@@ -10,6 +10,8 @@ export { default as Blog } from "./Blog";
 export { default as Home } from "./Home";
 export { default as Sale } from "./Sale";
 export { default as Product } from "./Product";
+export { default as WishList } from "./WishList";
+export { default as Orders } from "./Orders";
 // contact
 export { default as ContactUs } from "./contact/ContactUs";
 // shope

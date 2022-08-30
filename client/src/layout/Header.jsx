@@ -4,7 +4,7 @@ import { Image } from "cloudinary-react";
 import { LayoutGroup, motion } from "framer-motion";
 import { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { NavLink, useSearchParams } from "react-router-dom";
+import { NavLink, useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { ReactComponent as CharIcon } from "../assets/icons/header/cart.svg";
@@ -15,24 +15,28 @@ import logo from "../assets/logo-black.svg";
 import { DropDown } from "../components";
 import { shope, userDropdown } from "../constants/data";
 import { getUser, setDialog } from "../store/authSlice";
+import { getCart } from "../store/cartSlice";
 
 function classNames(...classes) {
 	return classes.filter(Boolean).join(" ");
 }
 export default function Header({ activeShop }) {
-	const [scrollY, setScrollY] = useState(window.pageYOffset);
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
+	const [scrollY, setScrollY] = useState(window.pageYOffset);
 	const [showHeader, setShowHeader] = useState(true);
 	const [open, setOpen] = useState(false);
 	const [active, setActive] = useState(null);
 	const user = useSelector(getUser);
 	const [activeIndex, setActiveIndex] = useState(null);
+
 	const [searchParams] = useSearchParams();
-
 	const err = searchParams.get("err");
+	const cart = useSelector(getCart);
 
-	const userClickHandle = () => {
+	const userClickHandle = (link) => {
 		if (!user?.email) return dispatch(setDialog(true));
+		navigate(link);
 	};
 
 	const MotionLink = motion(NavLink);
@@ -69,7 +73,7 @@ export default function Header({ activeShop }) {
 			toast.error("Email is already register through email password");
 			dispatch(setDialog(true));
 		}
-	}, []);
+	}, [dispatch, err]);
 
 	return (
 		<div
@@ -82,7 +86,7 @@ export default function Header({ activeShop }) {
 				<Transition.Root show={open} as={Fragment}>
 					<Dialog
 						as="div"
-						className="relative z-50 lg:hidden"
+						className="relative z-50 lg:hidden bg-white"
 						onClose={setOpen}
 					>
 						<Transition.Child
@@ -214,7 +218,6 @@ export default function Header({ activeShop }) {
 																	{section.name}
 																</p>
 																<ul
-																	role="list"
 																	aria-labelledby={`${category.id}-${section.id}-heading-mobile`}
 																	className={`mt-6 flex flex-col space-y-6 h-0 overflow-hidden transition-all duration-500 ease-linear ${
 																		active === index ? "!h-auto" : ""
@@ -275,8 +278,8 @@ export default function Header({ activeShop }) {
 								<LayoutGroup>
 									<Popover.Group className="hidden lg:block lg:self-stretch mx-auto">
 										<motion.div
-											className="h-full flex gap-8"
-											onHoverEnd={() => setActiveIndex(null)}
+											className="h-full flex gap-8 "
+											onMouseLeave={() => setActiveIndex(null)}
 											layout
 										>
 											{shope.categories.map((category) => (
@@ -286,7 +289,9 @@ export default function Header({ activeShop }) {
 															<div className="relative flex">
 																<MotionPopoverButton
 																	className={classNames(
-																		open ? activeLinkClass : noneActive,
+																		open && !activeShop
+																			? activeLinkClass
+																			: noneActive,
 																		"relative flex items-center text-sm font-medium focus:outline-none"
 																	)}
 																>
@@ -347,7 +352,6 @@ export default function Header({ activeShop }) {
 																								{section.name}
 																							</p>
 																							<ul
-																								role="list"
 																								aria-labelledby={`${section.name}-heading`}
 																								className="mt-6 space-y-6 sm:mt-4 sm:space-y-4"
 																							>
@@ -451,7 +455,7 @@ export default function Header({ activeShop }) {
 											<Heart
 												className="w-6 h-6"
 												aria-hidden="true"
-												onClick={() => userClickHandle()}
+												onClick={() => userClickHandle("/wishlist")}
 											/>
 										</span>
 									</div>
@@ -491,15 +495,19 @@ export default function Header({ activeShop }) {
 
 									{/* Cart */}
 									<div className="ml-4 flow-root lg:ml-6 bg-white p-2 rounded-md text-gray-400">
-										<span className="group -m-2 p-2 flex items-center cursor-pointer">
+										<span
+											className="group -m-2 p-2 flex items-center cursor-pointer"
+											onClick={() => userClickHandle("/cart")}
+										>
 											<CharIcon
 												className="flex-shrink-0 h-6 w-6 text-gray-400 group-hover:text-gray-500"
 												aria-hidden="true"
-												onClick={() => userClickHandle()}
 											/>
-											<span className="ml-1 text-sm font-medium text-white rounded-full bg-secondary-darkest w-5 h-5 grid place-content-center">
-												0
-											</span>
+											{cart?.length > 0 && (
+												<span className="ml-1 text-sm font-medium text-white rounded-full bg-secondary-darkest w-5 h-5 grid place-content-center">
+													{cart?.length}
+												</span>
+											)}
 											<span className="sr-only">items in cart, view bag</span>
 										</span>
 									</div>

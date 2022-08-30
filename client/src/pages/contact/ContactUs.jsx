@@ -1,6 +1,9 @@
+import emailjs from "@emailjs/browser";
 import { Formik } from "formik";
 import { MdPlayCircleFilled } from "react-icons/md";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import { useRef } from "react";
 
 import { ReactComponent as Facebook } from "../../assets/icons/social/ic-facebook.svg";
 import { ReactComponent as Google } from "../../assets/icons/social/ic-google.svg";
@@ -8,22 +11,45 @@ import { ReactComponent as Instagram } from "../../assets/icons/social/ic-instag
 import { ReactComponent as Twitter } from "../../assets/icons/social/ic-twitter.svg";
 import { AreaTextField, Button, Input } from "../../components";
 import { contactInfo, faqData } from "../../constants/data";
+import MetaData from "../../utils/MetaData";
 import MountTransition from "../../utils/MountTransition";
 import useContact from "./useContact";
 
 const ContactUs = () => {
+	const form = useRef();
 	const { active, setActive, initialValues, validationSchema } = useContact();
+
+	const sendEmail = (values, { resetForm }) => {
+		emailjs
+			.sendForm(
+				"service_g3a0u92",
+				"template_dfxqgnp",
+				form.current,
+				"5p66bB_WiHK1mjJkZ"
+			)
+			.then(
+				(result) => {
+					toast.success("Thank's for contacting");
+					resetForm();
+				},
+				(e) => {
+					toast.error(e.text);
+				}
+			);
+	};
 
 	return (
 		<MountTransition>
+			<MetaData title={"Contact Us"} />
 			<div className="mt-20 space-y-4">
 				<div>
 					<Formik
 						initialValues={initialValues}
 						validationSchema={validationSchema}
+						onSubmit={sendEmail}
 					>
 						{({ handleSubmit }) => (
-							<>
+							<form ref={form}>
 								<div className="grid lg:grid-cols-2 items-center gap-10 max-w-7xl mx-auto px-8">
 									<div className="space-y-3">
 										<h1 className="text-neutral-darkest text-4xl font-bold">
@@ -109,6 +135,7 @@ const ContactUs = () => {
 													<a
 														href="https://www.facebook.com/danishsjjd"
 														target={"_blank"}
+														rel="noreferrer"
 													>
 														<Facebook />
 													</a>
@@ -122,6 +149,7 @@ const ContactUs = () => {
 													<a
 														href="https://twitter.com/Danishsjjd"
 														target={"_blank"}
+														rel="noreferrer"
 													>
 														<Twitter />
 													</a>
@@ -130,6 +158,7 @@ const ContactUs = () => {
 													<a
 														href="https://www.instagram.com/danishsjjd/"
 														target={"_blank"}
+														rel="noreferrer"
 													>
 														<Instagram />
 													</a>
@@ -141,7 +170,7 @@ const ContactUs = () => {
 								<div className="flex justify-center items-center my-3">
 									<Button title={"Submit"} onClick={handleSubmit} app />
 								</div>
-							</>
+							</form>
 						)}
 					</Formik>
 				</div>

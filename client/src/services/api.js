@@ -30,12 +30,13 @@ const SERVICES = {
 	toggleLikeReview: { uri: "reviews/like", method: "post" },
 	// user - cart
 	createCart: { uri: "cart/", method: "post" },
-	deleteCart: { uri: "cart/", method: "delete" }, //:id
+	deleteCart: { uri: "cart/", method: "delete" }, //:id // not use
+	deleteProductCart: { uri: "cart/deleteProduct", method: "post" },
 	getCart: { uri: "cart/", method: "get" }, //:userId
 	// user - orders
 	createOrder: { uri: "orders/", method: "post" },
-	// user - checkout
-	checkout: { uri: "checkout/payment/", method: "post" },
+	buySingleProductOrder: { uri: "orders/buyProduct", method: "post" },
+	getUserOrder: { uri: "orders/", method: "get" },
 };
 
 export default SERVICES;

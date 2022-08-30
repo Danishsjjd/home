@@ -1,18 +1,20 @@
 import React from "react";
 
 import aboutUs from "../assets/images/aboutUs.png";
-import { aboutCard } from "../constants/data";
-import MountTransition from "../utils/MountTransition";
-import { Sponsors } from "../components";
 import insta1 from "../assets/images/home/insta1.png";
 import insta2 from "../assets/images/home/insta2.png";
+import { Sponsors } from "../components";
+import { aboutCard } from "../constants/data";
+import MetaData from "../utils/MetaData";
+import MountTransition from "../utils/MountTransition";
 
 const AboutUs = () => {
 	return (
 		<MountTransition>
+			<MetaData title={"About Us"} />
 			<div className="mt-20 mx-auto grid p-9 lg:p-3 text-center lg:text-left lg:grid-cols-2 gap-8 max-w-7xl">
 				<div className="flex justify-center">
-					<img src={aboutUs} alt="about us image" />
+					<img src={aboutUs} alt="About us " />
 				</div>
 				<div className="space-y-2">
 					<h5 className="text-secondary-darker ">ABOUT US</h5>

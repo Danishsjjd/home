@@ -3,17 +3,20 @@ import { useEffect, useId } from "react";
 import { useDispatch } from "react-redux";
 import { Route, Routes, useLocation } from "react-router-dom";
 
+import { PageNotFound } from "../components";
 import { Footer, Header } from "../layout";
 import { API } from "../libs/axios";
 import {
 	AboutUs,
 	Blog,
+	Cart,
 	ContactUs,
 	Home,
+	Product,
 	Sale,
 	Shope,
-	Product,
-	Cart,
+	WishList,
+	Orders,
 } from "../pages";
 import { setLogin, setUser } from "../store/authSlice";
 import { setCart } from "../store/cartSlice";
@@ -34,11 +37,8 @@ const Router = () => {
 				dispatch(setLogin(true));
 				try {
 					const cart = await API.getCart({ params: response.data._id });
-					console.log("cart is", cart);
 					dispatch(setCart(cart.data.products));
-				} catch (e) {
-					console.log(e);
-				}
+				} catch (e) {}
 			} catch (e) {
 				dispatch(setUser({}));
 				dispatch(setLogin(false));
@@ -52,7 +52,7 @@ const Router = () => {
 		};
 		getUser();
 		getProductsFunc();
-	}, []);
+	}, [dispatch]);
 	useEffect(() => {
 		window.scrollTo(0, 0);
 	}, [location.pathname]);
@@ -72,7 +72,16 @@ const Router = () => {
 					<Route path="/Contact" element={<ContactUs />} />
 					<Route path="/about" element={<AboutUs />} />
 					<Route path="/product/:id" element={<Product />} />
-					<Route path="/Cart" element={<Cart />} />
+					<Route path="/Cart" element={<PrivateRoutes element={<Cart />} />} />
+					<Route
+						path="/orders"
+						element={<PrivateRoutes element={<Orders />} />}
+					/>
+					<Route
+						path="/wishlist"
+						element={<PrivateRoutes element={<WishList />} />}
+					/>
+					<Route path="*" element={<PageNotFound />} />
 				</Route>
 				<Route path="/blog" element={<Blog />} />
 				<Route path="/sale" element={<Sale />} />

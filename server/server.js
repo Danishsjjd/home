@@ -11,18 +11,10 @@ const connection = require("./database/db");
 const cartRouter = require("./routes/cart");
 const ordersRouter = require("./routes/orders");
 const productsRouter = require("./routes/products");
-const stripeRoute = require("./routes/stripe");
 const reviewsRouter = require("./routes/reviews");
 const users = require("./routes/users");
 
 const app = express();
-
-if (process.env.NODE_ENV == "production") {
-	app.use(express.static("./client/build"));
-	app.get("*", (req, res) => {
-		res.sendFile(path.resolve(__dirname, "./client/build/index.html"));
-	});
-}
 
 app.use(
 	cors({
@@ -49,13 +41,19 @@ app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 app.use(express.json({ limit: "50mb" }));
 
 app.use("/api/cart", cartRouter);
-app.use("/api/checkout", stripeRoute);
 app.use("/api/orders", ordersRouter);
 app.use("/api/products", productsRouter);
 app.use("/api/reviews", reviewsRouter);
 app.use("/api/users", users);
 
 app.use(error);
+
+if (process.env.NODE_ENV == "production") {
+	app.use(express.static("./client/build"));
+	app.get("*", (req, res) => {
+		res.sendFile(path.resolve(__dirname, "./client/build/index.html"));
+	});
+}
 
 const server = app.listen(process.env.PORT || 5000);
 
@@ -76,8 +74,9 @@ process.on("unhandledRejection", (err) => {
 connection();
 
 // steps for mongo Transaction
-// await start
-// await commit (after committing all operations)
-// await abort (if any error)
-// end
-// ? pass array while creating, deleting or removing, and { session }
+// const session = await mongoose.startSession();
+// session.startTransaction()
+// await session.commitTransaction() (after committing all operations)
+// await session.abortTransaction() (if any error)
+// await session.endSession();
+// ? pass array while creating, deleting or removing, and give { session } param to function

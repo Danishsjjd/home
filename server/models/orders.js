@@ -37,11 +37,10 @@ const Orders = mongoose.model("orders", OrderSchema);
 function validateOrdersCreate(obj) {
 	const schema = Joi.object({
 		amount: Joi.number().required("amount is required"),
-		address: Joi.object().required("please provide address"),
-		products: Joi.array(),
-		userId: Joi.string().required().message({
+		userId: Joi.string().required().messages({
 			"number.required": "user is not provided",
 		}),
+		token: Joi.object().required(),
 	});
 	return schema.validate(obj);
 }

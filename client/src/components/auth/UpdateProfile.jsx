@@ -1,10 +1,10 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { Fragment } from "react";
+import { Image } from "cloudinary-react";
 import { Formik } from "formik";
+import { Fragment, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import * as Yup from "yup";
-import { useState } from "react";
 
 import { API } from "../../libs/axios";
 import {
@@ -13,9 +13,9 @@ import {
 	setUpdateProfile,
 	setUser,
 } from "../../store/authSlice";
-import Input from "../form/Input";
 import Button from "../Button";
 import ErrorMessage from "../form/ErrorMessage";
+import Input from "../form/Input";
 
 export default function UpdateProfile() {
 	const dispatch = useDispatch();
@@ -38,12 +38,10 @@ export default function UpdateProfile() {
 	};
 
 	const onSubmit = async (values, { resetForm }) => {
-		console.log(values);
 		try {
 			const response = await API.UpdateProfile({ data: values });
 			toast.success(response.data.message);
 			resetForm();
-			console.log("user", user);
 			dispatch(setUser(response.data.updatedUser));
 		} catch (e) {
 			toast.error(e?.response?.data?.message || e?.message);
@@ -115,15 +113,24 @@ export default function UpdateProfile() {
 															</label>
 															<div className="mt-1 flex items-center flex-col gap-3">
 																<div className="w-40 h-40 rounded-full overflow-hidden">
-																	<img
-																		src={image || user.avatar.url}
-																		alt="user default image"
-																		className={`w-full h-full ${
-																			user.avatar.url
-																				? "object-cover"
-																				: "object-contain bg-[#999]"
-																		}`}
-																	/>
+																	{user?.avatar?.public_id && image === null ? (
+																		<Image
+																			cloudName={
+																				process.env.REACT_APP_CLOUD_NAME
+																			}
+																			publicId={user?.avatar?.public_id}
+																			width="160"
+																			height="160"
+																			alt="user image"
+																			className="w-full h-full"
+																		/>
+																	) : (
+																		<img
+																			src={image || user?.googleAvatar}
+																			alt="user"
+																			className={`w-full h-full object-cover bg-[#999]`}
+																		/>
+																	)}
 																</div>
 																<button className="ml-5 bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:outline-secondary-darker">
 																	<label htmlFor="userAvatar">Upload</label>

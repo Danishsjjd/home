@@ -24,7 +24,7 @@ exports.createProduct = catchAsyncErrors(async (req, res, next) => {
 
 	for (let i = 0; i < images.length; i++) {
 		const result = await cloudinary.uploader.upload(images[i], {
-			folder: "Home/products",
+			folder: "Home_assets/products",
 		});
 
 		imagesLinks.push({
@@ -78,7 +78,7 @@ exports.getSingleProduct = catchAsyncErrors(async (req, res, next) => {
 
 // Update Product ---Admin
 exports.updateProduct = catchAsyncErrors(async (req, res, next) => {
-	const { error } = validator(validateProductUpdate, req.body);
+	const error = validator(validateProductUpdate, req.body);
 	if (error) return next(error);
 	let product = await Products.findById(req.params.id);
 	if (!product)
@@ -95,14 +95,14 @@ exports.updateProduct = catchAsyncErrors(async (req, res, next) => {
 	if (images !== undefined) {
 		// Delete image from cloudinary
 		for (let i = 0; i < product.images.length; i++) {
-			await cloudinary.v2.uploader.destroy(product.images[i].public_id);
+			await cloudinary.uploader.destroy(product.images[i].public_id);
 		}
 
 		const imagesLinks = [];
 
 		for (let i = 0; i < images.length; i++) {
 			const result = await cloudinary.uploader.upload(images[i], {
-				folder: "Home/products",
+				folder: "Home_assets/products",
 			});
 			imagesLinks.push({
 				public_id: result.public_id,

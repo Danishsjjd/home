@@ -62,21 +62,21 @@ export const NavLinks = [
 // admin - dashboard cards - title
 export const cardContent = [
 	{
-		title: "Daily Views",
-		number: "1,504",
+		title: "Daily sales",
+		number: "80",
 		icon: (
 			<AiOutlineEye className="text-6xl text-lightBlack group-hover:text-white" />
 		),
 	},
 	{
 		title: "Sales",
-		number: "80",
+		number: "1,504",
 		icon: (
 			<BsCart2 className="text-6xl text-lightBlack group-hover:text-white" />
 		),
 	},
 	{
-		title: "comments",
+		title: "reviews",
 		number: "284",
 		icon: (
 			<FaRegComments className="text-6xl text-lightBlack group-hover:text-white" />
@@ -150,13 +150,13 @@ export const shope = {
 			featured: [
 				{
 					name: "New Arrivals",
-					to: "/shope",
+					to: "/shope?category",
 					imageSrc: offer1,
 					imageAlt: "feature offer no.1",
 				},
 				{
 					name: "Artwork Tees",
-					to: "#",
+					to: "/shope?category",
 					imageSrc: offer2,
 					imageAlt: "feature offer no.2",
 				},
@@ -164,60 +164,93 @@ export const shope = {
 			// name
 			sections: [
 				{
-					name: "Baths",
+					name: "Bath",
 					items: [
-						{ name: "View All", to: "#" },
-						{ name: "Cost iron baths", to: "#" },
-						{ name: "Copper Baths", to: "#" },
-						{ name: "Bath Tops & Mixers", to: "#" },
-						{ name: "Bath wastes", to: "#" },
+						{ name: "View All", to: "/shope?category=bathroom" },
+						{ name: "Cost iron baths", to: "/shope?category=Cost iron baths" },
+						{ name: "Copper Baths", to: "/shope?category=Copper Baths" },
+						{
+							name: "Bath Tops & Mixers",
+							to: "/shope?category=Bath Tops & Mixers",
+						},
+						{ name: "Bath wastes", to: "/shope?category=Bath wastes" },
 					],
 				},
 				{
-					name: "Showers",
+					name: "Living Room",
 					items: [
-						{ name: "View All", to: "#" },
-						{ name: "freestanding Showers", to: "#" },
-						{ name: "Showers Sets & Controls", to: "#" },
-						{ name: "Showers Heads & Arms", to: "#" },
-						{ name: "Shower Accessories", to: "#" },
+						{ name: "View All", to: "/shope?category=living+room" },
+						{
+							name: "freestanding Showers",
+							to: "/shope?category=freestanding Showers",
+						},
+						{
+							name: "Showers Sets & Controls",
+							to: "/shope?category=Showers Sets & Controls",
+						},
+						{
+							name: "Showers Heads & Arms",
+							to: "/shope?category=Showers Heads & Arms",
+						},
+						{
+							name: "Shower Accessories",
+							to: "/shope?category=Shower Accessories",
+						},
 					],
 				},
 				{
-					name: "Accessories & Lighting",
+					name: "Kitchen",
 					items: [
-						{ name: "View All", to: "#" },
-						{ name: "Lightings", to: "#" },
-						{ name: "Mirrors", to: "#" },
-						{ name: "Organizers", to: "#" },
-						{ name: "Living Room Accessories", to: "#" },
+						{ name: "View All", to: "/shope?category=kitchen" },
+						{ name: "Lightings", to: "/shope?category=Lightings" },
+						{ name: "Mirrors", to: "/shope?category=Mirrors" },
+						{ name: "Organizers", to: "/shope?category=Organizers" },
+						{
+							name: "Living Room Accessories",
+							to: "/shope?category=Living Room Accessories",
+						},
 					],
 				},
 				{
-					name: "WC Suites & Bidets",
+					name: "Workspace",
 					items: [
-						{ name: "View All", to: "#" },
-						{ name: "Complete WC Suites", to: "#" },
-						{ name: "Loo Seats", to: "#" },
-						{ name: "Bidets & WC Accessories", to: "#" },
+						{ name: "View All", to: "/shope?category=workspace" },
+						{
+							name: "Complete WC Suites",
+							to: "/shope?category=Complete WC Suites",
+						},
+						{ name: "Loo Seats", to: "/shope?category=Loo Seats" },
+						{
+							name: "Bidets & WC Accessories",
+							to: "/shope?category=Bidets & WC Accessories",
+						},
 					],
 				},
 				{
 					name: "Bedroom",
 					items: [
-						{ name: "View All", to: "#" },
-						{ name: "Bed Accessories", to: "#" },
-						{ name: "Curtains", to: "#" },
-						{ name: "Chets", to: "#" },
-						{ name: "Mattresses", to: "#" },
+						{ name: "View All", to: "/shope?category=bedroom" },
+						{ name: "Bed Accessories", to: "/shope?category=Bed Accessories" },
+						{ name: "Curtains", to: "/shope?category=Curtains" },
+						{ name: "Chets", to: "/shope?category=Chets" },
+						{ name: "Mattresses", to: "/shope?category=Mattresses" },
 					],
 				},
 				{
 					name: "More",
 					items: [
-						{ name: "Kitchen Taps & Lighting", to: "#" },
-						{ name: "Archive Collection", to: "#" },
-						{ name: "Ex-Display Collection", to: "#" },
+						{
+							name: "Kitchen Taps & Lighting",
+							to: "/shope?category=Kitchen Taps & Lighting",
+						},
+						{
+							name: "Archive Collection",
+							to: "/shope?category=Archive Collection",
+						},
+						{
+							name: "Ex-Display Collection",
+							to: "/shope?category=Ex-Display Collection",
+						},
 					],
 				},
 			],
@@ -257,7 +290,7 @@ export const userDropdown = [
 ];
 // home - category - title
 export const homeCategories = [
-	{ Icon: LivingRoom, title: "LivingRoom" },
+	{ Icon: LivingRoom, title: "Living Room" },
 	{ Icon: Bedroom, title: "Bedroom" },
 	{ Icon: Kitchen, title: "Kitchen" },
 	{ Icon: Bathroom, title: "Bathroom" },

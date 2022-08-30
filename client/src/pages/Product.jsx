@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { ColorRing } from "react-loader-spinner";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { ColorRing } from "react-loader-spinner";
+import StripeCheckout from "react-stripe-checkout";
 
 import { ReactComponent as FireIcon } from "../assets/icons/fire.svg";
 import { ReactComponent as HeartIcon } from "../assets/icons/header/heart.svg";
@@ -11,8 +12,10 @@ import { ReactComponent as InstaIcon } from "../assets/icons/social/ic-instagram
 import { ReactComponent as TwitterIcon } from "../assets/icons/social/ic-twitter.svg";
 import { Button, PageNotFound, Reviews, Slider } from "../components";
 import { API } from "../libs/axios";
-import { getUser, setUser, setDialog } from "../store/authSlice";
+import { getUser, setDialog, setUser } from "../store/authSlice";
 import { getCart, setCart } from "../store/cartSlice";
+import HomeLogo from "../assets/logo-black.svg";
+import MetaData from "../utils/MetaData";
 
 const Product = () => {
 	const dispatch = useDispatch();
@@ -26,7 +29,7 @@ const Product = () => {
 	const toggleWishList = async () => {
 		if (Object.keys(user).length < 1) return dispatch(setDialog(true));
 		const isInWishList = user.wishlist.find(
-			(wishes) => wishes._id == product._id
+			(wishes) => wishes._id === product._id
 		);
 		if (!isInWishList) {
 			try {
@@ -41,7 +44,7 @@ const Product = () => {
 				const response = await API.removeItemFromWishList({ data: product });
 				toast.success(response.data.message);
 				const updatedWishlist = user.wishlist.filter((wishes) => {
-					return wishes._id != product._id;
+					return wishes._id !== product._id;
 				});
 				dispatch(setUser({ ...user, wishlist: [...updatedWishlist] }));
 			} catch (e) {
@@ -51,22 +54,30 @@ const Product = () => {
 	};
 	const addToCart = async () => {
 		if (Object.keys(user).length < 1) return dispatch(setDialog(true));
+		if (product.inStock < 1) return toast.error("product is not in stock");
 		try {
 			const updatedCart = await API.createCart({
-				data: { userId: user._id, productId: product._id, quantity: toCart },
+				data: {
+					userId: user._id,
+					productId: product._id,
+					quantity: `${toCart}`,
+				},
 			});
 			const search = cart.find(
-				(singleProduct) => singleProduct.productId._id == product._id
+				(singleProduct) => singleProduct.productId._id === product._id
 			);
 			let bucket;
 			if (!search)
-				bucket = [...cart, { productId: product, quantity: updatedCart.data }];
+				bucket = [
+					...cart,
+					{ productId: product, quantity: updatedCart.data.quantity },
+				];
 			else {
-				bucket = cart.map((x) => {
-					if (x._id === product._id) {
-						return { ...x, quantity: updatedCart.data };
+				bucket = cart.map(({ productId, quantity }) => {
+					if (productId._id === product._id) {
+						return { productId: product, quantity: updatedCart.data.quantity };
 					}
-					return x;
+					return { productId, quantity };
 				});
 			}
 			dispatch(setCart(bucket));
@@ -86,11 +97,11 @@ const Product = () => {
 			setLoading(false);
 		};
 		getProduct();
-	}, []);
+	}, [id]);
 	useEffect(() => {
 		if (Object.keys(user).length > 0 && product !== null) {
 			const inWishlist = user.wishlist.find(
-				(wishes) => wishes?._id == product._id
+				(wishes) => wishes?._id === product._id
 			);
 			if (inWishlist) setIsWishList(true);
 			else setIsWishList(false);
@@ -101,17 +112,36 @@ const Product = () => {
 	useEffect(() => {
 		if (cart.length > 0 && product) {
 			const search = cart.find(
-				(singleProduct) => singleProduct.productId._id == product._id
+				(singleProduct) => singleProduct.productId._id === product._id
 			);
-			setToCart(search.quantity);
-			console.log(search, "search");
-		} else {
-			setToCart(1);
+			if (search) {
+				setToCart(search?.quantity);
+			} else {
+				setToCart(1);
+			}
 		}
-	}, [product]);
-	console.log(cart);
+	}, [product, cart]);
+	const onToken = async (token) => {
+		setLoading(true);
+		try {
+			await API.buySingleProductOrder({
+				data: {
+					token: token,
+					amount: product.price * 100,
+					userId: user._id,
+					productId: product._id,
+				},
+			});
+			setProduct({ ...product, inStock: product.inStock - 1 });
+		} catch (e) {
+			toast.error(e?.response?.data?.message || e?.message);
+		} finally {
+			setLoading(false);
+		}
+	};
 	return loading ? (
 		<div className="mt-16 min-h-screen min-w-screen w-full h-full grid place-items-center">
+			<MetaData title={"Loading"} />
 			<ColorRing
 				visible={true}
 				height="80"
@@ -124,6 +154,7 @@ const Product = () => {
 		</div>
 	) : product ? (
 		<div className="">
+			<MetaData title={product.title} />
 			<div className="h-14 bg-neutral-lightest text-neutral-darker flex items-center mt-16 ">
 				<div className="flex max-w-7xl mx-auto flex-1">
 					<span className="px-4">
@@ -141,12 +172,12 @@ const Product = () => {
 						<div className="flex justify-between ">
 							<div>
 								<div className="text-4xl text-secondary-darkest font-bold flex gap-3 items-baseline">
-									{Number(product.offerPrice) == 0 ? (
+									{Number(product.offerPrice) === 0 ? (
 										"$" + product.price
 									) : (
 										<span className="">${product.offerPrice}</span>
 									)}
-									{Number(product.offerPrice) == 0 ? null : (
+									{Number(product.offerPrice) === 0 ? null : (
 										<span className="line-through text-xl text-neutral-grey">
 											${product.price}
 										</span>
@@ -221,16 +252,32 @@ const Product = () => {
 								</div>
 							</div>
 						</div>
+
 						<Button
-							title={"But it now!"}
-							ClassName="w-full bg-accent-green hover:!bg-opacity-75"
+							title={
+								<StripeCheckout
+									name="Home"
+									image={HomeLogo}
+									billingAddress
+									shippingAddress
+									description={`Total $${product.price}`}
+									amount={product.price * 100}
+									token={onToken}
+									stripeKey={process.env.REACT_APP_STRIPE_TOKEN}
+								>
+									Buy it now!
+								</StripeCheckout>
+							}
+							ClassName="w-full [&>*]:block bg-accent-green hover:!bg-opacity-75"
 						/>
+
 						<div className="flex items-center gap-2 flex-col sm:flex-row">
 							<span className="text-xl font-medium">share</span>
 							<a
 								className="p-2 text-center gap-1 bg-blue-700/25 text-blue-700 rounded-md flex"
 								href="https://facebook.com/danishsjjd"
 								target={"_blank"}
+								rel="noreferrer"
 							>
 								<FBIcon />
 								<span>facebook</span>
@@ -239,6 +286,7 @@ const Product = () => {
 								className="p-2 text-center gap-1 bg-red-700/25 text-red-700 rounded-md flex"
 								href="https://instagram.com/danishsjjd"
 								target={"_blank"}
+								rel="noreferrer"
 							>
 								<InstaIcon />
 								<span>Instagram</span>
@@ -247,6 +295,7 @@ const Product = () => {
 								className="p-2 text-center gap-1 bg-cyan-700/25 text-cyan-700  rounded-md flex"
 								href="https://twitter.com/danishsjjd"
 								target={"_blank"}
+								rel="noreferrer"
 							>
 								<TwitterIcon />
 								<span>Twitter</span>

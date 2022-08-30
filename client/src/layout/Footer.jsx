@@ -1,14 +1,14 @@
 import React, { useId } from "react";
 import { Link, Outlet } from "react-router-dom";
 
-import { ReactComponent as Logo } from "../assets/logo-white.svg";
 import { ReactComponent as Facebook } from "../assets/icons/social/ic-facebook.svg";
 import { ReactComponent as Google } from "../assets/icons/social/ic-google.svg";
-import { ReactComponent as Twitter } from "../assets/icons/social/ic-twitter.svg";
 import { ReactComponent as Instagram } from "../assets/icons/social/ic-instagram.svg";
+import { ReactComponent as Twitter } from "../assets/icons/social/ic-twitter.svg";
 import { ReactComponent as Letterhead } from "../assets/icons/social/letterhead-arrow.svg";
-import Visa from "../assets/icons/social/Visa.png";
 import MasterCard from "../assets/icons/social/MasterCard.png";
+import Visa from "../assets/icons/social/Visa.png";
+import { ReactComponent as Logo } from "../assets/logo-white.svg";
 import { contactInfo } from "../constants/data";
 import MountTransition from "../utils/MountTransition";
 
@@ -16,7 +16,7 @@ const links = [
 	{ title: "About Us", to: "/about" },
 	{ title: "Shop", to: "/shop" },
 	{ title: "Features", to: "/" },
-	{ title: "Sale", to: "/" },
+	{ title: "Sale", to: "/sale" },
 	{ title: "Contact", to: "/contact" },
 	{ title: "Shipping", to: "/" },
 	{ title: "Help", to: "/" },
@@ -44,16 +44,28 @@ const Footer = () => {
 							</a>
 						))}
 						<div className="flex gap-2">
-							<a href="https://www.facebook.com/danishsjjd" target={"_blank"}>
+							<a
+								href="https://www.facebook.com/danishsjjd"
+								target={"_blank"}
+								rel="noreferrer"
+							>
 								<Facebook />
 							</a>
 							<Link to={"/"}>
 								<Google />
 							</Link>
-							<a href="https://twitter.com/Danishsjjd" target={"_blank"}>
+							<a
+								href="https://twitter.com/Danishsjjd"
+								target={"_blank"}
+								rel="noreferrer"
+							>
 								<Twitter />
 							</a>
-							<a href="https://www.instagram.com/danishsjjd/" target={"_blank"}>
+							<a
+								href="https://www.instagram.com/danishsjjd/"
+								target={"_blank"}
+								rel="noreferrer"
+							>
 								<Instagram />
 							</a>
 						</div>
@@ -81,7 +93,7 @@ const Footer = () => {
 						<div className="w-full relative">
 							<input
 								type="text"
-								className="w-full p-2 px-4 text-secondary-lightest rounded-full focus:outline-none bg-white/10 focus:ring-0 focus:border-secondary-darker"
+								className="w-full p-2 px-4 rounded-full bg-white/10 text-secondary-lightest focus:outline-none focus:ring-0 focus:border-secondary-darker"
 								placeholder="Enter Your Email"
 							/>
 							<div className="absolute right-0 cursor-pointer">

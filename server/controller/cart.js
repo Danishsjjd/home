@@ -5,8 +5,7 @@ const ErrorHandler = require("../utils/ErrorHandler");
 
 // create cart - user
 exports.createAndUpdate = catchAsyncErrors(async (req, res, next) => {
-	console.log(req.body);
-	const { error } = validator(validateCart, req.body);
+	const error = validator(validateCart, req.body);
 	if (error) return next(error);
 	const { userId, productId, quantity } = req.body;
 	const haveCart = await Cart.findOne({ userId: req.body.userId });
@@ -20,7 +19,7 @@ exports.createAndUpdate = catchAsyncErrors(async (req, res, next) => {
 			haveCart.products.push({ productId, quantity });
 		}
 		const updatedCart = await haveCart.save();
-		res.status(201).json(updatedCart);
+		res.status(201).json({ updatedCart, quantity });
 	} else {
 		const cart = await Cart.create({
 			userId,
@@ -35,6 +34,7 @@ exports.deleteUserCart = catchAsyncErrors(async (req, res, next) => {
 	if (!cart) return next(new ErrorHandler("cart is not found", 404));
 	res.status(200).json("Cart has been deleted...");
 });
+
 // get user cart  - user
 exports.userCart = catchAsyncErrors(async (req, res, next) => {
 	const cart = await Cart.findOne({ userId: req.params.userId }).populate({

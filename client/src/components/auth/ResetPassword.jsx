@@ -1,21 +1,16 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { Fragment } from "react";
 import { Formik } from "formik";
+import { Fragment } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import * as Yup from "yup";
 
 import { API } from "../../libs/axios";
-import {
-	getUpdateProfile,
-	setUpdateProfile,
-	getUser,
-} from "../../store/authSlice";
-import Input from "../form/Input";
+import { getUpdateProfile, setUpdateProfile } from "../../store/authSlice";
 import Button from "../Button";
+import Input from "../form/Input";
 
 export default function ResetPassword() {
-	const user = useSelector(getUser);
 	const dispatch = useDispatch();
 	const isOpen = useSelector(getUpdateProfile);
 	const closeModal = () => {

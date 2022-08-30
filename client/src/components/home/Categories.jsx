@@ -7,7 +7,11 @@ const Categories = () => {
 	return (
 		<div className="max-w-7xl mx-auto flex flex-wrap justify-evenly gap-3 my-8 px-4 lg:px-0">
 			{homeCategories.map(({ Icon, title }) => (
-				<Link className="space-y-2 sm:w-32 w-16 text-center" to="" key={title}>
+				<Link
+					className="space-y-2 sm:w-32 w-16 text-center"
+					to={`/shope?category=${title}`}
+					key={title}
+				>
 					<div className="sm:w-32 sm:h-32 w-16 h-16 rounded-full overflow-hidden grid place-items-center bg-secondary-lightest">
 						<Icon className="scale-75" />
 					</div>

@@ -20,13 +20,13 @@ const useSignUpLogin = () => {
 	const signUpValidation = Yup.object().shape({
 		avatar: Yup.string().required(),
 		email: Yup.string().email().required().label("Email"),
-		password: Yup.string().min(6).required().label("Password"),
+		password: Yup.string().min(8).required().label("Password"),
 		username: Yup.string().min(5).max(25).required().label("Username"),
 	});
 
 	const loginValidation = Yup.object().shape({
 		email: Yup.string().email().min(5).max(25).required().label("Email"),
-		password: Yup.string().min(6).required().label("Password"),
+		password: Yup.string().min(8).required().label("Password"),
 	});
 
 	const initialData = {

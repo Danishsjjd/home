@@ -19,7 +19,7 @@ function App() {
 		<Provider store={store}>
 			<BrowserRouter>
 				<Router />
-				<ToastContainer />
+				<ToastContainer position="top-left" />
 				<SignUpLogin />
 				<UpdatePassword />
 				<ForgetPassword />

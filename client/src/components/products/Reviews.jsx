@@ -1,14 +1,13 @@
 import Rating from "@mui/material/Rating";
-import { useDispatch, useSelector } from "react-redux";
 import { FaRegTrashAlt } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
 
-import { getUser, setDialog } from "../../store/authSlice";
-import ReviewForm from "./ReviewForm";
 import { Image } from "cloudinary-react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { API } from "../../libs/axios";
-import { useState } from "react";
-import { useEffect } from "react";
+import { getUser, setDialog } from "../../store/authSlice";
+import ReviewForm from "./ReviewForm";
 
 const Reviews = ({ reviews, ratings, productId, setProduct, product }) => {
 	const dispatch = useDispatch();
@@ -27,12 +26,12 @@ const Reviews = ({ reviews, ratings, productId, setProduct, product }) => {
 	};
 	useEffect(() => {
 		let finalReview = 0;
-		reviews.map((review) => {
+		reviews.forEach((review) => {
 			finalReview += review.rating;
 		});
 		setPercentRating(ratings * 20);
 		setTotal(finalReview);
-	}, [reviews]);
+	}, [reviews, ratings]);
 	const toggleLike = async (id) => {
 		if (Object.keys(user).length < 1) return dispatch(setDialog(true));
 		try {
@@ -53,8 +52,8 @@ const Reviews = ({ reviews, ratings, productId, setProduct, product }) => {
 	return (
 		<div className="max-w-7xl mx-auto mt-16 lg:p-0 px-4">
 			<span className="sm:!mb-5 !mb-2 block">Reviews</span>
-			<div className="flex justify-between">
-				<h1 className="sm:text-4xl font-bold max-w-lg w-full">
+			<div className="flex flex-col sm:flex-row gap-2 sm:gap-0 sm:justify-between">
+				<h1 className="sm:text-4xl text-xl font-bold max-w-lg w-full">
 					What people says about this product
 				</h1>
 				<div>
@@ -90,14 +89,18 @@ const Reviews = ({ reviews, ratings, productId, setProduct, product }) => {
 								<div className="flex justify-between">
 									<div className="flex gap-2 items-center">
 										<div className="w-10 h-10 rounded-full overflow-hidden">
-											<Image
-												cloudName={process.env.REACT_APP_CLOUD_NAME}
-												publicId={review.user.avatar.public_id}
-												width="40"
-												height="40"
-												alt="user image"
-												className="w-full h-full"
-											/>
+											{review?.user?.avatar?.public_id ? (
+												<Image
+													cloudName={process.env.REACT_APP_CLOUD_NAME}
+													publicId={review?.user?.avatar?.public_id}
+													width="40"
+													height="40"
+													alt="user image"
+													className="w-full h-full"
+												/>
+											) : (
+												<img src={review?.user?.googleAvatar} alt="user" />
+											)}
 										</div>
 										<div>
 											<h3 className="text-xl font-bold">

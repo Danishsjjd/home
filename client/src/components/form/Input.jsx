@@ -6,9 +6,9 @@ import ErrorMessage from "./ErrorMessage";
 const Input = ({ name, className, notShowError, app, ...otherProps }, ref) => {
 	const { values, setFieldValue, touched, errors, setFieldTouched } =
 		useFormikContext();
-	let classes = `rounded-full w-full form-control block px-3 py-1.5 text-xl font-medium bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:text-accent focus:border-accent focus:outline-none ${className}`;
+	let classes = `rounded-full w-full form-control block px-3 py-1.5 text-xl font-medium bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:text-accent focus:border-accent focus:outline-none focus:ring-0 ${className}`;
 	if (app)
-		classes = `rounded-full w-full form-control block px-3 py-1.5 font-medium bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 bg-white focus:text-secondary-darker focus:border-secondary-darkest focus:outline-none focus:ring-0 ${className}`;
+		classes = `rounded-full w-full form-control block px-3 py-1.5 font-medium bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 bg-white focus:text-secondary-darker text-neutral-darker focus:outline-none focus:ring-0 focus:border-secondary-darker ${className}`;
 	return (
 		<>
 			<input

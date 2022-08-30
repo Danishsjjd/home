@@ -43,6 +43,9 @@ body {
 	body {
 		@apply min-h-screen;
 	}
+	.show-footer {
+		@apply md:min-h-[calc(422px-100%)] min-h-[calc(935px-100%)];
+	}
 }
 
 @layer components {

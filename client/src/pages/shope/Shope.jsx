@@ -1,4 +1,3 @@
-import { Fragment, useState } from "react";
 import { Dialog, Disclosure, Menu, Transition } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/outline";
 import {
@@ -8,25 +7,97 @@ import {
 	PlusSmIcon,
 	ViewGridIcon,
 } from "@heroicons/react/solid";
-import { useSearchParams } from "react-router-dom";
+import { Fragment, useEffect, useState } from "react";
+import { AiOutlineUnorderedList } from "react-icons/ai";
+import { ColorRing } from "react-loader-spinner";
 import { useSelector } from "react-redux";
+import { Link, useSearchParams } from "react-router-dom";
 
-import MountTransition from "../../utils/MountTransition";
-import { filters, sortOptions, subCategories } from "../../constants/filters";
 import { Card } from "../../components";
+import { filters, sortOptions, subCategories } from "../../constants/filters";
 import { getProducts } from "../../store/productSlice";
+import MetaData from "../../utils/MetaData";
+import MountTransition from "../../utils/MountTransition";
 
 function classNames(...classes) {
 	return classes.filter(Boolean).join(" ");
 }
 
 export default function Shope() {
+	const [loading, setLoading] = useState(true);
 	const products = useSelector(getProducts);
+	const [filterProducts, setFilterProducts] = useState(products);
+	const [filterCopy, setFilterCopy] = useState(products);
+	const [grid, setGrid] = useState(true);
 	const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 	const [searchParams, setSearchParams] = useSearchParams();
+	const [selectedCategory, setSelectedCategory] = useState([]);
+
+	const category = searchParams.get("category");
+
+	const onCategoryChange = (e) => {
+		if (e.target.checked) {
+			if (category === null) {
+				setSearchParams({ category: e.target.name });
+			} else {
+				setSearchParams({ category: category + "," + e.target.name });
+			}
+		} else {
+			const updatedFilter = selectedCategory.filter(
+				(catName) => catName !== e.target.name
+			);
+			setSelectedCategory(updatedFilter);
+			setSearchParams({ category: updatedFilter.join(",") });
+		}
+	};
+
+	useEffect(() => {
+		if (category !== null && category !== "")
+			setSelectedCategory(category.toLowerCase().split(","));
+		else setSelectedCategory([]);
+	}, [category]);
+
+	useEffect(() => {
+		if (category !== null && category !== "") {
+			const updatedCategory = products.filter((e) => {
+				if (selectedCategory.includes(e.category.toLowerCase())) return true;
+				return false;
+			});
+			setFilterProducts(updatedCategory);
+			setFilterCopy(updatedCategory);
+		} else {
+			setFilterProducts(products);
+			setFilterCopy(products);
+		}
+	}, [products, selectedCategory, category]);
+
+	useEffect(() => {
+		if (products.length > 0) setLoading(false);
+		else setLoading(true);
+	}, [products]);
+
+	const sortFun = (sortBy) => {
+		if (sortBy === "Best Rating") {
+			setFilterCopy(filterProducts);
+			const haveToSort = [...filterProducts];
+			const sorted = haveToSort.sort((a, b) => {
+				return b.ratings - a.ratings;
+			});
+			setFilterProducts(sorted);
+		} else if (sortBy === "Newest") {
+			const haveToSort = [...filterProducts];
+			const sorted = haveToSort.sort((a, b) => {
+				return new Date(b.createdAt) - new Date(a.createdAt);
+			});
+			setFilterProducts(sorted);
+		} else {
+			setFilterProducts(filterCopy);
+		}
+	};
 
 	return (
 		<MountTransition>
+			<MetaData title={"Shope"} />
 			<div className="bg-white">
 				<div>
 					{/* Mobile filter dialog */}
@@ -76,15 +147,15 @@ export default function Shope() {
 										{/* Filters */}
 										<form className="mt-4 border-t border-gray-200">
 											<h3 className="sr-only">Categories</h3>
-											<ul
-												role="list"
-												className="font-medium text-gray-900 px-2 py-3"
-											>
+											<ul className="font-medium text-gray-900 px-2 py-3">
 												{subCategories.map((category) => (
 													<li key={category.name}>
-														<a href={category.href} className="block px-2 py-3">
+														<Link
+															to={category.href}
+															className="block px-2 py-3"
+														>
 															{category.name}
-														</a>
+														</Link>
 													</li>
 												))}
 											</ul>
@@ -124,13 +195,27 @@ export default function Shope() {
 																			key={option.value}
 																			className="flex items-center"
 																		>
-																			<input
+																			{/* <input
 																				id={`filter-mobile-${section.id}-${optionIdx}`}
 																				name={`${section.id}[]`}
 																				defaultValue={option.value}
 																				type="checkbox"
 																				defaultChecked={option.checked}
 																				className="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500"
+																			/> */}
+																			<input
+																				id={`filter-mobile-${section.id}-${optionIdx}`}
+																				type="checkbox"
+																				className="accent-secondary-darker h-4 w-4 focus:outline-1 focus:outline-secondary-darker focus:ring-0 checkbox checkbox-primary"
+																				name={`${option.value}`}
+																				defaultChecked={
+																					selectedCategory.includes(
+																						option.value
+																					)
+																						? true
+																						: option.checked
+																				}
+																				onChange={onCategoryChange}
 																			/>
 																			<label
 																				htmlFor={`filter-mobile-${section.id}-${optionIdx}`}
@@ -185,8 +270,8 @@ export default function Shope() {
 												{sortOptions.map((option) => (
 													<Menu.Item key={option.name}>
 														{({ active }) => (
-															<a
-																href={option.href}
+															<span
+																to={option.href}
 																className={classNames(
 																	option.current
 																		? "font-medium text-gray-900"
@@ -194,9 +279,10 @@ export default function Shope() {
 																	active ? "bg-gray-100" : "",
 																	"block px-4 py-2 text-sm"
 																)}
+																onClick={() => sortFun(option.name)}
 															>
 																{option.name}
-															</a>
+															</span>
 														)}
 													</Menu.Item>
 												))}
@@ -207,10 +293,17 @@ export default function Shope() {
 
 								<button
 									type="button"
-									className="p-2 -m-2 ml-5 sm:ml-7 text-gray-400 hover:text-gray-500"
+									className="p-2 -m-2 ml-5 sm:ml-7 text-gray-400 hover:text-gray-500 sm:block hidden"
+									onClick={() => setGrid((pre) => !pre)}
 								>
-									<span className="sr-only">View grid</span>
-									<ViewGridIcon className="w-5 h-5" aria-hidden="true" />
+									{grid ? (
+										<AiOutlineUnorderedList
+											className="w-5 h-5"
+											aria-hidden="true"
+										/>
+									) : (
+										<ViewGridIcon className="w-5 h-5" aria-hidden="true" />
+									)}
 								</button>
 								<button
 									type="button"
@@ -232,13 +325,10 @@ export default function Shope() {
 								{/* Filters */}
 								<form className="hidden lg:block">
 									<h3 className="sr-only">Categories</h3>
-									<ul
-										role="list"
-										className="text-sm font-medium text-gray-900 space-y-4 pb-6 border-b border-gray-200"
-									>
+									<ul className="text-sm font-medium text-gray-900 space-y-4 pb-6 border-b border-gray-200">
 										{subCategories.map((category) => (
 											<li key={category.name}>
-												<a href={category.href}>{category.name}</a>
+												<Link to={category.href}>{category.name}</Link>
 											</li>
 										))}
 									</ul>
@@ -280,11 +370,15 @@ export default function Shope() {
 																>
 																	<input
 																		id={`filter-${section.id}-${optionIdx}`}
-																		name={`${section.id}[]`}
-																		defaultValue={option.value}
 																		type="checkbox"
-																		defaultChecked={option.checked}
-																		className="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500"
+																		className="accent-secondary-darker h-4 w-4 focus:outline-1 focus:outline-secondary-darker focus:ring-0 checkbox checkbox-primary"
+																		name={`${option.value}`}
+																		defaultChecked={
+																			selectedCategory.includes(option.value)
+																				? true
+																				: option.checked
+																		}
+																		onChange={onCategoryChange}
 																	/>
 																	<label
 																		htmlFor={`filter-${section.id}-${optionIdx}`}
@@ -305,23 +399,57 @@ export default function Shope() {
 								{/* Product grid */}
 								<div className="lg:col-span-3">
 									{/* Replace with your content */}
-									<div className="sm:grid block grid-cols-2 md:grid-cols-3 gap-6">
-										{products.map((product) => {
-											return (
-												<Card
-													key={product?._id}
-													id={product?._id}
-													description={product?.description}
-													image={product?.images[0]?.url}
-													price={product?.price}
-													offerPrice={product?.offerPrice}
-													rating={product?.rating}
-													title={product?.title}
-													category={product?.category}
-												/>
-											);
-										})}
-									</div>
+
+									{!loading ? (
+										<div
+											className={`block grid-cols-2 md:grid-cols-3 gap-6 space-y-6  ${
+												grid ? "sm:grid sm:!space-y-0" : "space-y-6"
+											}`}
+										>
+											{filterProducts.length > 0 ? (
+												filterProducts.map((product) => {
+													return (
+														<Card
+															key={product?._id}
+															id={product?._id}
+															description={product?.description}
+															image={product?.images[0]?.url}
+															price={product?.price}
+															offerPrice={product?.offerPrice}
+															rating={product?.ratings}
+															title={product?.title}
+															category={product?.category}
+															reviews={product?.reviews}
+															grid={grid}
+														/>
+													);
+												})
+											) : (
+												<div className="text-lg font-medium">
+													we don't currently have item in{" "}
+													{selectedCategory.join(", ")}
+												</div>
+											)}
+										</div>
+									) : (
+										<div className="w-full h-full grid place-items-center">
+											<ColorRing
+												visible={true}
+												height="80"
+												width="80"
+												ariaLabel="blocks-loading"
+												wrapperStyle={{}}
+												wrapperClass="blocks-wrapper"
+												colors={[
+													"#e15b64",
+													"#f47e60",
+													"#f8b26a",
+													"#abbd81",
+													"#849b87",
+												]}
+											/>
+										</div>
+									)}
 									{/* /End replace */}
 								</div>
 							</div>

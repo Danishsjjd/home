@@ -48,6 +48,7 @@ const productsSchema = new mongoose.Schema(
 		offerPrice: {
 			type: String,
 			maxLength: [4, "Discount price can not exceed than 4 characters"],
+			default: 0,
 		},
 		ratings: {
 			type: Number,

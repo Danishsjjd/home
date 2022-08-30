@@ -27,7 +27,7 @@ exports.register = catchAsyncErrors(async (req, res, next) => {
 	let myCloud;
 	if (req.body.avatar) {
 		myCloud = await cloudinary.uploader.upload(req.body.avatar, {
-			folder: "Home/avatars",
+			folder: "Home_assets/avatars",
 			width: 150,
 			crop: "scale",
 		});
@@ -162,7 +162,7 @@ exports.updateProfile = catchAsyncErrors(async (req, res, next) => {
 		const imageId = user.avatar.public_id;
 
 		const myCloud = await cloudinary.uploader.upload(req.body.avatar, {
-			folder: "Home/avatars",
+			folder: "Home_assets/avatars",
 			width: 150,
 			crop: "scale",
 		});

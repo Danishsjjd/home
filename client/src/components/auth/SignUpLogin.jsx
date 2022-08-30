@@ -1,15 +1,15 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { Fragment } from "react";
 import { Formik } from "formik";
+import { Fragment } from "react";
 
-import login_signUp from "../../assets/images/auth/login_SignUp.jpg";
-import { ReactComponent as Google } from "../../assets/icons/social/ic-google.svg";
-import { ReactComponent as Logo } from "../../assets/logo-black.svg";
-import Input from "../form/Input";
-import Button from "../Button";
 import default_img from "../../assets/default_img.jpg";
-import useSignUpLogin from "./useSignUpLogin";
+import { ReactComponent as Google } from "../../assets/icons/social/ic-google.svg";
+import login_signUp from "../../assets/images/auth/login_SignUp.jpg";
+import { ReactComponent as Logo } from "../../assets/logo-black.svg";
+import Button from "../Button";
 import ErrorMessage from "../form/ErrorMessage";
+import Input from "../form/Input";
+import useSignUpLogin from "./useSignUpLogin";
 
 export default function SignUpLogin() {
 	const {
@@ -60,7 +60,7 @@ export default function SignUpLogin() {
 										<div className="hidden sm:block">
 											<img
 												src={login_signUp}
-												alt="login image"
+												alt="login"
 												className="w-full h-full object-cover"
 											/>
 										</div>
@@ -98,7 +98,7 @@ export default function SignUpLogin() {
 																	<div className="max-w-[100px] grid place-items-center w-full max-h-[100px] h-full overflow-hidden rounded-full">
 																		<img
 																			src={image || default_img}
-																			alt="user default image"
+																			alt="default"
 																			className={`w-full ${
 																				image
 																					? "object-cover"
