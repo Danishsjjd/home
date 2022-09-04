@@ -6,33 +6,31 @@ import { toast } from "react-toastify";
 import * as Yup from "yup";
 
 import { API } from "../../libs/axios";
-import { getUpdateProfile, setUpdateProfile } from "../../store/authSlice";
+import { getRestDialog, setRestDialog } from "../../store/authSlice";
 import Button from "../Button";
 import Input from "../form/Input";
 
-export default function ResetPassword() {
+export default function ResetPassword({ token }) {
 	const dispatch = useDispatch();
-	const isOpen = useSelector(getUpdateProfile);
+	const isOpen = useSelector(getRestDialog);
 	const closeModal = () => {
-		dispatch(setUpdateProfile(false));
+		dispatch(setRestDialog(false));
 	};
 
 	const validationSchema = Yup.object().shape({
-		oldPassword: Yup.string().min(8).required().label("Old Password"),
-		newPassword: Yup.string().min(8).required().label("New Password"),
+		password: Yup.string().min(8).required().label("Password"),
 		confirmPassword: Yup.string().min(8).required().label("Confirm Password"),
 	});
 
 	const initialValues = {
-		oldPassword: "",
-		newPassword: "",
+		password: "",
 		confirmPassword: "",
 	};
 
 	const onSubmit = async (values, { resetForm }) => {
 		try {
-			const response = await API.updatePassword({ data: values });
-			dispatch(setUpdateProfile(false));
+			const response = await API.resetPassword({ data: values, params: token });
+			dispatch(setRestDialog(false));
 			toast.success(response.data.message);
 			resetForm();
 		} catch (e) {
@@ -82,15 +80,9 @@ export default function ResetPassword() {
 													<>
 														<div>
 															<h2 className="text-lg mb-1 mt-2">
-																Old Password
-															</h2>
-															<Input name="oldPassword" app type="password" />
-														</div>
-														<div>
-															<h2 className="text-lg mb-1 mt-2">
 																New Password
 															</h2>
-															<Input name="newPassword" app type="password" />
+															<Input name="password" app type="password" />
 														</div>
 														<div>
 															<h2 className="text-lg mb-1 mt-2">
