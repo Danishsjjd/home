@@ -37,7 +37,6 @@ const userSchema = new mongoose.Schema(
 			required: function () {
 				return this.fromGoogle !== true;
 			},
-			select: false,
 		},
 		role: {
 			type: String,
@@ -178,6 +177,13 @@ function validateUpdateProfile(obj) {
 	return schema.validate(obj);
 }
 
+function validateGetSingleUser(obj) {
+	const schema = Joi.object({
+		id: Joi.objectId().required(),
+	});
+	return schema.validate(obj);
+}
+
 module.exports = {
 	User,
 	validateUser,
@@ -186,4 +192,5 @@ module.exports = {
 	validateResetPassword,
 	validateUpdatePassword,
 	validateUpdateProfile,
+	validateGetSingleUser,
 };

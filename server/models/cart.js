@@ -29,15 +29,19 @@ const cartSchema = new mongoose.Schema(
 
 function validateCart(obj) {
 	const schema = Joi.object({
-		userId: Joi.string().required().messages({
-			"number.required": "userId not required",
-		}),
 		productId: Joi.string().required(),
 		quantity: Joi.string().required(),
 	});
 	return schema.validate(obj);
 }
 
+function validateProductId(obj) {
+	const schema = Joi.object({
+		productId: Joi.objectId().required(),
+	});
+	return schema.validate(obj);
+}
+
 const Cart = mongoose.model("cart", cartSchema);
 
-module.exports = { Cart, validateCart };
+module.exports = { Cart, validateCart, validateProductId };

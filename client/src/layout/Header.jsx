@@ -20,7 +20,7 @@ import { getCart } from "../store/cartSlice";
 function classNames(...classes) {
 	return classes.filter(Boolean).join(" ");
 }
-export default function Header({ activeShop }) {
+export default function Header({ activeShop, setActiveIndex, activeIndex }) {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const [scrollY, setScrollY] = useState(window.pageYOffset);
@@ -28,10 +28,10 @@ export default function Header({ activeShop }) {
 	const [open, setOpen] = useState(false);
 	const [active, setActive] = useState(null);
 	const user = useSelector(getUser);
-	const [activeIndex, setActiveIndex] = useState(null);
 
 	const [searchParams] = useSearchParams();
 	const err = searchParams.get("err");
+
 	const cart = useSelector(getCart);
 
 	const userClickHandle = (link) => {
@@ -68,12 +68,17 @@ export default function Header({ activeShop }) {
 			window.removeEventListener("scroll", handleScroll);
 		};
 	});
+
 	useEffect(() => {
 		if (err === "emailExists") {
 			toast.error("Email is already register through email password");
 			dispatch(setDialog(true));
 		}
 	}, [dispatch, err]);
+
+	useEffect(() => {
+		setActiveIndex(null);
+	}, [showHeader, setActiveIndex]);
 
 	return (
 		<div
@@ -255,7 +260,7 @@ export default function Header({ activeShop }) {
 						aria-label="Top"
 						className="max-w-7xl bg-white mx-auto px-4 sm:px-6 lg:px-8 shadow "
 					>
-						<div className="border-b border-gray-200">
+						<div className="border-b border-gray-200 ">
 							<div className="h-16 flex items-center lg:justify-between">
 								<button
 									type="button"
@@ -275,113 +280,115 @@ export default function Header({ activeShop }) {
 								</div>
 
 								{/* Flyout menus */}
-								<LayoutGroup>
-									<Popover.Group className="hidden lg:block lg:self-stretch mx-auto">
-										<motion.div
-											className="h-full flex gap-8 "
-											onMouseLeave={() => setActiveIndex(null)}
-											layout
-										>
-											{shope.categories.map((category) => (
-												<Popover key={category.name} className="flex order-1">
-													{({ open, close }) => (
-														<>
-															<div className="relative flex">
-																<MotionPopoverButton
-																	className={classNames(
-																		open && !activeShop
-																			? activeLinkClass
-																			: noneActive,
-																		"relative flex items-center text-sm font-medium focus:outline-none"
-																	)}
-																>
-																	{!activeIndex && activeShop && (
-																		<motion.span
-																			layoutId="border"
-																			className={`border-neutral-darkest transition-none w-full h-2 text-neutral-darkest border-b-2 text-bold absolute bottom-0`}
-																		/>
-																	)}
-
-																	{category.name}
-																</MotionPopoverButton>
-															</div>
-
-															<Transition
-																as={Fragment}
-																enter="transition ease-out duration-200"
-																enterFrom="opacity-0"
-																enterTo="opacity-100"
-																leave="transition ease-in duration-150"
-																leaveFrom="opacity-100"
-																leaveTo="opacity-0"
+								<Popover.Group className="hidden lg:block lg:self-stretch mx-auto">
+									<motion.div
+										className="h-full flex gap-8 overflow-hidden"
+										onMouseLeave={() => setActiveIndex(null)}
+									>
+										{shope.categories.map((category) => (
+											<Popover key={category.name} className="flex order-1">
+												{({ open, close }) => (
+													<>
+														<div className="relative flex">
+															<MotionPopoverButton
+																className={classNames(
+																	open && !activeShop
+																		? activeLinkClass
+																		: noneActive,
+																	"relative flex items-center text-sm font-medium focus:outline-none"
+																)}
 															>
-																<Popover.Panel className="absolute top-full inset-x-0 text-sm text-gray-500">
-																	<div
-																		className="absolute inset-0 top-1/2 bg-white shadow"
-																		aria-hidden="true"
+																{!activeIndex && activeShop && (
+																	<motion.span
+																		layoutId="border"
+																		className={`border-neutral-darkest transition-none w-full h-2 text-neutral-darkest border-b-2 text-bold absolute bottom-0`}
 																	/>
+																)}
 
-																	<div className="relative bg-white">
-																		<div className="max-w-7xl mx-auto px-8">
-																			<div className="grid grid-cols-2 gap-y-10 gap-x-8 py-16 items-center">
-																				<div className="col-start-2 grid grid-cols-2 gap-x-8">
-																					{category.featured.map((item) => (
-																						<NavLink
-																							to={item.to}
-																							className="relative "
-																							key={item.name}
-																							onClick={() => close()}
-																						>
-																							<div className="rounded-lg w-full h-full overflow-hidden group-hover:opacity-75">
-																								<img
-																									src={item.imageSrc}
-																									alt={item.imageAlt}
-																									className="object-center object-cover"
-																								/>
-																							</div>
-																						</NavLink>
-																					))}
-																				</div>
-																				<div className="row-start-1 grid grid-cols-3 gap-y-10 gap-x-8 text-sm">
-																					{category.sections.map((section) => (
-																						<div key={section.name}>
-																							<p
-																								id={`${section.name}-heading`}
-																								className="font-medium text-gray-900"
-																							>
-																								{section.name}
-																							</p>
-																							<ul
-																								aria-labelledby={`${section.name}-heading`}
-																								className="mt-6 space-y-6 sm:mt-4 sm:space-y-4"
-																							>
-																								{section.items.map((item) => (
-																									<li
-																										key={item.name}
-																										className="flex"
-																									>
-																										<NavLink
-																											to={item.to}
-																											className="hover:text-gray-800"
-																											onClick={() => close()}
-																										>
-																											{item.name}
-																										</NavLink>
-																									</li>
-																								))}
-																							</ul>
+																{category.name}
+															</MotionPopoverButton>
+														</div>
+
+														<Transition
+															as={Fragment}
+															enter="transition ease-out duration-200"
+															enterFrom="opacity-0"
+															enterTo="opacity-100"
+															leave="transition ease-in duration-150"
+															leaveFrom="opacity-100"
+															leaveTo="opacity-0"
+														>
+															<Popover.Panel
+																className="absolute top-full inset-x-0 text-sm text-gray-500"
+																onMouseEnter={() => setActiveIndex(null)}
+															>
+																<div
+																	className="absolute inset-0 top-1/2 bg-white shadow"
+																	aria-hidden="true"
+																/>
+
+																<div className="relative bg-white">
+																	<div className="max-w-7xl mx-auto px-8">
+																		<div className="grid grid-cols-2 gap-y-10 gap-x-8 py-16 items-center">
+																			<div className="col-start-2 grid grid-cols-2 gap-x-8">
+																				{category.featured.map((item) => (
+																					<NavLink
+																						to={item.to}
+																						className="relative "
+																						key={item.name}
+																						onClick={() => close()}
+																					>
+																						<div className="rounded-lg w-full h-full overflow-hidden group-hover:opacity-75">
+																							<img
+																								src={item.imageSrc}
+																								alt={item.imageAlt}
+																								className="object-center object-cover"
+																							/>
 																						</div>
-																					))}
-																				</div>
+																					</NavLink>
+																				))}
+																			</div>
+																			<div className="row-start-1 grid grid-cols-3 gap-y-10 gap-x-8 text-sm">
+																				{category.sections.map((section) => (
+																					<div key={section.name}>
+																						<p
+																							id={`${section.name}-heading`}
+																							className="font-medium text-gray-900"
+																						>
+																							{section.name}
+																						</p>
+																						<ul
+																							aria-labelledby={`${section.name}-heading`}
+																							className="mt-6 space-y-6 sm:mt-4 sm:space-y-4"
+																						>
+																							{section.items.map((item) => (
+																								<li
+																									key={item.name}
+																									className="flex"
+																								>
+																									<NavLink
+																										to={item.to}
+																										className="hover:text-gray-800"
+																										onClick={() => close()}
+																									>
+																										{item.name}
+																									</NavLink>
+																								</li>
+																							))}
+																						</ul>
+																					</div>
+																				))}
 																			</div>
 																		</div>
 																	</div>
-																</Popover.Panel>
-															</Transition>
-														</>
-													)}
-												</Popover>
-											))}
+																</div>
+															</Popover.Panel>
+														</Transition>
+													</>
+												)}
+											</Popover>
+										))}
+										<LayoutGroup>
 											{shope.pages.map((page, index) => {
 												return (
 													<MotionLink
@@ -390,13 +397,14 @@ export default function Header({ activeShop }) {
 														className={({ isActive }) =>
 															`${
 																isActive && activeIndex === null && !activeShop
-																	? "border-neutral-darkest text-neutral-darkest"
+																	? "text-neutral-darkest border-neutral-darkest"
 																	: "text-neutral-darker hover:text-neutral-darkest"
-															} relative flex items-center text-sm font-medium ${
+															} relative flex items-center text-sm font-medium  ${
 																page.className
 															}`
 														}
 														onHoverStart={() => setActiveIndex(index)}
+														layout
 													>
 														{({ isActive }) => {
 															const isBorderActive = index === activeIndex;
@@ -435,9 +443,9 @@ export default function Header({ activeShop }) {
 													Dashboard
 												</NavLink>
 											)}
-										</motion.div>
-									</Popover.Group>
-								</LayoutGroup>
+										</LayoutGroup>
+									</motion.div>
+								</Popover.Group>
 
 								<div className="sm:space-x-1 -space-x-2 flex items-center ml-auto lg:ml-0">
 									{/* Search */}

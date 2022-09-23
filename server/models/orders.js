@@ -36,21 +36,36 @@ const Orders = mongoose.model("orders", OrderSchema);
 
 function validateOrdersCreate(obj) {
 	const schema = Joi.object({
-		amount: Joi.number().required("amount is required"),
-		userId: Joi.string().required().messages({
-			"number.required": "user is not provided",
-		}),
 		token: Joi.object().required(),
 	});
 	return schema.validate(obj);
 }
 function validateOrdersUpdateStatus(obj) {
 	const schema = Joi.object({
-		status: Joi.string().required().message({
-			"number.required": "status is not required",
+		status: Joi.string().required().messages({
+			"string.required": "status is not required",
 		}),
 	});
 	return schema.validate(obj);
 }
+function validateBuyOneProduct(obj) {
+	const schema = Joi.object({
+		productId: Joi.objectId().required(),
+		token: Joi.string().required(),
+	});
+	return schema.validate(obj);
+}
+function validateOrderId(obj) {
+	const schema = Joi.object({
+		id: Joi.objectId().required(),
+	});
+	return schema.validate(obj);
+}
 
-module.exports = { Orders, validateOrdersCreate, validateOrdersUpdateStatus };
+module.exports = {
+	Orders,
+	validateOrdersCreate,
+	validateOrdersUpdateStatus,
+	validateBuyOneProduct,
+	validateOrderId,
+};

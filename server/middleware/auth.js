@@ -1,38 +1,13 @@
-// const jwt = require("jsonwebtoken");
-
-// const authentication = (req, res, next) => {
-// 	if (req.user) {
-// 		try {
-// 			const userToken = jwt.verify(req.user, process.env.ACCESS_TOKEN_KEY);
-// 			req.user = userToken;
-// 			return next();
-// 		} catch (e) {
-// 			return res.status(401).send("invalid token");
-// 		}
-// 	}
-// 	if (!req.header("x-auth-token"))
-// 		return res.status(401).send("token is not provided");
-// 	try {
-// 		const decoded = jwt.verify(
-// 			req.header("x-auth-token"),
-// 			process.env.ACCESS_TOKEN_KEY
-// 		);
-// 		req.user = decoded;
-// 		next();
-// 	} catch (err) {
-// 		return res.status(400).send("invalid token");
-// 	}
-// };
-
-// module.exports = authentication;
-
 const ErrorHandler = require("../utils/ErrorHandler");
-const catchAsyncErrors = require("../utils/catchAsyncErrors");
+const { User } = require("../models/users");
 const jwt = require("jsonwebtoken");
 
-exports.authentication = catchAsyncErrors(async (req, res, next) => {
+exports.authentication = async (req, res, next) => {
 	if (req.user) {
 		const userToken = jwt.verify(req.user, process.env.ACCESS_TOKEN_KEY);
+		const user = await User.countDocuments({ _id: userToken._id });
+		if (user == 0)
+			return next(new ErrorHandler("user not found, maybe deleted", 404));
 		req.user = userToken;
 		next();
 		return;
@@ -45,9 +20,12 @@ exports.authentication = catchAsyncErrors(async (req, res, next) => {
 		req.header("x-auth-token"),
 		process.env.ACCESS_TOKEN_KEY
 	);
+	const user = await User.countDocuments({ _id: decoded._id });
+	if (user == 0)
+		return next(new ErrorHandler("user not found, maybe deleted", 404));
 	req.user = decoded;
 	next();
-});
+};
 
 // Admin Roles
 exports.authorizeRoles = (...roles) => {

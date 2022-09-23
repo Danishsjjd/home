@@ -30,9 +30,9 @@ const SERVICES = {
 	toggleLikeReview: { uri: "reviews/like", method: "post" },
 	// user - cart
 	createCart: { uri: "cart/", method: "post" },
-	deleteCart: { uri: "cart/", method: "delete" }, //:id // not use
+	deleteCart: { uri: "cart/", method: "delete" },
 	deleteProductCart: { uri: "cart/deleteProduct", method: "post" },
-	getCart: { uri: "cart/", method: "get" }, //:userId
+	getCart: { uri: "cart/", method: "get" },
 	// user - orders
 	createOrder: { uri: "orders/", method: "post" },
 	buySingleProductOrder: { uri: "orders/buyProduct", method: "post" },

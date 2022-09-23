@@ -21,13 +21,12 @@ const Orders = () => {
 	useEffect(() => {
 		const getUserOrders = async () => {
 			try {
-				const response = await API.getUserOrder({
-					params: user._id,
-				});
+				const response = await API.getUserOrder({});
 				setOrders(response.data);
 				setLoading(false);
 			} catch (e) {
 				toast.error(e?.response?.data?.message || e.message);
+				setLoading(false);
 			}
 		};
 		getUserOrders();
@@ -124,7 +123,7 @@ const Orders = () => {
 																<span>
 																	Total: $
 																	{productId?.offerPrice < 1
-																		? Number(productId.price)
+																		? Number(productId.price) * quantity
 																		: Number(productId.offerPrice) * quantity}
 																</span>
 															</td>
@@ -166,9 +165,7 @@ const Orders = () => {
 										<div className="p-2 space-y-3">
 											<div className="flex justify-between">
 												<span className="font-medium">Total</span>
-												<h3 className="font-bold text-lg">
-													${order.amount / 100}
-												</h3>
+												<h3 className="font-bold text-lg">${order.amount}</h3>
 											</div>
 										</div>
 									</div>

@@ -2,16 +2,17 @@ const {
 	Products,
 	validateProductCreate,
 	validateProductUpdate,
+	validateProductId,
 } = require("../models/products");
 const ErrorHandler = require("../utils/ErrorHandler.js");
-const catchAsyncErrors = require("../utils/catchAsyncErrors");
 const cloudinary = require("../utils/cloudinary");
 const validator = require("../utils/validator");
 
 // create Product --Admin
-exports.createProduct = catchAsyncErrors(async (req, res, next) => {
+exports.createProduct = async (req, res, next) => {
 	const error = validator(validateProductCreate, req.body);
 	if (error) return next(error);
+
 	let images = [];
 
 	if (typeof req.body.images === "string") {
@@ -42,14 +43,17 @@ exports.createProduct = catchAsyncErrors(async (req, res, next) => {
 		success: true,
 		productId: product.id,
 	});
-});
+};
 
 // get All Products
-exports.getAllProducts = catchAsyncErrors(async (req, res) => {
-	const resultPerPage = 10;
+exports.getAllProducts = async (req, res) => {
 	const productsCount = await Products.countDocuments();
+
+	// pagination formula
+	const resultPerPage = 10;
 	const currentPage = req.query?.page ? Number(this.queryStr.page) : 1;
 	const skip = resultPerPage * (currentPage - 1);
+
 	const products = await Products.find().limit(resultPerPage).skip(skip);
 
 	res.status(200).json({
@@ -58,9 +62,12 @@ exports.getAllProducts = catchAsyncErrors(async (req, res) => {
 		productsCount,
 		resultPerPage,
 	});
-});
+};
 // single Product details
-exports.getSingleProduct = catchAsyncErrors(async (req, res, next) => {
+exports.getSingleProduct = async (req, res, next) => {
+	const error = validator(validateProductId, req.params);
+	if (error) return next(error);
+
 	const product = await Products.findById(req.params.id).populate({
 		path: "reviews",
 		populate: { path: "user" },
@@ -74,12 +81,16 @@ exports.getSingleProduct = catchAsyncErrors(async (req, res, next) => {
 		success: true,
 		product,
 	});
-});
+};
 
 // Update Product ---Admin
-exports.updateProduct = catchAsyncErrors(async (req, res, next) => {
+exports.updateProduct = async (req, res, next) => {
+	const errorId = validator(validateProductId, req.params);
+	if (errorId) return next(error);
+
 	const error = validator(validateProductUpdate, req.body);
 	if (error) return next(error);
+
 	let product = await Products.findById(req.params.id);
 	if (!product)
 		return next(new ErrorHandler("Product is not found with this id", 404));
@@ -122,12 +133,14 @@ exports.updateProduct = catchAsyncErrors(async (req, res, next) => {
 		success: true,
 		product,
 	});
-});
+};
 
 // delete Product - admin
-exports.deleteProduct = catchAsyncErrors(async (req, res, next) => {
-	const product = await Products.findById(req.params.id);
+exports.deleteProduct = async (req, res, next) => {
+	const error = validator(validateProductId, req.params);
+	if (error) return next(error);
 
+	const product = await Products.findById(req.params.id);
 	if (!product)
 		return next(new ErrorHandler("Product is not found with this id", 404));
 
@@ -142,6 +155,4 @@ exports.deleteProduct = catchAsyncErrors(async (req, res, next) => {
 		success: true,
 		message: "Product deleted succesfully",
 	});
-});
-
-//
+};

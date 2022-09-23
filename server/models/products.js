@@ -107,4 +107,16 @@ function validateProductUpdate(obj) {
 	return schema.validate(obj);
 }
 
-module.exports = { Products, validateProductCreate, validateProductUpdate };
+function validateProductId(obj) {
+	const schema = Joi.object({
+		id: Joi.objectId().required(),
+	});
+	return schema.validate(obj);
+}
+
+module.exports = {
+	Products,
+	validateProductCreate,
+	validateProductUpdate,
+	validateProductId,
+};

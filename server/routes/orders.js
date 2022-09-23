@@ -12,7 +12,7 @@ const {
 
 router.post("/", authentication, createOrder);
 router.post("/buyProduct", authentication, buyOneProduct);
-router.get("/:userId", authentication, getSingleUserOrder);
+router.get("/", authentication, getSingleUserOrder);
 router.put("/:id", authentication, authorizeRoles("admin"), updateOrder);
 router.delete("/:id", authentication, authorizeRoles("admin"), deleteOrder);
 router.get(

@@ -30,9 +30,3 @@ function App() {
 }
 
 export default App;
-
-// BrowserRouter :- depends on browser routes
-// HashRouter :- for shared server
-// HistoryRouter :- completely control on history element(currently not stable)
-// MemoryRouter :- useful for run test in code
-// StaticRouter :- for server side rendering
