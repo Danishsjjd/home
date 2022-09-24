@@ -5,7 +5,7 @@ import Modal from "../Modal";
 
 import { forgetPasswordApi } from "../../store/apiCall/authApi";
 import { getForgetDialog, setForgetDialog } from "../../store/authSlice";
-import Button from "../Button";
+import Button from "../form/Button";
 import Input from "../form/Input";
 
 export default function SignUpLogin() {
@@ -33,17 +33,13 @@ export default function SignUpLogin() {
           onSubmit={onSubmit}
           validationSchema={validationSchema}
         >
-          {({ handleSubmit }) => {
-            return (
-              <>
-                <div>
-                  <h2 className="text-lg mb-1 mt-2">Your Email:</h2>
-                  <Input name="email" placeholder="Enter Your Email" app />
-                </div>
-                <Button app title={"Forget Now!"} onClick={handleSubmit} />
-              </>
-            );
-          }}
+          <>
+            <div>
+              <h2 className="text-lg mb-1 mt-2">Your Email:</h2>
+              <Input name="email" placeholder="Enter Your Email" app />
+            </div>
+            <Button app title={"Forget Now!"} />
+          </>
         </Formik>
       </div>
     </Modal>

@@ -2,7 +2,14 @@ import { Menu, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import { useDispatch } from "react-redux";
 
-export default function DropDown({ list, anchor, side, setFieldValue, name }) {
+export default function DropDown({
+  list,
+  anchor,
+  side,
+  setFieldValue,
+  name,
+  dashboard,
+}) {
   const dispatch = useDispatch();
   return (
     <Menu as="div" className="relative inline-block text-left">
@@ -21,7 +28,9 @@ export default function DropDown({ list, anchor, side, setFieldValue, name }) {
             side === "right"
               ? "left-0 origin-top-left"
               : "right-0 origin-top-right"
-          } mt-2 w-56 divide-y divide-gray-100 rounded-md bg-white dark:bg-black shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none`}
+          } mt-2 w-56 divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none ${
+            dashboard && "dark:bg-black"
+          }`}
         >
           {list.map(({ title, Icon, onClick, className }) => (
             <Menu.Item key={title}>
@@ -29,8 +38,14 @@ export default function DropDown({ list, anchor, side, setFieldValue, name }) {
                 <button
                   className={` ${
                     active
-                      ? "bg-accent dark:text-black text-white"
-                      : "text-gray-900 dark:text-white"
+                      ? `text-white ${
+                          dashboard
+                            ? "dark:text-black bg-accent"
+                            : "bg-secondary-darker"
+                        }`
+                      : dashboard
+                      ? "text-gray-900 dark:text-white"
+                      : "text-gray-900"
                   } group flex w-full items-center rounded-md px-2 py-2 text-sm ${className}`}
                   onClick={() =>
                     setFieldValue
@@ -40,8 +55,14 @@ export default function DropDown({ list, anchor, side, setFieldValue, name }) {
                 >
                   {Icon && (
                     <Icon
-                      className={`mr-2 h-5 w-5 text-violet-400 ${
-                        active ? "dark:text-black" : ""
+                      className={`mr-2 h-5 w-5 ${
+                        active
+                          ? dashboard
+                            ? "dark:text-black"
+                            : ""
+                          : dashboard
+                          ? "text-black dark:text-white"
+                          : "text-gray-900"
                       }`}
                       aria-hidden="true"
                     />

@@ -4,7 +4,7 @@ import * as Yup from "yup";
 
 import { resetPasswordApi } from "../../store/apiCall/authApi";
 import { getRestDialog, setRestDialog } from "../../store/authSlice";
-import Button from "../Button";
+import Button from "../form/Button";
 import Input from "../form/Input";
 import Modal from "../Modal";
 
@@ -30,7 +30,12 @@ export default function ResetPassword({ token }) {
   };
 
   return (
-    <Modal closeModal={closeModal} isOpen={isOpen} zIndex={"z-30"}>
+    <Modal
+      closeModal={closeModal}
+      isOpen={isOpen}
+      zIndex={"z-30"}
+      maxWidth="max-w-lg"
+    >
       <div className="divide-y-2 space-y-5 divide-neutral-lighter">
         <h2 className="text-center py-2 text-2xl font-bold">Update Password</h2>
         <Formik
@@ -38,21 +43,17 @@ export default function ResetPassword({ token }) {
           onSubmit={onSubmit}
           validationSchema={validationSchema}
         >
-          {({ handleSubmit }) => {
-            return (
-              <>
-                <div>
-                  <h2 className="text-lg mb-1 mt-2">New Password</h2>
-                  <Input name="password" app type="password" />
-                </div>
-                <div>
-                  <h2 className="text-lg mb-1 mt-2">Confirm Password</h2>
-                  <Input name="confirmPassword" app type="password" />
-                </div>
-                <Button app title={"Reset Now!"} onClick={handleSubmit} />
-              </>
-            );
-          }}
+          <>
+            <div>
+              <h2 className="text-lg mb-1 mt-2">New Password</h2>
+              <Input name="password" app type="password" />
+            </div>
+            <div>
+              <h2 className="text-lg mb-1 mt-2">Confirm Password</h2>
+              <Input name="confirmPassword" app type="password" />
+            </div>
+            <Button app title={"Reset Now!"} />
+          </>
         </Formik>
       </div>
     </Modal>

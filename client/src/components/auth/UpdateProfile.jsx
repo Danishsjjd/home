@@ -11,7 +11,7 @@ import {
   getUser,
   setUpdateProfile,
 } from "../../store/authSlice";
-import Button from "../Button";
+import Button from "../form/Button";
 import ErrorMessage from "../form/ErrorMessage";
 import Input from "../form/Input";
 import Modal from "../Modal";
@@ -68,7 +68,7 @@ export default function UpdateProfile() {
           onSubmit={onSubmit}
           validationSchema={validationSchema}
         >
-          {({ handleSubmit, setFieldValue, errors, touched }) => {
+          {({ setFieldValue, errors, touched }) => {
             return (
               <>
                 <div>
@@ -125,7 +125,7 @@ export default function UpdateProfile() {
                   <h2 className="text-lg mb-1 mt-2">username</h2>
                   <Input name="username" app type="text" />
                 </div>
-                <Button app title={"Update Profile!"} onClick={handleSubmit} />
+                <Button app title={"Update Profile!"} />
               </>
             );
           }}

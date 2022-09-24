@@ -4,7 +4,7 @@ import * as Yup from "yup";
 
 import { updatePasswordApi } from "../../store/apiCall/authApi";
 import { getUpdatePassword, setUpdatePassword } from "../../store/authSlice";
-import Button from "../Button";
+import Button from "../form/Button";
 import Input from "../form/Input";
 import Modal from "../Modal";
 
@@ -40,25 +40,21 @@ export default function UpdatePassword() {
           onSubmit={onSubmit}
           validationSchema={validationSchema}
         >
-          {({ handleSubmit }) => {
-            return (
-              <>
-                <div>
-                  <h2 className="text-lg mb-1 mt-2">Old Password</h2>
-                  <Input name="oldPassword" app type="password" />
-                </div>
-                <div>
-                  <h2 className="text-lg mb-1 mt-2">New Password</h2>
-                  <Input name="newPassword" app type="password" />
-                </div>
-                <div>
-                  <h2 className="text-lg mb-1 mt-2">Confirm Password</h2>
-                  <Input name="confirmPassword" app type="password" />
-                </div>
-                <Button app title={"Reset Now!"} onClick={handleSubmit} />
-              </>
-            );
-          }}
+          <>
+            <div>
+              <h2 className="text-lg mb-1 mt-2">Old Password</h2>
+              <Input name="oldPassword" app type="password" />
+            </div>
+            <div>
+              <h2 className="text-lg mb-1 mt-2">New Password</h2>
+              <Input name="newPassword" app type="password" />
+            </div>
+            <div>
+              <h2 className="text-lg mb-1 mt-2">Confirm Password</h2>
+              <Input name="confirmPassword" app type="password" />
+            </div>
+            <Button app title={"Reset Now!"} />
+          </>
         </Formik>
       </div>
     </Modal>

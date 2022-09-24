@@ -4,7 +4,7 @@ import default_img from "../../assets/default_img.jpg";
 import { ReactComponent as Google } from "../../assets/icons/social/ic-google.svg";
 import login_signUp from "../../assets/images/auth/login_SignUp.jpg";
 import { ReactComponent as Logo } from "../../assets/logo-black.svg";
-import Button from "../Button";
+import Button from "../form/Button";
 import ErrorMessage from "../form/ErrorMessage";
 import Input from "../form/Input";
 import Modal from "../Modal";
@@ -58,7 +58,7 @@ export default function SignUpLogin() {
             initialValues={initialData}
             onSubmit={onSubmit}
           >
-            {({ handleSubmit, errors, touched, setFieldValue }) => (
+            {({ errors, touched, setFieldValue }) => (
               <>
                 {!haveAccount && (
                   <div>
@@ -140,7 +140,6 @@ export default function SignUpLogin() {
                     title={`${haveAccount ? "Login" : "create Account"}`}
                     app
                     ClassName={"text-center"}
-                    onClick={handleSubmit}
                   />
                 </div>
                 <p className="!mt-2 text-center">

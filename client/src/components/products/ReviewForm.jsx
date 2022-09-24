@@ -4,7 +4,7 @@ import { useState } from "react";
 import * as Yup from "yup";
 
 import { createReviewApi } from "../../store/apiCall/productApi";
-import Button from "../Button";
+import Button from "../form/Button";
 import AreaTextField from "../form/AreaTextField";
 import Input from "../form/Input";
 
@@ -28,7 +28,6 @@ const ReviewForm = ({ user, productId, setProduct }) => {
     };
     createReviewApi({ data: finalObj, setProduct, user }, resetForm);
   };
-  console.log(user.name);
   return (
     <div className="bg-neutral-lightest rounded p-4 space-y-8 md:sticky top-16 w-full">
       <h2 className="text-center text-2xl font-bold">Write a review</h2>
@@ -37,7 +36,7 @@ const ReviewForm = ({ user, productId, setProduct }) => {
         validationSchema={validationSchema}
         onSubmit={onSubmit}
       >
-        {({ handleSubmit, setFieldValue }) => {
+        {({ setFieldValue }) => {
           return (
             <>
               <div>
@@ -73,12 +72,7 @@ const ReviewForm = ({ user, productId, setProduct }) => {
                 <h4 className="mb-1">Your Review</h4>
                 <AreaTextField app name="review" />
               </div>
-              <Button
-                title={"Submit"}
-                ClassName="text-center"
-                app
-                onClick={handleSubmit}
-              />
+              <Button title={"Submit"} ClassName="text-center" app />
             </>
           );
         }}

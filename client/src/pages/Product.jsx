@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { ColorRing } from "react-loader-spinner";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import StripeCheckout from "react-stripe-checkout";
@@ -12,6 +11,7 @@ import { ReactComponent as InstaIcon } from "../assets/icons/social/ic-instagram
 import { ReactComponent as TwitterIcon } from "../assets/icons/social/ic-twitter.svg";
 import HomeLogo from "../assets/logo-black.svg";
 import { Button, PageNotFound, Reviews, Slider } from "../components";
+import LoadingDialog from "../components/LoadingDialog";
 import { API } from "../libs/axios";
 import { updateWishListAPI } from "../store/apiCall/authApi";
 import { addToCartApi } from "../store/apiCall/cartApi";
@@ -87,18 +87,7 @@ const Product = () => {
     }
   };
   return loading ? (
-    <div className="mt-16 min-h-screen min-w-screen w-full h-full grid place-items-center">
-      <MetaData title={"Loading"} />
-      <ColorRing
-        visible={true}
-        height="80"
-        width="80"
-        ariaLabel="blocks-loading"
-        wrapperStyle={{}}
-        wrapperClass="blocks-wrapper"
-        colors={["#e15b64", "#f47e60", "#f8b26a", "#abbd81", "#849b87"]}
-      />
-    </div>
+    <LoadingDialog loading={loading} className="bg-white" />
   ) : product ? (
     <div className="">
       <MetaData title={product.title} />
