@@ -197,14 +197,6 @@ export default function Shope() {
                                       key={option.value}
                                       className="flex items-center"
                                     >
-                                      {/* <input
-																				id={`filter-mobile-${section.id}-${optionIdx}`}
-																				name={`${section.id}[]`}
-																				defaultValue={option.value}
-																				type="checkbox"
-																				defaultChecked={option.checked}
-																				className="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500"
-																			/> */}
                                       <input
                                         id={`filter-mobile-${section.id}-${optionIdx}`}
                                         type="checkbox"

@@ -10,7 +10,14 @@ import { ReactComponent as FBIcon } from "../assets/icons/social/ic-facebook.svg
 import { ReactComponent as InstaIcon } from "../assets/icons/social/ic-instagram.svg";
 import { ReactComponent as TwitterIcon } from "../assets/icons/social/ic-twitter.svg";
 import HomeLogo from "../assets/logo-black.svg";
-import { Button, PageNotFound, Reviews, Slider } from "../components";
+import {
+  Button,
+  PageNotFound,
+  Rating,
+  ReviewForm,
+  Reviews,
+  Slider,
+} from "../components";
 import LoadingDialog from "../components/LoadingDialog";
 import { API } from "../libs/axios";
 import { updateWishListAPI } from "../store/apiCall/authApi";
@@ -20,6 +27,8 @@ import { getCart } from "../store/cartSlice";
 import MetaData from "../utils/MetaData";
 
 const Product = () => {
+  const [total, setTotal] = useState(0);
+  const [percentRating, setPercentRating] = useState(0);
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -68,6 +77,16 @@ const Product = () => {
       }
     }
   }, [product, cart]);
+  useEffect(() => {
+    if (product) {
+      let finalReview = 0;
+      product.reviews.forEach((review) => {
+        finalReview += review.rating;
+      });
+      setPercentRating(product.ratings * 20);
+      setTotal(finalReview);
+    }
+  }, [product]);
   const onToken = async (token) => {
     setLoading(true);
     try {
@@ -241,13 +260,30 @@ const Product = () => {
           </div>
         </div>
       </div>
-      <Reviews
-        reviews={product.reviews}
-        ratings={product.ratings}
-        productId={product._id}
-        setProduct={setProduct}
-        product={product}
-      />
+      <div className="max-w-7xl mx-auto mt-16 lg:p-0 px-4">
+        <Rating
+          percentRating={percentRating}
+          ratings={product?.ratings}
+          reviews={product?.reviews}
+          total={total}
+        />
+        {/* divider */}
+        <div className="my-10 h-1 rounded bg-gray-200 w-full" />
+        <div className="flex flex-col-reverse md:grid gap-8 grid-cols-3 items-start lg:px-0 px-1 sm:px-4">
+          <Reviews
+            reviews={product?.reviews}
+            ratings={product?.ratings}
+            productId={product?._id}
+            setProduct={setProduct}
+            product={product}
+          />
+          <ReviewForm
+            user={user}
+            productId={product?._id}
+            setProduct={setProduct}
+          />
+        </div>
+      </div>
     </div>
   ) : (
     <PageNotFound />

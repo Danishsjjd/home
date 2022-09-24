@@ -130,7 +130,7 @@ export const updateWishListAPI = async (user, product) => {
   }
 };
 
-export const getUserApi = async () => {
+export const getUserApi = async (setLoading) => {
   try {
     const response = await API.me({});
     dispatch(setUser(response?.data));
@@ -142,5 +142,7 @@ export const getUserApi = async () => {
   } catch (e) {
     dispatch(setUser({}));
     dispatch(setLogin(false));
+  } finally {
+    setLoading(false);
   }
 };

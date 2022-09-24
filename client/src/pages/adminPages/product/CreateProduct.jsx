@@ -7,7 +7,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import {
   AreaTextField,
   ErrorMessage,
-  FormDropDown,
+  FormList,
   Input,
 } from "../../../components";
 import Button from "../../../components/form/Button";
@@ -24,7 +24,7 @@ const CreateProducts = () => {
         initialValues={{
           title: "",
           images: [],
-          category: "living room",
+          category: productCategory[0],
           description: "",
           price: 0,
           offerPrice: 0,
@@ -132,11 +132,7 @@ const CreateProducts = () => {
                   </button>
                 </div>
                 <div className="ml-14">
-                  <FormDropDown
-                    name={"category"}
-                    list={productCategory}
-                    side="right"
-                  />
+                  <FormList list={productCategory} name={"category"} />
                 </div>
               </div>
               <ErrorMessage
