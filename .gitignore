@@ -12,6 +12,9 @@
 **/build
 server/client/build
 
+# log files
+*.log
+
 # misc
 *.DS_Store
 
