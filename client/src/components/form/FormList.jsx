@@ -2,19 +2,20 @@ import { Fragment } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronDownIcon } from "@heroicons/react/solid";
 import { useFormikContext } from "formik";
+import ErrorMessage from "./ErrorMessage";
 
 export default function FormList({ name, list }) {
-  const { values, setFieldValue } = useFormikContext();
+  const { values, setFieldValue, errors, touched } = useFormikContext();
 
   return (
-    <div className="">
+    <>
       <Listbox
         value={values[name]}
-        onChange={(val) => setFieldValue(name, val)}
+        onChange={(val) => setFieldValue(name, val.title)}
       >
         <div className="relative mt-1">
           <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-            <span className="block truncate">{values[name].title}</span>
+            <span className="block truncate">{values[name]}</span>
             <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
               <ChevronDownIcon
                 className="h-5 w-5 text-gray-400"
@@ -61,6 +62,7 @@ export default function FormList({ name, list }) {
           </Transition>
         </div>
       </Listbox>
-    </div>
+      <ErrorMessage err={errors[name]} visible={touched[name]} />
+    </>
   );
 }

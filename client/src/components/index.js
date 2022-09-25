@@ -3,6 +3,7 @@ export { default as Button } from "./Button";
 export { default as DropDown } from "./DropDown";
 export { default as Sponsors } from "./Sponsors";
 export { default as PageNotFound } from "./PageNotFound";
+export { default as Card } from "./Card";
 
 // auth
 export { default as SignUpLogin } from "./auth/SignUpLogin";
@@ -18,10 +19,3 @@ export { default as AreaTextField } from "./form/AreaTextField";
 export { default as FormDropDown } from "./form/FormDropDown";
 export { default as FormButton } from "./form/Button";
 export { default as FormList } from "./form/FormList";
-
-// Products
-export { default as Card } from "./products/Card";
-export { default as Slider } from "./products/Slider";
-export { default as Reviews } from "./products/Reviews";
-export { default as ReviewForm } from "./products/ReviewForm";
-export { default as Rating } from "./products/Rating";

@@ -17,22 +17,42 @@ const {
   createAndUpdateWishList,
   deleteItemFromWishList,
 } = require("../controller/users");
+const {
+  vUser,
+  vUserLogin,
+  vForgetPassword,
+  vResetPassword,
+  vUpdatePassword,
+  vUpdateProfile,
+  vGetSingleUser,
+} = require("../models/users");
+const validate = require("../middleware/validate");
 
 const router = express.Router();
 
 router.post("/wishlist", authentication, createAndUpdateWishList);
 router.post("/wishlist/remove", authentication, deleteItemFromWishList);
-router.post("/auth/register", register);
-router.post("/auth/login", login);
+router.post("/auth/register", validate(vUser), register);
+router.post("/auth/login", validate(vUserLogin), login);
 router.get("/auth/logout", (req, res) => {
   req.logout();
   res.status(200).json("success");
 });
 router.get("/me", authentication, refreshCheck);
-router.post("/password/forget", forgetPassword);
-router.post("/password/reset/:token", resetPassword);
-router.post("/password/update", authentication, updatePassword);
-router.post("/profile/update", authentication, updateProfile);
+router.post("/password/forget", validate(vForgetPassword), forgetPassword);
+router.post("/password/reset/:token", validate(vResetPassword), resetPassword);
+router.post(
+  "/password/update",
+  authentication,
+  validate(vUpdatePassword),
+  updatePassword
+);
+router.post(
+  "/profile/update",
+  authentication,
+  validate(vUpdateProfile),
+  updateProfile
+);
 router.get(
   "/getallUsers",
   authentication,
@@ -49,12 +69,14 @@ router.patch(
   "/updateUserRole/:id",
   authentication,
   authorizeRoles("admin"),
+  validate(vGetSingleUser, "params"),
   updateUserRole
 );
 router.delete(
   "/deleteUser/:id",
   authentication,
   authorizeRoles("admin"),
+  validate(vGetSingleUser, "params"),
   deleteUser
 );
 

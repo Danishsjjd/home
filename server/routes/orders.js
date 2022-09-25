@@ -2,24 +2,43 @@ const router = require("express").Router();
 
 const { authentication, authorizeRoles } = require("../middleware/auth");
 const {
-	createOrder,
-	getSingleUserOrder,
-	updateOrder,
-	deleteOrder,
-	getAllOrders,
-	buyOneProduct,
+  vBuyOneProduct,
+  vOrderId,
+  vOrdersCreate,
+  vOrdersUpdateStatus,
+} = require("../models/orders");
+const {
+  createOrder,
+  getSingleUserOrder,
+  updateOrder,
+  deleteOrder,
+  getAllOrders,
+  buyOneProduct,
 } = require("../controller/orders");
+const validate = require("../middleware/validate");
 
-router.post("/", authentication, createOrder);
-router.post("/buyProduct", authentication, buyOneProduct);
+router.post("/", authentication, validate(vOrdersCreate), createOrder);
+router.post(
+  "/buyProduct",
+  authentication,
+  validate(vBuyOneProduct),
+  buyOneProduct
+);
 router.get("/", authentication, getSingleUserOrder);
-router.put("/:id", authentication, authorizeRoles("admin"), updateOrder);
+router.put(
+  "/:id",
+  authentication,
+  authorizeRoles("admin"),
+  validate(vOrdersUpdateStatus),
+  validate(vOrderId, "params"),
+  updateOrder
+);
 router.delete("/:id", authentication, authorizeRoles("admin"), deleteOrder);
 router.get(
-	"/getAllOrders",
-	authentication,
-	authorizeRoles("admin"),
-	getAllOrders
+  "/getAllOrders",
+  authentication,
+  authorizeRoles("admin"),
+  getAllOrders
 );
 // router.get("/income", authentication, authorizeRoles("admin"), monthlyIncome);
 

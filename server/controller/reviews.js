@@ -1,19 +1,9 @@
 const { Products } = require("../models/products");
 const ErrorHandler = require("../utils/ErrorHandler");
-const {
-  Reviews,
-  validateReview,
-  validateLike,
-  validateProductId,
-  validateDeleteReview,
-} = require("../models/reviews.js");
-const validator = require("../utils/validator");
+const { Reviews } = require("../models/reviews.js");
 
 // Create New Review or Update the review
 exports.createProductReview = async (req, res, next) => {
-  const error = validator(validateReview, req.body);
-  if (error) return next(error);
-
   const { rating, review, productId } = req.body;
 
   let message,
@@ -78,8 +68,6 @@ exports.createProductReview = async (req, res, next) => {
 
 // user
 exports.toggleReviewLike = async (req, res, next) => {
-  const error = validator(validateLike, req.body);
-  if (error) return next(error);
   const { authorEmail, revId } = req.body;
   const review = await Reviews.findById(revId);
   if (!review) return next(new ErrorHandler("review is not found", 404));
@@ -111,8 +99,6 @@ exports.toggleReviewLike = async (req, res, next) => {
 
 // Delete Review --Admin
 exports.deleteReview = async (req, res, next) => {
-  const error = validator(validateDeleteReview, req.query);
-  if (error) return next(error);
   const product = await Products.findById(req.query.productId).populate(
     "reviews"
   );

@@ -35,7 +35,7 @@ const reviewsSchema = new mongoose.Schema(
 
 const Reviews = mongoose.model("reviews", reviewsSchema);
 
-function validateReview(obj) {
+function vReview(obj) {
   const validationSchema = Joi.object({
     rating: Joi.number().min(0).max(5).required().label("Rating"),
     review: Joi.string().required(),
@@ -44,7 +44,7 @@ function validateReview(obj) {
   return validationSchema.validate(obj);
 }
 
-function validateLike(obj) {
+function vLike(obj) {
   const validationSchema = Joi.object({
     authorEmail: Joi.string().email().required(),
     revId: Joi.objectId().required(),
@@ -52,14 +52,14 @@ function validateLike(obj) {
   return validationSchema.validate(obj);
 }
 
-function validateProductId(obj) {
+function vProductId(obj) {
   const schema = Joi.object({
     productId: Joi.objectId().required(),
   });
   return schema.validate(obj);
 }
 
-function validateDeleteReview(obj) {
+function vDeleteReview(obj) {
   const schema = Joi.object({
     productId: Joi.objectId().required(),
     id: Joi.objectId().required(),
@@ -69,8 +69,8 @@ function validateDeleteReview(obj) {
 
 module.exports = {
   Reviews,
-  validateReview,
-  validateLike,
-  validateProductId,
-  validateDeleteReview,
+  vReview,
+  vLike,
+  vProductId,
+  vDeleteReview,
 };

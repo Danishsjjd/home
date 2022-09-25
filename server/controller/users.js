@@ -4,23 +4,10 @@ const cloudinary = require("../utils/cloudinary.js");
 const ErrorHandler = require("../utils/ErrorHandler");
 const sendMail = require("../utils/sendMail");
 const sendToken = require("../utils/sendToken");
-const {
-  User,
-  validateUser,
-  validateUserLogin,
-  validateForgetPassword,
-  validateResetPassword,
-  validateUpdatePassword,
-  validateUpdateProfile,
-  validateGetSingleUser,
-} = require("../models/users");
-const validator = require("../utils/validator");
+const { User } = require("../models/users");
 
 // register - user
 exports.register = async (req, res, next) => {
-  const error = validator(validateUser, req.body);
-  if (error) return next(error);
-
   const uniqueEmail = await User.findOne({ email: req.body.email });
   if (uniqueEmail?.fromGoogle == true)
     return next(new ErrorHandler("Email is linked with google account", 400));
@@ -54,9 +41,6 @@ exports.register = async (req, res, next) => {
 
 // login - user
 exports.login = async (req, res, next) => {
-  const error = validator(validateUserLogin, req.body);
-  if (error) return next(error);
-
   const { password, email } = req.body;
   const user = await User.findOne({ email })
     .select("+password")
@@ -75,15 +59,12 @@ exports.login = async (req, res, next) => {
 
 // on refresh check if authenticated
 exports.refreshCheck = async (req, res) => {
-  const user = await User.findById(req.user._id);
+  const user = await User.findById(req.user._id).populate("wishlist");
 
   sendToken(user, res);
 };
 
 exports.forgetPassword = async (req, res, next) => {
-  const error = validator(validateForgetPassword, req.body);
-  if (error) return next(error);
-
   const user = await User.findOne({ email: req.body.email });
   if (!user)
     return next(new ErrorHandler("no user found with this email", 404));
@@ -117,9 +98,6 @@ exports.forgetPassword = async (req, res, next) => {
 };
 
 exports.resetPassword = async (req, res, next) => {
-  const error = validator(validateResetPassword, req.body);
-  if (error) return next(error);
-
   const { password, confirmPassword } = req.body;
 
   if (password !== confirmPassword)
@@ -155,9 +133,6 @@ exports.resetPassword = async (req, res, next) => {
 
 // Update User Password
 exports.updatePassword = async (req, res, next) => {
-  const error = validator(validateUpdatePassword, req.body);
-  if (error) return next(error);
-
   const user = await User.findById(req.user._id);
   if (user.fromGoogle == true)
     return next(new ErrorHandler("user linked with google"));
@@ -177,8 +152,6 @@ exports.updatePassword = async (req, res, next) => {
 
 // Update User Profile
 exports.updateProfile = async (req, res, next) => {
-  const error = validator(validateUpdateProfile, req.body);
-  if (error) return next(error);
   const { username } = req.body;
 
   let user = await User.findById(req.user._id);
@@ -267,9 +240,6 @@ exports.getSingleUser = async (req, res, next) => {
 
 // Change user Role --Admin
 exports.updateUserRole = async (req, res, next) => {
-  const error = validator(validateGetSingleUser, req.params);
-  if (error) return next(error);
-
   const { id } = req.params;
 
   const newUserData = {
@@ -289,9 +259,6 @@ exports.updateUserRole = async (req, res, next) => {
 
 // Delete User --- Admin
 exports.deleteUser = async (req, res, next) => {
-  const error = validator(validateGetSingleUser, req.params);
-  if (error) return next(error);
-
   const user = await User.findById(req.user._id);
 
   if (user?.avatar) {

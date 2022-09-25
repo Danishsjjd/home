@@ -6,8 +6,8 @@ import { Image } from "cloudinary-react";
 import {
   deleteReviewApi,
   toggleReviewLikeApi,
-} from "../../store/apiCall/productApi";
-import { getUser } from "../../store/authSlice";
+} from "../../../store/apiCall/productApi";
+import { getUser } from "../../../store/authSlice";
 
 const Reviews = ({ reviews, productId, setProduct }) => {
   const user = useSelector(getUser);

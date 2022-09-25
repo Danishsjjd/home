@@ -35,7 +35,6 @@ export const forgetPasswordApi = async (values, resetForm) => {
     resetForm && resetForm();
   } catch (e) {
     toast.error(e?.response?.data?.message || e?.message);
-    console.log(e);
   }
 };
 

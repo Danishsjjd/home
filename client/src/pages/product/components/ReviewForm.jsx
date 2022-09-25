@@ -3,10 +3,10 @@ import { Formik } from "formik";
 import { useState } from "react";
 import * as Yup from "yup";
 
-import { createReviewApi } from "../../store/apiCall/productApi";
-import Button from "../form/Button";
-import AreaTextField from "../form/AreaTextField";
-import Input from "../form/Input";
+import { createReviewApi } from "../../../store/apiCall/productApi";
+import AreaTextField from "../../../components/form/AreaTextField";
+import Button from "../../../components/form/Button";
+import Input from "../../../components/form/Input";
 
 const ReviewForm = ({ user, productId, setProduct }) => {
   const [localReview, setLocalReview] = useState(5);

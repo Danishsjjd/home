@@ -4,27 +4,21 @@ import { useParams } from "react-router-dom";
 import StripeCheckout from "react-stripe-checkout";
 import { toast } from "react-toastify";
 
-import { ReactComponent as FireIcon } from "../assets/icons/fire.svg";
-import { ReactComponent as HeartIcon } from "../assets/icons/header/heart.svg";
-import { ReactComponent as FBIcon } from "../assets/icons/social/ic-facebook.svg";
-import { ReactComponent as InstaIcon } from "../assets/icons/social/ic-instagram.svg";
-import { ReactComponent as TwitterIcon } from "../assets/icons/social/ic-twitter.svg";
-import HomeLogo from "../assets/logo-black.svg";
-import {
-  Button,
-  PageNotFound,
-  Rating,
-  ReviewForm,
-  Reviews,
-  Slider,
-} from "../components";
-import LoadingDialog from "../components/LoadingDialog";
-import { API } from "../libs/axios";
-import { updateWishListAPI } from "../store/apiCall/authApi";
-import { addToCartApi } from "../store/apiCall/cartApi";
-import { getUser } from "../store/authSlice";
-import { getCart } from "../store/cartSlice";
-import MetaData from "../utils/MetaData";
+import { ReactComponent as FireIcon } from "../../assets/icons/fire.svg";
+import { ReactComponent as HeartIcon } from "../../assets/icons/header/heart.svg";
+import { ReactComponent as FBIcon } from "../../assets/icons/social/ic-facebook.svg";
+import { ReactComponent as InstaIcon } from "../../assets/icons/social/ic-instagram.svg";
+import { ReactComponent as TwitterIcon } from "../../assets/icons/social/ic-twitter.svg";
+import HomeLogo from "../../assets/logo-black.svg";
+import { Button, PageNotFound } from "../../components";
+import LoadingDialog from "../../components/LoadingDialog";
+import { API } from "../../libs/axios";
+import { updateWishListAPI } from "../../store/apiCall/authApi";
+import { addToCartApi } from "../../store/apiCall/cartApi";
+import { getUser } from "../../store/authSlice";
+import { getCart } from "../../store/cartSlice";
+import MetaData from "../../utils/MetaData";
+import { Rating, ReviewForm, Reviews, Slider } from "./components";
 
 const Product = () => {
   const [total, setTotal] = useState(0);

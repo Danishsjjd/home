@@ -1,29 +1,44 @@
 const express = require("express");
 
+const {
+  createProduct,
+  deleteProduct,
+  getAllProducts,
+  getSingleProduct,
+  updateProduct,
+} = require("../controller/products");
 const { authentication, authorizeRoles } = require("../middleware/auth");
 const {
-	createProduct,
-	deleteProduct,
-	getAllProducts,
-	getSingleProduct,
-	updateProduct,
-} = require("../controller/products");
+  vProductCreate,
+  vProductId,
+  vProductUpdate,
+} = require("../models/products");
+const validate = require("../middleware/validate");
 
 const router = express.Router();
-router.post("/create", authentication, authorizeRoles("admin"), createProduct);
+router.post(
+  "/create",
+  authentication,
+  authorizeRoles("admin"),
+  validate(vProductCreate),
+  createProduct
+);
 router.delete(
-	"/delete/:id",
-	authentication,
-	authorizeRoles("admin"),
-	deleteProduct
+  "/delete/:id",
+  authentication,
+  authorizeRoles("admin"),
+  validate(vProductId, "params"),
+  deleteProduct
 );
 router.put(
-	"/update/:id",
-	authentication,
-	authorizeRoles("admin"),
-	updateProduct
+  "/update/:id",
+  authentication,
+  authorizeRoles("admin"),
+  validate(vProductId, "params"),
+  validate(vProductUpdate),
+  updateProduct
 );
-router.get("/:id", getSingleProduct);
+router.get("/:id", validate(vProductId, "params"), getSingleProduct);
 router.get("/", getAllProducts);
 
 module.exports = router;

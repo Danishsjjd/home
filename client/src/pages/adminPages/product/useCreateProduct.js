@@ -6,6 +6,7 @@ import { API } from "../../../libs/axios";
 
 const useCreateProduct = () => {
   const [images, setImage] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const validationSchema = Yup.object().shape({
     title: Yup.string().required().min(5).label("Title"),
@@ -49,6 +50,7 @@ const useCreateProduct = () => {
   };
 
   const onSubmit = async (values, { resetForm }) => {
+    setLoading(true);
     try {
       const response = await API.createProduct({ data: values });
       toast.success(response?.data);
@@ -56,6 +58,8 @@ const useCreateProduct = () => {
       setImage([]);
     } catch (e) {
       toast.error(e?.response?.data?.message || e.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -64,6 +68,7 @@ const useCreateProduct = () => {
     validationSchema,
     createProductImagesChange,
     onSubmit,
+    loading,
   };
 };
 

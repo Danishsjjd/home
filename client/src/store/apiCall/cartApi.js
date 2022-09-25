@@ -8,7 +8,6 @@ import { setCart } from "../cartSlice";
 const { dispatch } = store;
 
 export const addToCartApi = async (user, product, cart, quantity) => {
-  console.log(quantity);
   if (Object.keys(user).length < 1) return dispatch(setDialog(true));
   if (product.inStock < 1) return toast.error("product is not in stock");
 

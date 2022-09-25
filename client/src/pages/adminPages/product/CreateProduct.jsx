@@ -11,20 +11,27 @@ import {
   Input,
 } from "../../../components";
 import Button from "../../../components/form/Button";
+import LoadingDialog from "../../../components/LoadingDialog";
 import { productCategory } from "../../../constants/admin";
 import MountTransition from "../../../utils/MountTransition";
 import useCreateProduct from "./useCreateProduct";
 
 const CreateProducts = () => {
-  const { images, createProductImagesChange, validationSchema, onSubmit } =
-    useCreateProduct();
+  const {
+    images,
+    createProductImagesChange,
+    validationSchema,
+    onSubmit,
+    loading,
+  } = useCreateProduct();
   return (
     <MountTransition dashboard className="p-4">
+      <LoadingDialog loading={loading} />
       <Formik
         initialValues={{
           title: "",
           images: [],
-          category: productCategory[0],
+          category: productCategory[0].title,
           description: "",
           price: 0,
           offerPrice: 0,
