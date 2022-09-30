@@ -1,7 +1,7 @@
 // admin
 export { default as Customers } from "./adminPages/Customers";
 export { default as Dashboard } from "./adminPages/Dashboard";
-export { default as CreateProduct } from "./adminPages/product/CreateProduct";
+export { default as CreateAndUpdateProduct } from "./adminPages/product/CreateAndUpdateProduct";
 export { default as Settings } from "./adminPages/Settings";
 // home
 export { default as Home } from "./home/Home";

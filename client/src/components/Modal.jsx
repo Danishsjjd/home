@@ -7,6 +7,8 @@ export default function Modal({
   closeModal,
   zIndex,
   maxWidth,
+  notCenter,
+  backDrop,
 }) {
   return (
     <Transition appear show={isOpen} as={Fragment}>
@@ -24,11 +26,17 @@ export default function Modal({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-black bg-opacity-25" />
+          <div
+            className={`fixed inset-0 ${backDrop ? backDrop : "bg-black/25"}`}
+          />
         </Transition.Child>
 
         <div className="fixed inset-0 overflow-y-auto">
-          <div className="flex min-h-full items-center justify-center p-4 text-center">
+          <div
+            className={`flex min-h-full justify-center p-4 text-center ${
+              notCenter ? "items-start" : "items-center"
+            }`}
+          >
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"
@@ -41,7 +49,9 @@ export default function Modal({
               <Dialog.Panel
                 className={`w-full ${
                   maxWidth ? maxWidth : "max-w-4xl"
-                } transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all`}
+                } transform overflow-hidden rounded-2xl p-6 text-left align-middle  transition-all ${
+                  notCenter ? "" : "bg-white shadow-xl"
+                }`}
               >
                 {children}
               </Dialog.Panel>

@@ -1,6 +1,10 @@
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { BsFillTrashFill } from "react-icons/bs";
+import { MdUpdate } from "react-icons/md";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 import StripeCheckout from "react-stripe-checkout";
 import { toast } from "react-toastify";
 
@@ -15,26 +19,61 @@ import LoadingDialog from "../../components/LoadingDialog";
 import { API } from "../../libs/axios";
 import { updateWishListAPI } from "../../store/apiCall/authApi";
 import { addToCartApi } from "../../store/apiCall/cartApi";
-import { getUser } from "../../store/authSlice";
+import { getUser, setDialog } from "../../store/authSlice";
 import { getCart } from "../../store/cartSlice";
 import MetaData from "../../utils/MetaData";
 import { Rating, ReviewForm, Reviews, Slider } from "./components";
 
 const Product = () => {
+  const dispatch = useDispatch();
+
   const [total, setTotal] = useState(0);
   const [percentRating, setPercentRating] = useState(0);
-  const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [toCart, setToCart] = useState(0);
   const [isWishList, setIsWishList] = useState(false);
+
+  const navigate = useNavigate();
+  const { id } = useParams();
   const user = useSelector(getUser);
   const cart = useSelector(getCart);
+
+  const totalPrice =
+    product?.offerPrice > 1 ? product?.offerPrice * 100 : product?.price * 100;
+
   const toggleWishList = () => {
     updateWishListAPI(user, product);
   };
   const addToCart = () => {
+    if (product?.isDeleted) return toast.error("This Product is deleted");
     addToCartApi(user, product, cart, toCart);
+  };
+  const onToken = async (token) => {
+    if (product?.isDeleted) return toast.error("This Product is deleted");
+    setLoading(true);
+    try {
+      await API.buySingleProductOrder({
+        data: {
+          token: token,
+          productId: product._id,
+        },
+      });
+      setProduct({ ...product, inStock: product.inStock - 1 });
+    } catch (e) {
+      toast.error(e?.response?.data?.message || e?.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const deleteProduct = async () => {
+    // return setIsOpen(true);
+    try {
+      await API.deleteProduct({ params: product._id });
+      navigate(-1);
+    } catch (e) {
+      toast.error(e?.response?.data?.message || e?.message);
+    }
   };
   useEffect(() => {
     const getProduct = async () => {
@@ -81,28 +120,10 @@ const Product = () => {
       setTotal(finalReview);
     }
   }, [product]);
-  const onToken = async (token) => {
-    setLoading(true);
-    try {
-      await API.buySingleProductOrder({
-        data: {
-          token: token,
-          amount: product.price * 100,
-          userId: user._id,
-          productId: product._id,
-        },
-      });
-      setProduct({ ...product, inStock: product.inStock - 1 });
-    } catch (e) {
-      toast.error(e?.response?.data?.message || e?.message);
-    } finally {
-      setLoading(false);
-    }
-  };
   return loading ? (
     <LoadingDialog loading={loading} className="bg-white" />
   ) : product ? (
-    <div className="">
+    <div>
       <MetaData title={product.title} />
       <div className="h-14 bg-neutral-lightest text-neutral-darker flex items-center mt-16 ">
         <div className="flex max-w-7xl mx-auto flex-1">
@@ -115,7 +136,13 @@ const Product = () => {
         <div className="md:grid grid-cols-2 gap-3 items-start ">
           <Slider slides={product.images} />
           <div className="space-y-6 sticky top-16 right-0 bg-white pt-3">
-            <h1 className="text-3xl font-medium text-neutral-darkest">
+            <h1
+              className={`text-3xl font-medium ${
+                product.isDeleted
+                  ? "text-red-700 line-through"
+                  : "text-neutral-darkest"
+              }`}
+            >
               {product.title}
             </h1>
             <div className="flex justify-between ">
@@ -136,9 +163,11 @@ const Product = () => {
               <div className="flex gap-3">
                 {product.inStock > 0 ? (
                   <>
-                    <FireIcon />
+                    {!product.isDeleted && <FireIcon />}
                     <span className="text-accent-red ">
-                      IN STOCK {product.inStock}
+                      {product.isDeleted
+                        ? "Not Available"
+                        : `IN STOCK ${product.inStock}`}
                     </span>
                   </>
                 ) : (
@@ -147,7 +176,15 @@ const Product = () => {
               </div>
             </div>
             <div className="space-y-3">
-              <p className="text-neutral-darker ">{product.description}</p>
+              <p
+                className={`text-neutral-darker ${
+                  product.isDeleted
+                    ? "text-red-500 line-through"
+                    : "text-neutral-darkest"
+                }`}
+              >
+                {product.description}
+              </p>
               <div className="flex gap-3 items-center">
                 <div className="flex items-center gap-5">
                   <span className="text-lg hidden sm:inline">quantity</span>
@@ -186,12 +223,9 @@ const Product = () => {
                     </span>
                   </span>
                 </div>
-                <Button
-                  app
-                  title="Add to Cart"
-                  ClassName="flex-1"
-                  onClick={() => addToCart()}
-                />
+                <Button app className="flex-1" onClick={() => addToCart()}>
+                  Add to Cart
+                </Button>
                 <div
                   className="flex rounded-full w-12 h-12 border-gray-400 items-center justify-center border-1 cursor-pointer"
                   onClick={() => toggleWishList()}
@@ -204,22 +238,29 @@ const Product = () => {
             </div>
 
             <Button
-              title={
-                <StripeCheckout
-                  name="Home"
-                  image={HomeLogo}
-                  billingAddress
-                  shippingAddress
-                  description={`Total $${product.price}`}
-                  amount={product.price * 100}
-                  token={onToken}
-                  stripeKey={process.env.REACT_APP_STRIPE_TOKEN}
-                >
-                  Buy it now!
-                </StripeCheckout>
-              }
-              ClassName="w-full [&>*]:block bg-accent-green hover:!bg-opacity-75"
-            />
+              onClick={() => {
+                if (!user.email) return dispatch(setDialog(true));
+                if (product.isDeleted)
+                  return toast.error("This Product is deleted");
+              }}
+              className="w-full [&>*]:block bg-accent-green hover:!bg-opacity-75"
+            >
+              <StripeCheckout
+                name="Home"
+                image={HomeLogo}
+                billingAddress
+                shippingAddress
+                description={`Total $${totalPrice / 100}`}
+                amount={totalPrice}
+                token={onToken}
+                stripeKey={process.env.REACT_APP_STRIPE_TOKEN}
+                disabled={
+                  user.email ? (product?.isDeleted ? true : false) : true
+                }
+              >
+                Buy it now!
+              </StripeCheckout>
+            </Button>
 
             <div className="flex items-center gap-2 flex-col sm:flex-row">
               <span className="text-xl font-medium">share</span>
@@ -251,6 +292,25 @@ const Product = () => {
                 <span>Twitter</span>
               </a>
             </div>
+            {user.role === "admin" && (
+              <div className="flex gap-5">
+                <Tooltip title="Delete">
+                  <IconButton onClick={() => deleteProduct()}>
+                    <BsFillTrashFill className="text-secondary-darker text-3xl" />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip
+                  title="Update"
+                  onClick={() =>
+                    navigate(`/admin/updateProduct/${product?._id}`)
+                  }
+                >
+                  <IconButton>
+                    <MdUpdate className="text-secondary-darker text-3xl" />
+                  </IconButton>
+                </Tooltip>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -275,6 +335,7 @@ const Product = () => {
             user={user}
             productId={product?._id}
             setProduct={setProduct}
+            isDeleted={product?.isDeleted}
           />
         </div>
       </div>

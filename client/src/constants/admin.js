@@ -8,6 +8,7 @@ import {
 import { BsCart2 } from "react-icons/bs";
 import { FaRegComments, FaUsers } from "react-icons/fa";
 import { MdCreateNewFolder } from "react-icons/md";
+import { logout } from "./functions";
 
 // admin - sidebar - title
 export const NavLinks = [
@@ -79,21 +80,12 @@ export const tableContent = [
     status: "delivered",
   },
 ];
-// admin - users - email
-export const usersContent = [
-  {
-    name: "danish",
-    email: "this@that.com",
-    img: require("../assets/images/julian-wan-WNoLnJo7tS8-unsplash.jpg"),
-  },
-];
-
 // admin - user profile dropdown - title
 export const DropDownData = [
   {
     title: "Logout",
     Icon: AiFillHome,
-    onClick: () => console.log("logout"),
+    onClick: logout,
   },
 ];
 // admin - category picker dropdown - title

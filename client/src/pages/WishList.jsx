@@ -18,7 +18,6 @@ const WishList = () => {
         <div className="mt-20 max-w-6xl mx-auto lg:px-0 sm:px-5 px-3">
           <h1 className="text-3xl font-bold mb-4">WishList</h1>
           <div className="lg:col-span-3">
-            {/* Replace with your content */}
             <div className="sm:grid block grid-cols-2 md:grid-cols-3 gap-6">
               {wishlist.map((product) => {
                 return (
@@ -34,11 +33,11 @@ const WishList = () => {
                     category={product?.category}
                     reviews={product?.reviews}
                     grid={true}
+                    isDeleted={product?.isDeleted}
                   />
                 );
               })}
             </div>
-            {/* /End replace */}
           </div>
         </div>
       ) : (
@@ -47,7 +46,7 @@ const WishList = () => {
             <CartImg />
             <p className="font-medium text-lg">Your WishList is empty</p>
             <Link to="/shope" className="block">
-              <Button title="Continue Shopping" app />
+              <Button app>Continue Shopping</Button>
             </Link>
           </div>
         </div>

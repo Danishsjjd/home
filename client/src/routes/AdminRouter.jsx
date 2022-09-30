@@ -2,7 +2,12 @@ import React, { useState, useId } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 
 import { Sidebar, TopBar } from "../pages/adminPages/components";
-import { Dashboard, Customers, CreateProduct, Settings } from "../pages";
+import {
+  Dashboard,
+  Customers,
+  CreateAndUpdateProduct,
+  Settings,
+} from "../pages";
 import MetaData from "../utils/MetaData";
 import { AnimatePresence } from "framer-motion";
 import MountTransition from "../utils/MountTransition";
@@ -32,7 +37,14 @@ const AdminRouter = () => {
             <Routes location={location} key={id}>
               <Route path="/" element={<Dashboard />} />
               <Route path="customers" element={<Customers />} />
-              <Route path="createProduct" element={<CreateProduct />} />
+              <Route
+                path="createProduct"
+                element={<CreateAndUpdateProduct />}
+              />
+              <Route
+                path="updateProduct/:id"
+                element={<CreateAndUpdateProduct />}
+              />
               <Route path="settings" element={<Settings />} />
             </Routes>
           </AnimatePresence>

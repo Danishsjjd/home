@@ -7,8 +7,9 @@ import { createReviewApi } from "../../../store/apiCall/productApi";
 import AreaTextField from "../../../components/form/AreaTextField";
 import Button from "../../../components/form/Button";
 import Input from "../../../components/form/Input";
+import { toast } from "react-toastify";
 
-const ReviewForm = ({ user, productId, setProduct }) => {
+const ReviewForm = ({ user, productId, setProduct, isDeleted }) => {
   const [localReview, setLocalReview] = useState(5);
 
   const validationSchema = Yup.object().shape({
@@ -21,6 +22,7 @@ const ReviewForm = ({ user, productId, setProduct }) => {
   };
 
   const onSubmit = async (values, { resetForm }) => {
+    if (isDeleted) return toast.error("This Product is deleted");
     const finalObj = {
       rating: values.rating,
       review: values.review,
@@ -36,9 +38,9 @@ const ReviewForm = ({ user, productId, setProduct }) => {
         validationSchema={validationSchema}
         onSubmit={onSubmit}
       >
-        {({ setFieldValue }) => {
+        {({ setFieldValue, handleSubmit }) => {
           return (
-            <>
+            <form onSubmit={handleSubmit}>
               <div>
                 <h4 className="mb-1">Your Name</h4>
                 <Input
@@ -72,8 +74,10 @@ const ReviewForm = ({ user, productId, setProduct }) => {
                 <h4 className="mb-1">Your Review</h4>
                 <AreaTextField app name="review" />
               </div>
-              <Button title={"Submit"} ClassName="text-center" app />
-            </>
+              <Button className="text-center" app>
+                Submit
+              </Button>
+            </form>
           );
         }}
       </Formik>

@@ -14,6 +14,7 @@ const {
   deleteOrder,
   getAllOrders,
   buyOneProduct,
+  monthlyIncome,
 } = require("../controller/orders");
 const validate = require("../middleware/validate");
 
@@ -25,7 +26,7 @@ router.post(
   buyOneProduct
 );
 router.get("/", authentication, getSingleUserOrder);
-router.put(
+router.patch(
   "/:id",
   authentication,
   authorizeRoles("admin"),
@@ -40,6 +41,6 @@ router.get(
   authorizeRoles("admin"),
   getAllOrders
 );
-// router.get("/income", authentication, authorizeRoles("admin"), monthlyIncome);
+router.get("/income", authentication, authorizeRoles("admin"), monthlyIncome);
 
 module.exports = router;

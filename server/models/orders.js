@@ -3,7 +3,11 @@ const Joi = require("joi");
 
 const OrderSchema = new mongoose.Schema(
   {
-    userId: { type: String, required: true },
+    userId: {
+      type: String,
+      required: true,
+      ref: "users",
+    },
     products: [
       {
         productId: {
@@ -51,7 +55,7 @@ function vOrdersUpdateStatus(obj) {
 function vBuyOneProduct(obj) {
   const schema = Joi.object({
     productId: Joi.objectId().required(),
-    token: Joi.string().required(),
+    token: Joi.object().required(),
   });
   return schema.validate(obj);
 }

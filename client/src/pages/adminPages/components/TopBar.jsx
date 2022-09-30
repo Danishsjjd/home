@@ -1,18 +1,23 @@
 import React, { useState } from "react";
 import { AiOutlineMenu, AiOutlineSearch } from "react-icons/ai";
+import { useSelector } from "react-redux";
 
 import { DropDown } from "../../../components";
 import { DropDownData } from "../../../constants/admin";
+import { getUser } from "../../../store/authSlice";
 
-const dropDownAnchor = (
-  <div className="w-[60px] h-[60px] overflow-hidden rounded-full">
-    <img
-      alt="user"
-      className="object-cover w-full h-full"
-      src={require("../../../assets/images/julian-wan-WNoLnJo7tS8-unsplash.jpg")}
-    />
-  </div>
-);
+const DropDownAnchor = () => {
+  const user = useSelector(getUser);
+  return (
+    <div className="w-[60px] h-[60px] overflow-hidden rounded-full">
+      <img
+        alt="user"
+        className="object-cover w-full h-full"
+        src={user.avatar?.url || user.googleAvatar}
+      />
+    </div>
+  );
+};
 
 const TopBar = ({ setMenu }) => {
   const [search, setSearch] = useState("");
@@ -40,7 +45,7 @@ const TopBar = ({ setMenu }) => {
         </label>
       </div>
       <DropDown
-        anchor={dropDownAnchor}
+        anchor={<DropDownAnchor />}
         list={DropDownData}
         side={"left"}
         dashboard

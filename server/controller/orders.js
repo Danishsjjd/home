@@ -136,10 +136,12 @@ exports.getSingleUserOrder = async (req, res) => {
 
 // all orders - admin
 exports.getAllOrders = async (req, res) => {
-  const orders = await Orders.find().populate({
-    path: "products",
-    populate: "productId",
-  });
+  const orders = await Orders.find()
+    .populate({
+      path: "products",
+      populate: "productId",
+    })
+    .populate("userId");
 
   res.status(200).json(orders);
 };
@@ -149,6 +151,9 @@ exports.updateOrder = async (req, res, next) => {
   const order = await Orders.findById(req.params.id);
   if (!order) return next(new ErrorHandler("order not found", 404));
 
+  if (!["Pending", "Shipped", "Delivered"].includes(req.body.status))
+    return next(new ErrorHandler("Status is not valid"));
+
   order.status = req.body.status;
 
   if (req.body.status === "Delivered") {
@@ -157,7 +162,7 @@ exports.updateOrder = async (req, res, next) => {
 
   await order.save();
 
-  res.status(200).json(order);
+  res.status(200).send("Status Updated Successfully");
 };
 
 //DELETE - admin
@@ -179,29 +184,34 @@ async function updateStock(id, quantity, session) {
 }
 
 // monthly income - admin
-// exports.monthlyIncome = async (req, res) => {
-// 	const date = new Date();
-// 	const lastMonth = new Date(date.setMonth(date.getMonth() - 1));
-// 	const previousMonth = new Date(new Date().setMonth(lastMonth.getMonth() - 1));
+exports.monthlyIncome = async (req, res) => {
+  const date = new Date();
+  const lastMonth = new Date(date.setMonth(date.getMonth() - 1));
+  const previousMonth = new Date(new Date().setMonth(lastMonth.getMonth() - 1));
 
-// 	try {
-// 		const income = await Orders.aggregate([
-// 			{ $match: { createdAt: { $gte: previousMonth } } },
-// 			{
-// 				$project: {
-// 					month: { $month: "$createdAt" },
-// 					sales: "$amount",
-// 				},
-// 			},
-// 			{
-// 				$group: {
-// 					_id: "$month",
-// 					total: { $sum: "$sales" },
-// 				},
-// 			},
-// 		]);
-// 		res.status(200).json(income);
-// 	} catch (err) {
-// 		res.status(500).json(err);
-// 	}
-// };
+  try {
+    const income = await Orders.aggregate([
+      { $match: { createdAt: { $gte: previousMonth } } },
+      {
+        $project: {
+          month: { $month: "$createdAt" },
+          sales: "$amount",
+        },
+      },
+      {
+        $group: {
+          _id: "$month",
+          total: { $sum: "$sales" },
+        },
+      },
+      {
+        $sort: {
+          month: -1,
+        },
+      },
+    ]);
+    res.status(200).json(income);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+};

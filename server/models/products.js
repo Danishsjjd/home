@@ -63,6 +63,11 @@ const productsSchema = new mongoose.Schema(
       required: true,
       min: 0,
     },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+      required: true,
+    },
   },
   { timestamps: true }
 );
@@ -114,9 +119,17 @@ function vProductId(obj) {
   return schema.validate(obj);
 }
 
+function vSearch(obj) {
+  const schema = Joi.object({
+    word: Joi.string().empty("").default(""),
+  });
+  return schema.validate(obj);
+}
+
 module.exports = {
   Products,
   vProductCreate,
   vProductUpdate,
   vProductId,
+  vSearch,
 };

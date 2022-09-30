@@ -6,27 +6,27 @@ import "swiper/css";
 
 import "./assets/styles/style.css";
 import {
-	SignUpLogin,
-	ForgetPassword,
-	UpdatePassword,
-	UpdateProfile,
+  SignUpLogin,
+  ForgetPassword,
+  UpdatePassword,
+  UpdateProfile,
 } from "./components";
 import store from "./config/store";
 import Router from "./routes/Router";
 
 function App() {
-	return (
-		<Provider store={store}>
-			<BrowserRouter>
-				<Router />
-				<ToastContainer position="top-left" />
-				<SignUpLogin />
-				<UpdatePassword />
-				<ForgetPassword />
-				<UpdateProfile />
-			</BrowserRouter>
-		</Provider>
-	);
+  return (
+    <Provider store={store}>
+      <BrowserRouter>
+        <Router />
+        <ToastContainer position="top-left" />
+        <SignUpLogin />
+        <UpdatePassword />
+        <ForgetPassword />
+        <UpdateProfile />
+      </BrowserRouter>
+    </Provider>
+  );
 }
 
 export default App;

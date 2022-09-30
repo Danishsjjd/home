@@ -120,14 +120,16 @@ export const shope = {
   ],
   // name
   pages: [
-    { name: "Home", to: "/", className: "order-0" },
-    { name: "Contact", to: "/contact", className: "order-2" },
-    { name: "About Us", to: "/about", className: "order-2" },
-    { name: "Blog", to: "/blog", className: "order-2" },
+    { name: "Home", to: "/" },
+    { name: "Dashboard", to: "/admin" },
+    { name: "shop", to: "" },
+    { name: "Contact", to: "/contact" },
+    { name: "About Us", to: "/about" },
+    { name: "Blog", to: "/blog" },
     {
       name: "Sale",
       to: "/sale",
-      className: "order-2 !text-accent-red",
+      className: "!text-accent-red",
     },
   ],
 };

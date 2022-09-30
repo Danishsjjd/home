@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import store from "../../config/store";
 import { API } from "../../libs/axios";
 import { setDialog } from "../authSlice";
-import { addProduct } from "../productSlice";
+import { addProduct, setProductCount } from "../productSlice";
 
 const { dispatch } = store;
 
@@ -56,9 +56,14 @@ export const deleteReviewApi = async (productId, revId, setProduct) => {
   }
 };
 
-export const getProductsApi = async () => {
+export const getProductsApi = async (page) => {
   try {
-    const response = await API.getAllProduct({});
+    const response = await API.getAllProduct({
+      ...(page ? { query: `page=${page}` } : {}),
+    });
     dispatch(addProduct(response?.data?.products));
+    dispatch(setProductCount(response?.data?.productsCount));
+    if (response?.data?.products.length <= 0)
+      toast.error(`We don't have products in page ${page}`);
   } catch (e) {}
 };

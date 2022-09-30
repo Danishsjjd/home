@@ -7,16 +7,20 @@ winston.exceptions.handle(
   new winston.transports.MongoDB({
     db: process.env.DATABASE_URL,
     options: { useUnifiedTopology: true },
-    collection: "exceptionLogs",
-  }),
-  process.env.NODE_ENV !== "production" &&
+    collection: "exception.logs",
+  })
+);
+
+if (process.env.NODE_ENV !== "production") {
+  winston.exceptions.handle(
     new winston.transports.Console({
       format: winston.format.combine(
         winston.format.colorize(),
         winston.format.simple()
       ),
     })
-);
+  );
+}
 
 const logger = winston.createLogger({
   level: "info",
@@ -30,6 +34,7 @@ const logger = winston.createLogger({
       db: process.env.DATABASE_URL,
       level: "error",
       options: { useUnifiedTopology: true },
+      collection: "logFile.log",
     }),
   ],
 });

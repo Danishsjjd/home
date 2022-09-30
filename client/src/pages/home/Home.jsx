@@ -45,11 +45,12 @@ const Home = () => {
             AWESOME FURNITURE
           </h1>
           <Button
-            title={"Take This Look"}
             app
-            ClassName={"absolute bottom-1/4"}
+            className={"absolute bottom-1/4"}
             onClick={() => navigate("/shope")}
-          />
+          >
+            Take This Look
+          </Button>
         </div>
         <Categories />
         {/* gird items */}
@@ -89,11 +90,12 @@ const Home = () => {
             className="w-full hidden md:block"
           />
           <Button
-            title={"Explore Now"}
-            ClassName={"absolute right-[15%] top-1/2 hidden md:block"}
+            className={"absolute right-[15%] top-1/2 hidden md:block"}
             app
             onClick={() => navigate("/shope")}
-          />
+          >
+            Explore Now
+          </Button>
           <Link to="">
             <img
               src={longBannerBtn}
@@ -118,11 +120,9 @@ const Home = () => {
                   <h2 className="text-xl">{desc}</h2>
                   <h1 className="font-bold sm:text-2xl text-2xl">-30%</h1>
                   <div>
-                    <Button
-                      title={"Shope Now"}
-                      cardBtn
-                      onClick={() => navigate("/shope")}
-                    />
+                    <Button cardBtn onClick={() => navigate("/shope")}>
+                      Shope Now
+                    </Button>
                   </div>
                 </div>
                 <div className="w-full h-full relative">

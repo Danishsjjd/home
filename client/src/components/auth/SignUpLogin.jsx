@@ -58,8 +58,8 @@ export default function SignUpLogin() {
             initialValues={initialData}
             onSubmit={onSubmit}
           >
-            {({ errors, touched, setFieldValue }) => (
-              <>
+            {({ errors, touched, setFieldValue, handleSubmit }) => (
+              <form onSubmit={handleSubmit}>
                 {!haveAccount && (
                   <div>
                     <label className="block text-sm font-medium text-gray-700 text-center">
@@ -136,11 +136,9 @@ export default function SignUpLogin() {
                   </div>
                 )}
                 <div className="text-center !my-2">
-                  <Button
-                    title={`${haveAccount ? "Login" : "create Account"}`}
-                    app
-                    ClassName={"text-center"}
-                  />
+                  <Button app className={"text-center"}>
+                    {haveAccount ? "Login" : "create Account"}
+                  </Button>
                 </div>
                 <p className="!mt-2 text-center">
                   {haveAccount ? "Not a Member?" : "Already a member?"}{" "}
@@ -151,7 +149,7 @@ export default function SignUpLogin() {
                     {haveAccount ? "Sign In" : "Login"}
                   </span>
                 </p>
-              </>
+              </form>
             )}
           </Formik>
         </div>

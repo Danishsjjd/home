@@ -1,6 +1,8 @@
 import { AnimatePresence } from "framer-motion";
 import { useEffect, useId, useState } from "react";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { Route, Routes, useLocation, useSearchParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 import { PageNotFound } from "../components";
 import { Footer, Header } from "../layout";
@@ -17,34 +19,35 @@ import {
   WishList,
 } from "../pages";
 import { getUserApi } from "../store/apiCall/authApi";
-import { getProductsApi } from "../store/apiCall/productApi";
+import { setDialog } from "../store/authSlice";
 import AdminRouter from "./AdminRouter";
 import PrivateRoutes from "./PrivateRoutes";
 
 const Router = () => {
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
-  const [activeIndex, setActiveIndex] = useState(null);
+
   const id = useId();
+
   const location = useLocation();
   const locationArr = location.pathname?.split("/") ?? [];
+  const [searchParams] = useSearchParams();
+  const err = searchParams.get("err");
+
+  useEffect(() => {
+    if (err === "emailExists") {
+      toast.error("Email is already register through email password");
+      dispatch(setDialog(true));
+    }
+  }, [dispatch, err]);
+
   useEffect(() => {
     getUserApi(setLoading);
-    getProductsApi();
   }, []);
-  useEffect(() => {
-    window.scrollTo(0, 0);
-    setActiveIndex(null);
-  }, [location.pathname]);
+
   return (
     <AnimatePresence mode="wait" initial={false}>
-      {locationArr[1] !== "admin" && (
-        <Header
-          key={id + "-header"}
-          activeShop={locationArr[1] === "shope"}
-          activeIndex={activeIndex}
-          setActiveIndex={setActiveIndex}
-        />
-      )}
+      {locationArr[1] !== "admin" && <Header key={id + "-header"} />}
       <Routes location={location} key={id}>
         <Route
           path="/admin/*"

@@ -1,10 +1,9 @@
-import { Formik } from "formik";
 import React from "react";
 import * as Yup from "yup";
 
 import bg from "../assets/images/Blog_image.jpg";
-import { Input } from "../components";
-import Button from "../components/form/Button";
+import { Form, Input } from "../components";
+import FormButton from "../components/form/Button";
 import CountDown from "./CountDown";
 
 const ComingSoon = ({ title, desc, date }) => {
@@ -26,9 +25,12 @@ const ComingSoon = ({ title, desc, date }) => {
         </div>
         <CountDown date={date} />
         <div>
-          <Formik
+          <Form
             initialValues={initialValues}
             validationSchema={validationSchema}
+            onSubmit={(values, { resetForm }) => {
+              resetForm();
+            }}
           >
             <div className="flex gap-3">
               <div className="flex-1">
@@ -40,10 +42,10 @@ const ComingSoon = ({ title, desc, date }) => {
                 />
               </div>
               <div>
-                <Button title={"Submit"} app />
+                <FormButton app>Submit</FormButton>
               </div>
             </div>
-          </Formik>
+          </Form>
         </div>
       </div>
     </div>

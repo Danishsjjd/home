@@ -166,7 +166,7 @@ const ContactUs = () => {
                 </div>
               </div>
               <div className="flex justify-center items-center my-3">
-                <Button title={"Submit"} app />
+                <Button app>Submit</Button>
               </div>
             </form>
           </Formik>

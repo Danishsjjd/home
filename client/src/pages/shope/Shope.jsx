@@ -7,6 +7,7 @@ import {
   PlusSmIcon,
   ViewGridIcon,
 } from "@heroicons/react/solid";
+import { Pagination, Slider, styled } from "@mui/material";
 import { Fragment, useEffect, useState } from "react";
 import { AiOutlineUnorderedList } from "react-icons/ai";
 import { useSelector } from "react-redux";
@@ -15,60 +16,99 @@ import { Link, useSearchParams } from "react-router-dom";
 import { Card } from "../../components";
 import LoadingDialog from "../../components/LoadingDialog";
 import { filters, sortOptions, subCategories } from "../../constants/filters";
-import { getProducts } from "../../store/productSlice";
+import { getProductsApi } from "../../store/apiCall/productApi";
+import { getProducts, getProductsCount } from "../../store/productSlice";
 import MetaData from "../../utils/MetaData";
 import MountTransition from "../../utils/MountTransition";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
+const CusSlider = styled(Slider)({
+  color: "#e9672b",
+  marginTop: 30,
+  height: 8,
+  "& .MuiSlider-track": {
+    border: "none",
+  },
+  "& .MuiSlider-thumb": {
+    height: 24,
+    width: 24,
+    backgroundColor: "#fff",
+    border: "2px solid currentColor",
+    "&:focus, &:hover, &.Mui-active, &.Mui-focusVisible": {
+      boxShadow: "inherit",
+    },
+    "&:before": {
+      display: "none",
+    },
+  },
+  "& .MuiSlider-valueLabel": {
+    lineHeight: 1.2,
+    fontSize: 12,
+    background: "unset",
+    padding: 0,
+    width: 32,
+    height: 32,
+    borderRadius: "50% 50% 50% 0",
+    backgroundColor: "#e9672b",
+    transformOrigin: "bottom left",
+    transform: "translate(50%, -100%) rotate(-45deg) scale(0)",
+    "&:before": { display: "none" },
+    "&.MuiSlider-valueLabelOpen": {
+      transform: "translate(50%, -100%) rotate(-45deg) scale(1)",
+    },
+    "& > *": {
+      transform: "rotate(45deg)",
+    },
+  },
+});
 
 export default function Shope() {
   const [loading, setLoading] = useState(true);
-  const products = useSelector(getProducts);
   const [sort, setSort] = useState("");
   const [grid, setGrid] = useState(true);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [selectedCategory, setSelectedCategory] = useState([]);
+  const [value, setValue] = useState([0, 2000]);
 
-  const category = searchParams.get("category");
+  const products = useSelector(getProducts);
+  const productsCount = useSelector(getProductsCount);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const category = searchParams.get("category") || "";
+  const pageN = Number(searchParams.get("page"));
+  const page = typeof pageN === "number" ? (pageN < 0 ? 1 : pageN) : 1;
 
   let cards = [];
 
   const onCategoryChange = (e) => {
     if (e.target.checked) {
       if (category === null) {
-        setSearchParams({ category: e.target.name });
+        setSearchParams({ page, category: e.target.name });
       } else {
-        setSearchParams({ category: category + "," + e.target.name });
+        setSearchParams({ page, category: category + e.target.name });
       }
     } else {
-      const updatedFilter = selectedCategory.filter(
-        (catName) => catName !== e.target.name
+      const updatedFilter = category.replace(
+        new RegExp(e.target.name, "i"),
+        ""
       );
-      setSelectedCategory(updatedFilter);
-      setSearchParams({ category: updatedFilter.join(",") });
+      setSearchParams({ page, category: updatedFilter });
     }
   };
 
-  useEffect(() => {
-    if (category !== null && category !== "")
-      setSelectedCategory(category.toLowerCase().split(","));
-    else setSelectedCategory([]);
-  }, [category]);
-
-  useEffect(() => {
-    if (products.length > 0) setLoading(false);
-    else setLoading(true);
-  }, [products]);
-
   products?.forEach((product) => {
     if (
-      selectedCategory.length > 0 &&
-      !selectedCategory.includes(product.category.toLowerCase())
+      category.length > 0 &&
+      !category.includes(product.category.toLowerCase())
     )
       return;
+
+    const productPrice =
+      product.offerPrice < 1 ? product.price : product.offerPrice;
+
+    if (productPrice < value[0] || productPrice > value[1]) return;
+
     cards.push(
       <Card
         key={product?._id}
@@ -96,6 +136,15 @@ export default function Shope() {
       return new Date(b.props.createdAt) - new Date(a.props.createdAt);
     });
   }
+
+  useEffect(() => {
+    if (products.length > 0) setLoading(false);
+    else setLoading(true);
+  }, [products]);
+
+  useEffect(() => {
+    getProductsApi(page);
+  }, [page]);
 
   return (
     <MountTransition>
@@ -161,7 +210,6 @@ export default function Shope() {
                           </li>
                         ))}
                       </ul>
-
                       {filters.map((section) => (
                         <Disclosure
                           as="div"
@@ -202,13 +250,9 @@ export default function Shope() {
                                         type="checkbox"
                                         className="accent-secondary-darker h-4 w-4 focus:outline-1 focus:outline-secondary-darker focus:ring-0 checkbox checkbox-primary"
                                         name={`${option.value}`}
-                                        defaultChecked={
-                                          selectedCategory.includes(
-                                            option.value
-                                          )
-                                            ? true
-                                            : option.checked
-                                        }
+                                        checked={category.includes(
+                                          option.value
+                                        )}
                                         onChange={onCategoryChange}
                                       />
                                       <label
@@ -225,6 +269,48 @@ export default function Shope() {
                           )}
                         </Disclosure>
                       ))}
+                      <Disclosure
+                        as="div"
+                        className="border-b border-gray-200 py-6 px-4"
+                      >
+                        {({ open }) => (
+                          <>
+                            <h3 className="-my-3 flow-root">
+                              <Disclosure.Button className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
+                                <span className="font-medium text-gray-900">
+                                  Price Range
+                                </span>
+                                <span className="ml-6 flex items-center">
+                                  {open ? (
+                                    <MinusSmIcon
+                                      className="h-5 w-5"
+                                      aria-hidden="true"
+                                    />
+                                  ) : (
+                                    <PlusSmIcon
+                                      className="h-5 w-5"
+                                      aria-hidden="true"
+                                    />
+                                  )}
+                                </span>
+                              </Disclosure.Button>
+                            </h3>
+                            <Disclosure.Panel className="pt-6 px-4">
+                              <CusSlider
+                                getAriaLabel={() => "Price range"}
+                                value={value}
+                                onChange={(e, updatedValue) =>
+                                  setValue(updatedValue)
+                                }
+                                valueLabelDisplay="on"
+                                getAriaValueText={(value) => `${value}$`}
+                                min={0}
+                                max={2000}
+                              />
+                            </Disclosure.Panel>
+                          </>
+                        )}
+                      </Disclosure>
                     </form>
                   </Dialog.Panel>
                 </Transition.Child>
@@ -317,7 +403,7 @@ export default function Shope() {
 
               <div className="grid grid-cols-1 lg:grid-cols-4 gap-x-8 gap-y-10">
                 {/* Filters */}
-                <form className="hidden lg:block">
+                <form className="hidden lg:block sticky top-16 self-start">
                   <h3 className="sr-only">Categories</h3>
                   <ul className="text-sm font-medium text-gray-900 space-y-4 pb-6 border-b border-gray-200">
                     {subCategories.map((category) => (
@@ -332,6 +418,7 @@ export default function Shope() {
                       as="div"
                       key={section.id}
                       className="border-b border-gray-200 py-6"
+                      defaultOpen
                     >
                       {({ open }) => (
                         <>
@@ -367,11 +454,7 @@ export default function Shope() {
                                     type="checkbox"
                                     className="accent-secondary-darker h-4 w-4 focus:outline-1 focus:outline-secondary-darker focus:ring-0 checkbox checkbox-primary"
                                     name={`${option.value}`}
-                                    defaultChecked={
-                                      selectedCategory.includes(option.value)
-                                        ? true
-                                        : option.checked
-                                    }
+                                    checked={category.includes(option.value)}
                                     onChange={onCategoryChange}
                                   />
                                   <label
@@ -388,6 +471,48 @@ export default function Shope() {
                       )}
                     </Disclosure>
                   ))}
+                  <Disclosure
+                    as="div"
+                    className="border-b border-gray-200 py-6"
+                  >
+                    {({ open }) => (
+                      <>
+                        <h3 className="-my-3 flow-root">
+                          <Disclosure.Button className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
+                            <span className="font-medium text-gray-900">
+                              Price Range
+                            </span>
+                            <span className="ml-6 flex items-center">
+                              {open ? (
+                                <MinusSmIcon
+                                  className="h-5 w-5"
+                                  aria-hidden="true"
+                                />
+                              ) : (
+                                <PlusSmIcon
+                                  className="h-5 w-5"
+                                  aria-hidden="true"
+                                />
+                              )}
+                            </span>
+                          </Disclosure.Button>
+                        </h3>
+                        <Disclosure.Panel className="pt-6">
+                          <CusSlider
+                            getAriaLabel={() => "Price range"}
+                            value={value}
+                            onChange={(e, updatedValue) =>
+                              setValue(updatedValue)
+                            }
+                            valueLabelDisplay="on"
+                            getAriaValueText={(value) => `${value}$`}
+                            min={0}
+                            max={2000}
+                          />
+                        </Disclosure.Panel>
+                      </>
+                    )}
+                  </Disclosure>
                 </form>
 
                 {/* Product grid */}
@@ -401,13 +526,25 @@ export default function Shope() {
                       }`}
                     >
                       {cards.length > 0 ? (
-                        cards
+                        <>{cards}</>
                       ) : (
                         <div className="text-lg font-medium">
-                          we don't currently have item in{" "}
-                          {selectedCategory.join(", ")}
+                          we don't currently have item in {category}
                         </div>
                       )}
+                      <Pagination
+                        count={Math.ceil(productsCount / 10)}
+                        className="col-span-2 md:col-span-3 [&_ul]:justify-center "
+                        variant="outlined"
+                        size="large"
+                        page={page}
+                        onChange={(e, pageNumber) =>
+                          setSearchParams({
+                            category,
+                            page: pageNumber,
+                          })
+                        }
+                      />
                     </div>
                   ) : (
                     <LoadingDialog

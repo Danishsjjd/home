@@ -125,7 +125,7 @@ export default function UpdateProfile() {
                   <h2 className="text-lg mb-1 mt-2">username</h2>
                   <Input name="username" app type="text" />
                 </div>
-                <Button app title={"Update Profile!"} />
+                <Button app>Update Profile!</Button>
               </>
             );
           }}
