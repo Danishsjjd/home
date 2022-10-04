@@ -1,5 +1,3 @@
-const path = require("path");
-
 const cors = require("cors");
 const cookieSession = require("cookie-session");
 const express = require("express");
@@ -11,6 +9,8 @@ const ordersRouter = require("../routes/orders");
 const productsRouter = require("../routes/products");
 const reviewsRouter = require("../routes/reviews");
 const users = require("../routes/users");
+
+const root = require("path").join(__dirname, "../client", "build");
 
 module.exports = function (app) {
   app.use(
@@ -40,9 +40,9 @@ module.exports = function (app) {
   app.use(error);
 
   if (process.env.NODE_ENV == "production") {
-    app.use(express.static("./client/build"));
+    app.use(express.static(root));
     app.get("*", (req, res) => {
-      res.sendFile(path.resolve(__dirname, "./client/build/index.html"));
+      res.sendFile("index.html", { root });
     });
   }
 };
