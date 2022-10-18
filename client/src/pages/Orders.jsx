@@ -5,13 +5,13 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { ReactComponent as CartImg } from "../assets/icons/cart_center.svg";
+import ordersBg from "../assets/images/orders-bg.jpg";
 import { Button } from "../components";
 import LoadingDialog from "../components/LoadingDialog";
 import { API } from "../libs/axios";
 import { getUser } from "../store/authSlice";
 import MetaData from "../utils/MetaData";
 import MountTransition from "../utils/MountTransition";
-import ordersBg from "../assets/images/orders-bg.jpg";
 
 const Orders = () => {
   const [loading, setLoading] = useState(true);

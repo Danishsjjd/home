@@ -12,16 +12,6 @@ const axiosInstance = axios.create({
   },
 });
 
-axiosInstance.interceptors.request.use(
-  (config) => config,
-  (err) => Promise.reject(err)
-);
-
-axiosInstance.interceptors.response.use(
-  (response) => response,
-  (err) => Promise.reject(err)
-);
-
 const API = {};
 
 for (const [keys, values] of Object.entries(SERVICES)) {
@@ -31,17 +21,13 @@ for (const [keys, values] of Object.entries(SERVICES)) {
     downloadProgress
   ) => {
     return axiosInstance({
-      ...(query
-        ? { url: `/${values.uri}?${query}` }
-        : params
-        ? { url: `${values.uri}/${params}` }
-        : { url: values.uri }),
+      ...(params ? { url: `${values.uri + params}` } : { url: values.uri }),
       method: values.method,
+      ...(query ? { params: query } : {}),
       headers: {
         ...(headers && {
           headers,
         }),
-        "x-auth-token": localStorage.getItem("x-auth-token"),
       },
       ...(data && { data: data }),
       onUploadProgress: (progressEvent) => {

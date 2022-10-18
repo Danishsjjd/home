@@ -1,6 +1,6 @@
 import { toast } from "react-toastify";
 
-import store from "../../config/store";
+import store from "../configureStore";
 import { API } from "../../libs/axios";
 import { setDialog } from "../authSlice";
 import { setCart } from "../cartSlice";

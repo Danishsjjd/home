@@ -31,6 +31,7 @@ const Router = () => {
 
   const location = useLocation();
   const locationArr = location.pathname?.split("/") ?? [];
+
   const [searchParams] = useSearchParams();
   const err = searchParams.get("err");
 

@@ -1,6 +1,6 @@
 import { toast } from "react-toastify";
 
-import store from "../../config/store";
+import store from "../configureStore";
 import { API } from "../../libs/axios";
 import { setDialog } from "../authSlice";
 import { addProduct, setProductCount } from "../productSlice";
@@ -48,7 +48,10 @@ export const toggleReviewLikeApi = async ({
 export const deleteReviewApi = async (productId, revId, setProduct) => {
   try {
     const response = await API.deleteReview({
-      query: `productId=${productId}&id=${revId}`,
+      query: {
+        productId,
+        id: revId,
+      },
     });
     setProduct(response.data.updatedProduct);
   } catch (e) {
@@ -59,7 +62,7 @@ export const deleteReviewApi = async (productId, revId, setProduct) => {
 export const getProductsApi = async (page) => {
   try {
     const response = await API.getAllProduct({
-      ...(page ? { query: `page=${page}` } : {}),
+      ...(page ? { query: { page } } : {}),
     });
     dispatch(addProduct(response?.data?.products));
     dispatch(setProductCount(response?.data?.productsCount));

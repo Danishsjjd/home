@@ -47,7 +47,7 @@ function vOrdersCreate(obj) {
 function vOrdersUpdateStatus(obj) {
   const schema = Joi.object({
     status: Joi.string().required().messages({
-      "string.required": "status is not required",
+      "any.required": "status is not required",
     }),
   });
   return schema.validate(obj);

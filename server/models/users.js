@@ -104,7 +104,7 @@ function vUser(obj) {
   const schema = Joi.object({
     avatar: Joi.binary().required(),
     email: Joi.string().email().required().messages({
-      "string.email": "email should be valid",
+      "string.email": "Email should be valid",
     }),
     password: Joi.string().min(5).required().messages({
       "string.min": `password should have a minimum length of {#limit}`,
@@ -112,7 +112,7 @@ function vUser(obj) {
     }),
     username: Joi.string().min(5).required().messages({
       "string.min": `username should have a minimum length of {#limit}`,
-      "string.required": `username is a required field`,
+      "any.required": `username is a required field`,
     }),
     wishlist: Joi.array(),
   });

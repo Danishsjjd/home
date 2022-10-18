@@ -1,10 +1,9 @@
 import { Combobox, Transition } from "@headlessui/react";
 import { CheckIcon, SearchIcon } from "@heroicons/react/solid";
-import React, { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import useDebounce from "../hooks/useDebounce";
 import { API } from "../libs/axios";
 import Modal from "./Modal";

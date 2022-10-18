@@ -76,10 +76,10 @@ const Products = mongoose.model("products", productsSchema);
 
 function vProductCreate(obj) {
   const schema = Joi.object({
-    title: Joi.string().required("Title is required"),
+    title: Joi.string().required().label("Title"),
     images: Joi.array(),
-    category: Joi.string().required("category is required"),
-    description: Joi.string().required("descriptions is required"),
+    category: Joi.string().required().label("Category"),
+    description: Joi.string().required().label("Description"),
     price: Joi.number()
       .max(99999999)
       .required()
@@ -106,7 +106,7 @@ function vProductUpdate(obj) {
     offerPrice: Joi.number().max(9999),
     inStock: Joi.number().required().min(1).messages({
       "number.min": "must be in stock",
-      "number.required": "must be in stock",
+      "any.required": "must be in stock",
     }),
   });
   return schema.validate(obj);

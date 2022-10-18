@@ -11,7 +11,7 @@ import {
   UpdatePassword,
   UpdateProfile,
 } from "./components";
-import store from "./config/store";
+import store from "./store/configureStore";
 import Router from "./routes/Router";
 
 function App() {

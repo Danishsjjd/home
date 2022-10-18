@@ -100,7 +100,7 @@ export default function Shope() {
   products?.forEach((product) => {
     if (
       category.length > 0 &&
-      !category.includes(product.category.toLowerCase())
+      !category.toLowerCase().includes(product.category.toLowerCase())
     )
       return;
 
@@ -250,9 +250,9 @@ export default function Shope() {
                                         type="checkbox"
                                         className="accent-secondary-darker h-4 w-4 focus:outline-1 focus:outline-secondary-darker focus:ring-0 checkbox checkbox-primary"
                                         name={`${option.value}`}
-                                        checked={category.includes(
-                                          option.value
-                                        )}
+                                        checked={category
+                                          .toLowerCase()
+                                          .includes(option.value)}
                                         onChange={onCategoryChange}
                                       />
                                       <label
@@ -454,7 +454,9 @@ export default function Shope() {
                                     type="checkbox"
                                     className="accent-secondary-darker h-4 w-4 focus:outline-1 focus:outline-secondary-darker focus:ring-0 checkbox checkbox-primary"
                                     name={`${option.value}`}
-                                    checked={category.includes(option.value)}
+                                    checked={category
+                                      .toLowerCase()
+                                      .includes(option.value)}
                                     onChange={onCategoryChange}
                                   />
                                   <label

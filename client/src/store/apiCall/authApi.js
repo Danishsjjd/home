@@ -1,6 +1,6 @@
 import { toast } from "react-toastify";
 
-import store from "../../config/store";
+import store from "../configureStore";
 import { API } from "../../libs/axios";
 import {
   setForgetDialog,
