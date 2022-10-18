@@ -8,6 +8,8 @@
 # testing
 /coverage
 
+*.log
+
 
 # misc
 *.DS_Store
