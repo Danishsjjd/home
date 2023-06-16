@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const Joi = require("joi");
+const mongoose = require("mongoose")
+const Joi = require("joi")
 
 const OrderSchema = new mongoose.Schema(
   {
@@ -34,36 +34,36 @@ const OrderSchema = new mongoose.Schema(
     deliveredAt: { type: Date },
   },
   { timestamps: true }
-);
+)
 
-const Orders = mongoose.model("orders", OrderSchema);
+const Orders = mongoose.model("orders", OrderSchema)
 
 function vOrdersCreate(obj) {
   const schema = Joi.object({
     token: Joi.object().required(),
-  });
-  return schema.validate(obj);
+  })
+  return schema.validate(obj)
 }
 function vOrdersUpdateStatus(obj) {
   const schema = Joi.object({
     status: Joi.string().required().messages({
       "any.required": "status is not required",
     }),
-  });
-  return schema.validate(obj);
+  })
+  return schema.validate(obj)
 }
 function vBuyOneProduct(obj) {
   const schema = Joi.object({
     productId: Joi.objectId().required(),
     token: Joi.object().required(),
-  });
-  return schema.validate(obj);
+  })
+  return schema.validate(obj)
 }
 function vOrderId(obj) {
   const schema = Joi.object({
     id: Joi.objectId().required(),
-  });
-  return schema.validate(obj);
+  })
+  return schema.validate(obj)
 }
 
 module.exports = {
@@ -72,4 +72,4 @@ module.exports = {
   vOrdersUpdateStatus,
   vBuyOneProduct,
   vOrderId,
-};
+}

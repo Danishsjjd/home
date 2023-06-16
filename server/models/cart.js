@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const Joi = require("joi");
+const mongoose = require("mongoose")
+const Joi = require("joi")
 
 const cartSchema = new mongoose.Schema(
   {
@@ -25,23 +25,23 @@ const cartSchema = new mongoose.Schema(
     ],
   },
   { timestamps: true }
-);
+)
 
 function vCart(obj) {
   const schema = Joi.object({
     productId: Joi.string().required(),
     quantity: Joi.string().required(),
-  });
-  return schema.validate(obj);
+  })
+  return schema.validate(obj)
 }
 
 function vProductId(obj) {
   const schema = Joi.object({
     productId: Joi.objectId().required(),
-  });
-  return schema.validate(obj);
+  })
+  return schema.validate(obj)
 }
 
-const Cart = mongoose.model("cart", cartSchema);
+const Cart = mongoose.model("cart", cartSchema)
 
-module.exports = { Cart, vCart, vProductId };
+module.exports = { Cart, vCart, vProductId }

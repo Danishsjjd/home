@@ -1,8 +1,8 @@
-const crypto = require("crypto");
-const bcrypt = require("bcrypt");
-const Joi = require("joi");
-const jwt = require("jsonwebtoken");
-const mongoose = require("mongoose");
+const crypto = require("crypto")
+const bcrypt = require("bcrypt")
+const Joi = require("joi")
+const jwt = require("jsonwebtoken")
+const mongoose = require("mongoose")
 
 const userSchema = new mongoose.Schema(
   {
@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema(
     googleAvatar: {
       type: String,
       required: function () {
-        return this.fromGoogle;
+        return this.fromGoogle
       },
     },
     email: {
@@ -35,7 +35,7 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: function () {
-        return this.fromGoogle !== true;
+        return this.fromGoogle !== true
       },
     },
     role: {
@@ -61,44 +61,38 @@ const userSchema = new mongoose.Schema(
     resetPasswordTime: Date,
   },
   { timestamps: true }
-);
+)
 
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
-    next();
+    next()
   }
-  this.password = await bcrypt.hash(this.password, 10);
-});
+  this.password = await bcrypt.hash(this.password, 10)
+})
 
 userSchema.methods.getAccessToken = function () {
-  const token = jwt.sign(
-    { _id: this._id, role: this.role },
-    process.env.ACCESS_TOKEN_KEY
-  );
-  return token;
-};
+  const token = jwt.sign({ _id: this._id, role: this.role }, process.env.ACCESS_TOKEN_KEY)
+  return token
+}
 
 userSchema.methods.comparePassword = async function (enteredPassword) {
-  return await bcrypt.compare(enteredPassword, this.password);
-};
+  return await bcrypt.compare(enteredPassword, this.password)
+}
 
 // Forgot password
 userSchema.methods.getResetToken = function () {
   // Generating token
-  const resetToken = crypto.randomBytes(20).toString("hex");
+  const resetToken = crypto.randomBytes(20).toString("hex")
 
   //    hashing and adding resetPasswordToken to userSchema
-  this.resetPasswordToken = crypto
-    .createHash("sha256")
-    .update(resetToken)
-    .digest("hex");
+  this.resetPasswordToken = crypto.createHash("sha256").update(resetToken).digest("hex")
 
-  this.resetPasswordTime = Date.now() + 15 * 60 * 1000;
+  this.resetPasswordTime = Date.now() + 15 * 60 * 1000
 
-  return resetToken;
-};
+  return resetToken
+}
 
-const User = mongoose.model("users", userSchema);
+const User = mongoose.model("users", userSchema)
 
 function vUser(obj) {
   const schema = Joi.object({
@@ -115,8 +109,8 @@ function vUser(obj) {
       "any.required": `username is a required field`,
     }),
     wishlist: Joi.array(),
-  });
-  return schema.validate(obj);
+  })
+  return schema.validate(obj)
 }
 
 function vUserLogin(obj) {
@@ -128,8 +122,8 @@ function vUserLogin(obj) {
       "string.min": `password should have a minimum length of {#limit}`,
       "any.required": `password is a required field`,
     }),
-  });
-  return schema.validate(obj);
+  })
+  return schema.validate(obj)
 }
 
 function vForgetPassword(obj) {
@@ -137,8 +131,8 @@ function vForgetPassword(obj) {
     email: Joi.string().email().required().messages({
       "string.email": "email should be valid",
     }),
-  });
-  return schema.validate(obj);
+  })
+  return schema.validate(obj)
 }
 
 function vResetPassword(obj) {
@@ -149,8 +143,8 @@ function vResetPassword(obj) {
     confirmPassword: Joi.string().required().min(5).messages({
       "string.min": "at least 5 character",
     }),
-  });
-  return schema.validate(obj);
+  })
+  return schema.validate(obj)
 }
 
 function vUpdatePassword(obj) {
@@ -164,8 +158,8 @@ function vUpdatePassword(obj) {
     confirmPassword: Joi.string().required().min(5).messages({
       "string.min": "confirmPassword: at least 5 character",
     }),
-  });
-  return schema.validate(obj);
+  })
+  return schema.validate(obj)
 }
 function vUpdateProfile(obj) {
   const schema = Joi.object({
@@ -173,15 +167,15 @@ function vUpdateProfile(obj) {
       "string.min": "at least 5 character",
     }),
     avatar: Joi.string().allow(""),
-  });
-  return schema.validate(obj);
+  })
+  return schema.validate(obj)
 }
 
 function vGetSingleUser(obj) {
   const schema = Joi.object({
     id: Joi.objectId().required(),
-  });
-  return schema.validate(obj);
+  })
+  return schema.validate(obj)
 }
 
 module.exports = {
@@ -193,4 +187,4 @@ module.exports = {
   vUpdatePassword,
   vUpdateProfile,
   vGetSingleUser,
-};
+}

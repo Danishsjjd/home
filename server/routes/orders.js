@@ -1,12 +1,7 @@
-const router = require("express").Router();
+const router = require("express").Router()
 
-const { authentication, authorizeRoles } = require("../middleware/auth");
-const {
-  vBuyOneProduct,
-  vOrderId,
-  vOrdersCreate,
-  vOrdersUpdateStatus,
-} = require("../models/orders");
+const { authentication, authorizeRoles } = require("../middleware/auth")
+const { vBuyOneProduct, vOrderId, vOrdersCreate, vOrdersUpdateStatus } = require("../models/orders")
 const {
   createOrder,
   getSingleUserOrder,
@@ -15,17 +10,12 @@ const {
   getAllOrders,
   buyOneProduct,
   monthlyIncome,
-} = require("../controller/orders");
-const validate = require("../middleware/validate");
+} = require("../controller/orders")
+const validate = require("../middleware/validate")
 
-router.post("/", authentication, validate(vOrdersCreate), createOrder);
-router.post(
-  "/buyProduct",
-  authentication,
-  validate(vBuyOneProduct),
-  buyOneProduct
-);
-router.get("/", authentication, getSingleUserOrder);
+router.post("/", authentication, validate(vOrdersCreate), createOrder)
+router.post("/buyProduct", authentication, validate(vBuyOneProduct), buyOneProduct)
+router.get("/", authentication, getSingleUserOrder)
 router.patch(
   "/:id",
   authentication,
@@ -33,14 +23,9 @@ router.patch(
   validate(vOrdersUpdateStatus),
   validate(vOrderId, "params"),
   updateOrder
-);
-router.delete("/:id", authentication, authorizeRoles("admin"), deleteOrder);
-router.get(
-  "/getAllOrders",
-  authentication,
-  authorizeRoles("admin"),
-  getAllOrders
-);
-router.get("/income", authentication, authorizeRoles("admin"), monthlyIncome);
+)
+router.delete("/:id", authentication, authorizeRoles("admin"), deleteOrder)
+router.get("/getAllOrders", authentication, authorizeRoles("admin"), getAllOrders)
+router.get("/income", authentication, authorizeRoles("admin"), monthlyIncome)
 
-module.exports = router;
+module.exports = router

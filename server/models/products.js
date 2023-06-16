@@ -1,19 +1,12 @@
-const mongoose = require("mongoose");
-const Joi = require("joi");
+const mongoose = require("mongoose")
+const Joi = require("joi")
 
 const productsSchema = new mongoose.Schema(
   {
     category: {
       type: String,
       enum: {
-        values: [
-          "living room",
-          "bedroom",
-          "kitchen",
-          "bathroom",
-          "workspace",
-          "accessories",
-        ],
+        values: ["living room", "bedroom", "kitchen", "bathroom", "workspace", "accessories"],
         message: "category is not valid",
       },
       required: true,
@@ -70,9 +63,9 @@ const productsSchema = new mongoose.Schema(
     },
   },
   { timestamps: true }
-);
+)
 
-const Products = mongoose.model("products", productsSchema);
+const Products = mongoose.model("products", productsSchema)
 
 function vProductCreate(obj) {
   const schema = Joi.object({
@@ -80,17 +73,14 @@ function vProductCreate(obj) {
     images: Joi.array(),
     category: Joi.string().required().label("Category"),
     description: Joi.string().required().label("Description"),
-    price: Joi.number()
-      .max(99999999)
-      .required()
-      .messages({ "number.max": "exceed than 8 characters" }),
+    price: Joi.number().max(99999999).required().messages({ "number.max": "exceed than 8 characters" }),
     offerPrice: Joi.number().max(9999),
     inStock: Joi.number().required().min(1).messages({
       "number.min": "must be in stock",
       "number.required": "must be in stock",
     }),
-  });
-  return schema.validate(obj);
+  })
+  return schema.validate(obj)
 }
 
 function vProductUpdate(obj) {
@@ -99,31 +89,28 @@ function vProductUpdate(obj) {
     description: Joi.string(),
     title: Joi.string(),
     images: Joi.array(),
-    price: Joi.number()
-      .max(99999999)
-      .required()
-      .messages({ "number.max": "exceed than 8 characters" }),
+    price: Joi.number().max(99999999).required().messages({ "number.max": "exceed than 8 characters" }),
     offerPrice: Joi.number().max(9999),
     inStock: Joi.number().required().min(1).messages({
       "number.min": "must be in stock",
       "any.required": "must be in stock",
     }),
-  });
-  return schema.validate(obj);
+  })
+  return schema.validate(obj)
 }
 
 function vProductId(obj) {
   const schema = Joi.object({
     id: Joi.objectId().required(),
-  });
-  return schema.validate(obj);
+  })
+  return schema.validate(obj)
 }
 
 function vSearch(obj) {
   const schema = Joi.object({
     word: Joi.string().empty("").default(""),
-  });
-  return schema.validate(obj);
+  })
+  return schema.validate(obj)
 }
 
 module.exports = {
@@ -132,4 +119,4 @@ module.exports = {
   vProductUpdate,
   vProductId,
   vSearch,
-};
+}
