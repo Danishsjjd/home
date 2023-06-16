@@ -1,28 +1,28 @@
-import Rating from "@mui/material/Rating";
-import { FaRegTrashAlt } from "react-icons/fa";
-import { useSelector } from "react-redux";
+import Rating from "@mui/material/Rating"
+import { FaRegTrashAlt } from "react-icons/fa"
+import { useSelector } from "react-redux"
 
-import { Image } from "cloudinary-react";
+import { Image } from "cloudinary-react"
 import {
   deleteReviewApi,
   toggleReviewLikeApi,
-} from "../../../store/apiCall/productApi";
-import { getUser } from "../../../store/authSlice";
+} from "../../../store/apiCall/productApi"
+import { getUser } from "../../../store/authSlice"
 
 const Reviews = ({ reviews, productId, setProduct }) => {
-  const user = useSelector(getUser);
+  const user = useSelector(getUser)
 
   const deleteReview = async (revId) => {
-    deleteReviewApi(productId, revId, setProduct);
-  };
+    deleteReviewApi(productId, revId, setProduct)
+  }
 
   const toggleLike = (id) => {
-    toggleReviewLikeApi({ revId: id, setProduct, user, reviews });
-  };
+    toggleReviewLikeApi({ revId: id, setProduct, user, reviews })
+  }
   return (
     <div className="divide-y col-span-2 max-w-2xl">
       {reviews.map((review) => {
-        const liked = review.likes.find((email) => email === user.email);
+        const liked = review.likes.find((email) => email === user.email)
         return (
           <div className="p-4 space-y-2" key={review.user.email}>
             <div className="flex justify-between">
@@ -30,7 +30,7 @@ const Reviews = ({ reviews, productId, setProduct }) => {
                 <div className="w-10 h-10 rounded-full overflow-hidden">
                   {review?.user?.avatar?.public_id ? (
                     <Image
-                      cloudName={process.env.REACT_APP_CLOUD_NAME}
+                      cloudName={import.meta.env.VITE_CLOUD_NAME}
                       publicId={review?.user?.avatar?.public_id}
                       width="40"
                       height="40"
@@ -68,10 +68,10 @@ const Reviews = ({ reviews, productId, setProduct }) => {
               Like
             </button>
           </div>
-        );
+        )
       })}
     </div>
-  );
-};
+  )
+}
 
-export default Reviews;
+export default Reviews

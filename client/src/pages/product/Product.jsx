@@ -1,125 +1,125 @@
-import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
-import React, { useEffect, useState } from "react";
-import { BsFillTrashFill } from "react-icons/bs";
-import { MdUpdate } from "react-icons/md";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
-import StripeCheckout from "react-stripe-checkout";
-import { toast } from "react-toastify";
+import IconButton from "@mui/material/IconButton"
+import Tooltip from "@mui/material/Tooltip"
+import React, { useEffect, useState } from "react"
+import { BsFillTrashFill } from "react-icons/bs"
+import { MdUpdate } from "react-icons/md"
+import { useDispatch, useSelector } from "react-redux"
+import { useNavigate, useParams } from "react-router-dom"
+import StripeCheckout from "react-stripe-checkout"
+import { toast } from "react-toastify"
 
-import { ReactComponent as FireIcon } from "../../assets/icons/fire.svg";
-import { ReactComponent as HeartIcon } from "../../assets/icons/header/heart.svg";
-import { ReactComponent as FBIcon } from "../../assets/icons/social/ic-facebook.svg";
-import { ReactComponent as InstaIcon } from "../../assets/icons/social/ic-instagram.svg";
-import { ReactComponent as TwitterIcon } from "../../assets/icons/social/ic-twitter.svg";
-import HomeLogo from "../../assets/logo-black.svg";
-import { Button, PageNotFound } from "../../components";
-import LoadingDialog from "../../components/LoadingDialog";
-import { API } from "../../libs/axios";
-import { updateWishListAPI } from "../../store/apiCall/authApi";
-import { addToCartApi } from "../../store/apiCall/cartApi";
-import { getUser, setDialog } from "../../store/authSlice";
-import { getCart } from "../../store/cartSlice";
-import MetaData from "../../utils/MetaData";
-import { Rating, ReviewForm, Reviews, Slider } from "./components";
+import { ReactComponent as FireIcon } from "../../assets/icons/fire.svg"
+import { ReactComponent as HeartIcon } from "../../assets/icons/header/heart.svg"
+import { ReactComponent as FBIcon } from "../../assets/icons/social/ic-facebook.svg"
+import { ReactComponent as InstaIcon } from "../../assets/icons/social/ic-instagram.svg"
+import { ReactComponent as TwitterIcon } from "../../assets/icons/social/ic-twitter.svg"
+import HomeLogo from "../../assets/logo-black.svg"
+import { Button, PageNotFound } from "../../components"
+import LoadingDialog from "../../components/LoadingDialog"
+import { API } from "../../libs/axios"
+import { updateWishListAPI } from "../../store/apiCall/authApi"
+import { addToCartApi } from "../../store/apiCall/cartApi"
+import { getUser, setDialog } from "../../store/authSlice"
+import { getCart } from "../../store/cartSlice"
+import MetaData from "../../utils/MetaData"
+import { Rating, ReviewForm, Reviews, Slider } from "./components"
 
 const Product = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
-  const [total, setTotal] = useState(0);
-  const [percentRating, setPercentRating] = useState(0);
-  const [product, setProduct] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [toCart, setToCart] = useState(0);
-  const [isWishList, setIsWishList] = useState(false);
+  const [total, setTotal] = useState(0)
+  const [percentRating, setPercentRating] = useState(0)
+  const [product, setProduct] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [toCart, setToCart] = useState(0)
+  const [isWishList, setIsWishList] = useState(false)
 
-  const navigate = useNavigate();
-  const { id } = useParams();
-  const user = useSelector(getUser);
-  const cart = useSelector(getCart);
+  const navigate = useNavigate()
+  const { id } = useParams()
+  const user = useSelector(getUser)
+  const cart = useSelector(getCart)
 
   const totalPrice =
-    product?.offerPrice > 1 ? product?.offerPrice * 100 : product?.price * 100;
+    product?.offerPrice > 1 ? product?.offerPrice * 100 : product?.price * 100
 
   const toggleWishList = () => {
-    updateWishListAPI(user, product);
-  };
+    updateWishListAPI(user, product)
+  }
   const addToCart = () => {
-    if (product?.isDeleted) return toast.error("This Product is deleted");
-    addToCartApi(user, product, cart, toCart);
-  };
+    if (product?.isDeleted) return toast.error("This Product is deleted")
+    addToCartApi(user, product, cart, toCart)
+  }
   const onToken = async (token) => {
-    if (product?.isDeleted) return toast.error("This Product is deleted");
-    setLoading(true);
+    if (product?.isDeleted) return toast.error("This Product is deleted")
+    setLoading(true)
     try {
       await API.buySingleProductOrder({
         data: {
           token: token,
           productId: product._id,
         },
-      });
-      setProduct({ ...product, inStock: product.inStock - 1 });
+      })
+      setProduct({ ...product, inStock: product.inStock - 1 })
     } catch (e) {
-      toast.error(e?.response?.data?.message || e?.message);
+      toast.error(e?.response?.data?.message || e?.message)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
   const deleteProduct = async () => {
     // return setIsOpen(true);
     try {
-      await API.deleteProduct({ params: product._id });
-      navigate(-1);
+      await API.deleteProduct({ params: product._id })
+      navigate(-1)
     } catch (e) {
-      toast.error(e?.response?.data?.message || e?.message);
+      toast.error(e?.response?.data?.message || e?.message)
     }
-  };
+  }
   useEffect(() => {
     const getProduct = async () => {
       try {
-        const fetchProduct = await API.getSingleProduct({ params: id });
-        setProduct(fetchProduct.data.product);
+        const fetchProduct = await API.getSingleProduct({ params: id })
+        setProduct(fetchProduct.data.product)
       } catch (e) {
-        toast.error(e?.response?.data?.message || e.message);
+        toast.error(e?.response?.data?.message || e.message)
       }
-      setLoading(false);
-    };
-    getProduct();
-  }, [id]);
+      setLoading(false)
+    }
+    getProduct()
+  }, [id])
   useEffect(() => {
     if (Object.keys(user).length > 0 && product !== null) {
       const inWishlist = user.wishlist.find(
         (wishes) => wishes?._id === product._id
-      );
-      if (inWishlist) setIsWishList(true);
-      else setIsWishList(false);
+      )
+      if (inWishlist) setIsWishList(true)
+      else setIsWishList(false)
     } else {
-      setIsWishList(false);
+      setIsWishList(false)
     }
-  }, [user, product, user.wishlist]);
+  }, [user, product, user.wishlist])
   useEffect(() => {
     if (cart.length > 0 && product) {
       const search = cart.find(
         (singleProduct) => singleProduct.productId._id === product._id
-      );
+      )
       if (search) {
-        setToCart(search?.quantity);
+        setToCart(search?.quantity)
       } else {
-        setToCart(product.inStock ? 1 : 0);
+        setToCart(product.inStock ? 1 : 0)
       }
     }
-  }, [product, cart]);
+  }, [product, cart])
   useEffect(() => {
     if (product) {
-      let finalReview = 0;
+      let finalReview = 0
       product.reviews.forEach((review) => {
-        finalReview += review.rating;
-      });
-      setPercentRating(product.ratings * 20);
-      setTotal(finalReview);
+        finalReview += review.rating
+      })
+      setPercentRating(product.ratings * 20)
+      setTotal(finalReview)
     }
-  }, [product]);
+  }, [product])
   return loading ? (
     <LoadingDialog loading={loading} className="bg-white" />
   ) : product ? (
@@ -193,9 +193,9 @@ const Product = () => {
                       className="text-4xl select-none cursor-pointer"
                       onClick={() =>
                         setToCart((pre) => {
-                          if (pre >= product.inStock) return product.inStock;
-                          if (!product.inStock) return 0;
-                          else return ++pre;
+                          if (pre >= product.inStock) return product.inStock
+                          if (!product.inStock) return 0
+                          else return ++pre
                         })
                       }
                     >
@@ -214,8 +214,8 @@ const Product = () => {
                       className="text-4xl select-none cursor-pointer"
                       onClick={() =>
                         setToCart((pre) => {
-                          if (pre < 1) return 0;
-                          else return --pre;
+                          if (pre < 1) return 0
+                          else return --pre
                         })
                       }
                     >
@@ -239,9 +239,9 @@ const Product = () => {
 
             <Button
               onClick={() => {
-                if (!user.email) return dispatch(setDialog(true));
+                if (!user.email) return dispatch(setDialog(true))
                 if (product.isDeleted)
-                  return toast.error("This Product is deleted");
+                  return toast.error("This Product is deleted")
               }}
               className="w-full [&>*]:block bg-accent-green hover:!bg-opacity-75"
             >
@@ -253,7 +253,7 @@ const Product = () => {
                 description={`Total $${totalPrice / 100}`}
                 amount={totalPrice}
                 token={onToken}
-                stripeKey={process.env.REACT_APP_STRIPE_TOKEN}
+                stripeKey={import.meta.env.VITE_STRIPE_TOKEN}
                 disabled={
                   user.email ? (product?.isDeleted ? true : false) : true
                 }
@@ -342,7 +342,7 @@ const Product = () => {
     </div>
   ) : (
     <PageNotFound />
-  );
-};
+  )
+}
 
-export default Product;
+export default Product

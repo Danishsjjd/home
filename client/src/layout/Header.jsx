@@ -1,80 +1,80 @@
-import { Dialog, Popover, Tab, Transition } from "@headlessui/react";
-import { MenuIcon, XIcon } from "@heroicons/react/outline";
-import { Image } from "cloudinary-react";
-import { LayoutGroup, motion } from "framer-motion";
-import { Fragment, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import { Dialog, Popover, Tab, Transition } from "@headlessui/react"
+import { MenuIcon, XIcon } from "@heroicons/react/outline"
+import { Image } from "cloudinary-react"
+import { LayoutGroup, motion } from "framer-motion"
+import { Fragment, useEffect, useState } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { NavLink, useLocation, useNavigate } from "react-router-dom"
+import { toast } from "react-toastify"
 
-import { ReactComponent as CharIcon } from "../assets/icons/header/cart.svg";
-import { ReactComponent as Heart } from "../assets/icons/header/heart.svg";
-import { ReactComponent as SearchIcon } from "../assets/icons/header/search.svg";
-import { ReactComponent as User } from "../assets/icons/header/user.svg";
-import logo from "../assets/logo-black.svg";
-import { DropDown, Search } from "../components";
-import { shope, userDropdown } from "../constants/user";
-import { getUser, setDialog } from "../store/authSlice";
-import { getCart } from "../store/cartSlice";
+import { ReactComponent as CharIcon } from "../assets/icons/header/cart.svg"
+import { ReactComponent as Heart } from "../assets/icons/header/heart.svg"
+import { ReactComponent as SearchIcon } from "../assets/icons/header/search.svg"
+import { ReactComponent as User } from "../assets/icons/header/user.svg"
+import logo from "../assets/logo-black.svg"
+import { DropDown, Search } from "../components"
+import { shope, userDropdown } from "../constants/user"
+import { getUser, setDialog } from "../store/authSlice"
+import { getCart } from "../store/cartSlice"
 
 function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
+  return classes.filter(Boolean).join(" ")
 }
 export default function Header() {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
-  const [activeIndex, setActiveIndex] = useState(null);
-  const [scrollY, setScrollY] = useState(window.pageYOffset);
-  const [showHeader, setShowHeader] = useState(true);
-  const [open, setOpen] = useState(false);
-  const [active, setActive] = useState(null);
-  const [openSearch, setOpenSearch] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(null)
+  const [scrollY, setScrollY] = useState(window.pageYOffset)
+  const [showHeader, setShowHeader] = useState(true)
+  const [open, setOpen] = useState(false)
+  const [active, setActive] = useState(null)
+  const [openSearch, setOpenSearch] = useState(false)
 
-  const location = useLocation();
+  const location = useLocation()
 
-  const user = useSelector(getUser);
-  const cart = useSelector(getCart);
+  const user = useSelector(getUser)
+  const cart = useSelector(getCart)
 
   const userClickHandle = (link) => {
-    if (!user?.email) return dispatch(setDialog(true));
-    navigate(link);
-  };
+    if (!user?.email) return dispatch(setDialog(true))
+    navigate(link)
+  }
 
-  const MotionLink = motion(NavLink);
-  const MotionPopoverButton = motion(Popover.Button);
+  const MotionLink = motion(NavLink)
+  const MotionPopoverButton = motion(Popover.Button)
   const UserImage = user.avatar && (
     <Image
       alt={"user profile"}
       className="rounded-full w-6 h-6"
-      cloudName={process.env.REACT_APP_CLOUD_NAME}
+      cloudName={import.meta.env.VITE_CLOUD_NAME}
       publicId={user.avatar.public_id}
       width="24"
       height="24"
     />
-  );
+  )
 
   useEffect(() => {
     const handleScroll = () => {
-      let moving = window.pageYOffset;
+      let moving = window.pageYOffset
 
-      setShowHeader(scrollY > moving);
-      setScrollY(moving);
-    };
-    window.addEventListener("scroll", handleScroll);
+      setShowHeader(scrollY > moving)
+      setScrollY(moving)
+    }
+    window.addEventListener("scroll", handleScroll)
     return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  });
+      window.removeEventListener("scroll", handleScroll)
+    }
+  })
 
   useEffect(() => {
-    setActiveIndex(null);
-  }, [showHeader, setActiveIndex]);
+    setActiveIndex(null)
+  }, [showHeader, setActiveIndex])
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-    setActiveIndex(null);
-  }, [location.pathname]);
+    window.scrollTo(0, 0)
+    setActiveIndex(null)
+  }, [location.pathname])
 
   return (
     <div
@@ -274,10 +274,10 @@ export default function Header() {
                     <LayoutGroup>
                       {shope.pages.map((page, index) => {
                         if (user?.role !== "admin" && page.to === "/admin")
-                          return null;
+                          return null
                         if (page.name === "shop")
                           return shope.categories.map((category) => {
-                            const isBorderActive = index === activeIndex;
+                            const isBorderActive = index === activeIndex
                             return (
                               <Popover key={category.name} className="flex">
                                 {({ close }) => (
@@ -416,8 +416,8 @@ export default function Header() {
                                   </>
                                 )}
                               </Popover>
-                            );
-                          });
+                            )
+                          })
                         return (
                           <MotionLink
                             key={index}
@@ -435,7 +435,7 @@ export default function Header() {
                             layout
                           >
                             {({ isActive }) => {
-                              const isBorderActive = index === activeIndex;
+                              const isBorderActive = index === activeIndex
                               return (
                                 <>
                                   {isBorderActive && (
@@ -452,10 +452,10 @@ export default function Header() {
                                   )}
                                   {page.name}
                                 </>
-                              );
+                              )
                             }}
                           </MotionLink>
-                        );
+                        )
                       })}
                     </LayoutGroup>
                   </motion.div>
@@ -544,5 +544,5 @@ export default function Header() {
         </header>
       </div>
     </div>
-  );
+  )
 }

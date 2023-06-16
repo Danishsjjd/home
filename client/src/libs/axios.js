@@ -1,18 +1,18 @@
-import axios from "axios";
+import axios from "axios"
 
-import SERVICES from "./api";
+import SERVICES from "./api"
 
 const axiosInstance = axios.create({
-  baseURL: process.env.REACT_APP_SERVER_URL,
+  baseURL: import.meta.env.VITE_SERVER_URL,
   withCredentials: true,
   headers: {
     Accept: "application/json",
     "Content-Type": "application/json",
     "Access-Control-Allow-Credentials": true,
   },
-});
+})
 
-const API = {};
+const API = {}
 
 for (const [keys, values] of Object.entries(SERVICES)) {
   API[keys] = (
@@ -34,20 +34,20 @@ for (const [keys, values] of Object.entries(SERVICES)) {
         if (uploadProgress) {
           const percentage = Math.round(
             (progressEvent.loaded * 100) / progressEvent.total
-          );
-          uploadProgress(percentage);
+          )
+          uploadProgress(percentage)
         }
       },
       onDownloadProgress: (progressEvent) => {
         if (downloadProgress) {
           const percentage = Math.round(
             (progressEvent.loaded * 100) / progressEvent.total
-          );
-          downloadProgress(percentage);
+          )
+          downloadProgress(percentage)
         }
       },
-    });
-  };
+    })
+  }
 }
 
-export { API };
+export { API }

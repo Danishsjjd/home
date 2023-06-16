@@ -1,12 +1,12 @@
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Thumbs, Mousewheel } from "swiper";
-import "swiper/css";
-import "swiper/css/navigation";
-import { useState } from "react";
-import { Image } from "cloudinary-react";
+import { Swiper, SwiperSlide } from "swiper/react"
+import { Navigation, Thumbs, Mousewheel } from "swiper"
+import "swiper/css"
+import "swiper/css/navigation"
+import { useState } from "react"
+import { Image } from "cloudinary-react"
 
 export default function Slider({ slides }) {
-  const [imagesNavSlider, setImagesNavSlider] = useState(null);
+  const [imagesNavSlider, setImagesNavSlider] = useState(null)
   return (
     <section className="slider sticky top-0 left-0">
       <div className="slider__flex">
@@ -40,12 +40,12 @@ export default function Slider({ slides }) {
                     <div className="slider__image">
                       <Image
                         alt={slide.publicId}
-                        cloudName={process.env.REACT_APP_CLOUD_NAME}
+                        cloudName={import.meta.env.VITE_CLOUD_NAME}
                         publicId={slide.public_id}
                       />
                     </div>
                   </SwiperSlide>
-                );
+                )
               })}
             </Swiper>
           </div>
@@ -87,16 +87,16 @@ export default function Slider({ slides }) {
                   <div className="slider__image">
                     <Image
                       alt={slide.publicId}
-                      cloudName={process.env.REACT_APP_CLOUD_NAME}
+                      cloudName={import.meta.env.VITE_CLOUD_NAME}
                       publicId={slide.public_id}
                     />
                   </div>
                 </SwiperSlide>
-              );
+              )
             })}
           </Swiper>
         </div>
       </div>
     </section>
-  );
+  )
 }

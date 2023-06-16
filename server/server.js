@@ -7,4 +7,4 @@ require("./utils/logger");
 require("./startup/db")(process.env.DATABASE_URL);
 require("./startup/middleware")(app);
 
-app.listen(process.env.PORT || 5000);
+app.listen(process.env.PORT || 8000);

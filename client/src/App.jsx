@@ -15,6 +15,7 @@ import store from "./store/configureStore";
 import Router from "./routes/Router";
 
 function App() {
+  console.log(import.meta.env)
   return (
     <Provider store={store}>
       <BrowserRouter>

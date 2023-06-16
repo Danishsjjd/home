@@ -1,56 +1,56 @@
-import { Image } from "cloudinary-react";
-import { Form, Formik } from "formik";
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import StripeCheckout from "react-stripe-checkout";
-import { toast } from "react-toastify";
+import { Image } from "cloudinary-react"
+import { Form, Formik } from "formik"
+import { useEffect, useState } from "react"
+import { useSelector } from "react-redux"
+import { Link } from "react-router-dom"
+import StripeCheckout from "react-stripe-checkout"
+import { toast } from "react-toastify"
 
-import { ReactComponent as CartImg } from "../../assets/icons/cart_center.svg";
-import { ReactComponent as IcClose } from "../../assets/icons/ic-close.svg";
-import MasterCard from "../../assets/icons/social/MasterCard.png";
-import Visa from "../../assets/icons/social/Visa.png";
-import HomeLogo from "../../assets/logo-black.svg";
-import { Button, Input } from "../../components";
-import LoadingDialog from "../../components/LoadingDialog";
+import { ReactComponent as CartImg } from "../../assets/icons/cart_center.svg"
+import { ReactComponent as IcClose } from "../../assets/icons/ic-close.svg"
+import MasterCard from "../../assets/icons/social/MasterCard.png"
+import Visa from "../../assets/icons/social/Visa.png"
+import HomeLogo from "../../assets/logo-black.svg"
+import { Button, Input } from "../../components"
+import LoadingDialog from "../../components/LoadingDialog"
 import {
   createOrderFromCartApi,
   removeProductCartApi,
-} from "../../store/apiCall/cartApi";
-import { getCart } from "../../store/cartSlice";
-import MetaData from "../../utils/MetaData";
-import MountTransition from "../../utils/MountTransition";
+} from "../../store/apiCall/cartApi"
+import { getCart } from "../../store/cartSlice"
+import MetaData from "../../utils/MetaData"
+import MountTransition from "../../utils/MountTransition"
 
 const Cart = () => {
-  const [loading, setLoading] = useState(false);
-  const [haveDeletedProducts, setHaveDeletedProducts] = useState([]);
-  const cart = useSelector(getCart);
+  const [loading, setLoading] = useState(false)
+  const [haveDeletedProducts, setHaveDeletedProducts] = useState([])
+  const cart = useSelector(getCart)
   const totalPrice = cart
     .map(({ productId, quantity }) => {
-      const { price, offerPrice } = productId;
-      if (offerPrice > 0) return offerPrice * quantity;
-      return price * quantity;
+      const { price, offerPrice } = productId
+      if (offerPrice > 0) return offerPrice * quantity
+      return price * quantity
     })
     .reduce((acc, cur) => {
-      return (acc += cur);
-    }, 0);
+      return (acc += cur)
+    }, 0)
   const subtotalPrice = cart
     .map(({ productId, quantity }) => {
-      const { price } = productId;
-      return price * quantity;
+      const { price } = productId
+      return price * quantity
     })
     .reduce((acc, cur) => {
-      return (acc += cur);
-    }, 0);
+      return (acc += cur)
+    }, 0)
 
   const onToken = async (token) => {
-    createOrderFromCartApi(setLoading, token);
-  };
+    createOrderFromCartApi(setLoading, token)
+  }
 
-  const rows = [];
+  const rows = []
 
   cart.forEach(({ productId, quantity }) => {
-    const isDeleted = productId?.isDeleted;
+    const isDeleted = productId?.isDeleted
     rows.push(
       <tr key={productId._id} className="border-1 border-neutral-lighter">
         <td colSpan={2}>
@@ -65,7 +65,7 @@ const Cart = () => {
               <Link to={`/product/${productId._id}`} className="avatar block">
                 <div className="mask mask-squircle w-20 h-20">
                   <Image
-                    cloudName={process.env.REACT_APP_CLOUD_NAME}
+                    cloudName={import.meta.env.VITE_CLOUD_NAME}
                     alt="item pic"
                     className="w-full object-cover"
                     width="80"
@@ -114,16 +114,16 @@ const Cart = () => {
           </span>
         </td>
       </tr>
-    );
-  });
+    )
+  })
 
   useEffect(() => {
-    setHaveDeletedProducts([]);
+    setHaveDeletedProducts([])
     cart.forEach(({ productId }) => {
       if (productId.isDeleted)
-        setHaveDeletedProducts((pre) => [...pre, productId._id]);
-    });
-  }, [cart]);
+        setHaveDeletedProducts((pre) => [...pre, productId._id])
+    })
+  }, [cart])
 
   return (
     <MountTransition>
@@ -192,7 +192,7 @@ const Cart = () => {
                       if (haveDeletedProducts.length > 0)
                         return toast.error(
                           "Please remove deleted Products first"
-                        );
+                        )
                     }}
                   >
                     <StripeCheckout
@@ -203,7 +203,7 @@ const Cart = () => {
                       description={`Total $${totalPrice}`}
                       amount={totalPrice * 100}
                       token={onToken}
-                      stripeKey={process.env.REACT_APP_STRIPE_TOKEN}
+                      stripeKey={import.meta.env.VITE_STRIPE_TOKEN}
                       disabled={haveDeletedProducts.length > 0}
                     >
                       Proceed to Checkout
@@ -238,7 +238,7 @@ const Cart = () => {
         </div>
       )}
     </MountTransition>
-  );
-};
+  )
+}
 
-export default Cart;
+export default Cart

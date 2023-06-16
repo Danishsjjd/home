@@ -1,64 +1,64 @@
-import { Image } from "cloudinary-react";
-import { Formik } from "formik";
-import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { toast } from "react-toastify";
-import * as Yup from "yup";
+import { Image } from "cloudinary-react"
+import { Formik } from "formik"
+import { useState } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { toast } from "react-toastify"
+import * as Yup from "yup"
 
-import { updateProfileApi } from "../../store/apiCall/authApi";
+import { updateProfileApi } from "../../store/apiCall/authApi"
 import {
   getUpdateProfile,
   getUser,
   setUpdateProfile,
-} from "../../store/authSlice";
-import Button from "../form/Button";
-import ErrorMessage from "../form/ErrorMessage";
-import Input from "../form/Input";
-import Modal from "../Modal";
+} from "../../store/authSlice"
+import Button from "../form/Button"
+import ErrorMessage from "../form/ErrorMessage"
+import Input from "../form/Input"
+import Modal from "../Modal"
 
 export default function UpdateProfile() {
-  const dispatch = useDispatch();
-  const [image, setImage] = useState(null);
+  const dispatch = useDispatch()
+  const [image, setImage] = useState(null)
 
-  const user = useSelector(getUser);
-  const isOpen = useSelector(getUpdateProfile);
+  const user = useSelector(getUser)
+  const isOpen = useSelector(getUpdateProfile)
 
   const closeModal = () => {
-    dispatch(setUpdateProfile(false));
-  };
+    dispatch(setUpdateProfile(false))
+  }
 
   const validationSchema = Yup.object().shape({
     avatar: Yup.string(),
     username: Yup.string(),
-  });
+  })
   const initialValues = {
     avatar: "",
     username: user.username,
-  };
+  }
 
   const onSubmit = (values, { resetForm }) => {
-    updateProfileApi(values, resetForm);
-  };
+    updateProfileApi(values, resetForm)
+  }
 
   const onImageChange = (e, setFiledValue) => {
-    const file = e.target.files[0];
+    const file = e.target.files[0]
 
-    const reader = new FileReader();
+    const reader = new FileReader()
     reader.onload = () => {
-      const extension = reader.result?.split(";")[0]?.split("/")[1];
+      const extension = reader.result?.split(";")[0]?.split("/")[1]
       if (reader.readyState === 2) {
         if (
           extension === "jpeg" ||
           extension === "png" ||
           extension === "jpg"
         ) {
-          setImage(reader.result);
-          setFiledValue(e.target.name, reader.result);
-        } else return toast.error("Only image is valid for profile");
+          setImage(reader.result)
+          setFiledValue(e.target.name, reader.result)
+        } else return toast.error("Only image is valid for profile")
       }
-    };
-    reader.readAsDataURL(file);
-  };
+    }
+    reader.readAsDataURL(file)
+  }
 
   return (
     <Modal closeModal={closeModal} isOpen={isOpen} maxWidth={"max-w-lg"}>
@@ -79,7 +79,7 @@ export default function UpdateProfile() {
                     <div className="w-40 h-40 rounded-full overflow-hidden">
                       {user?.avatar?.public_id && image === null ? (
                         <Image
-                          cloudName={process.env.REACT_APP_CLOUD_NAME}
+                          cloudName={import.meta.env.VITE_CLOUD_NAME}
                           publicId={user?.avatar?.public_id}
                           width="160"
                           height="160"
@@ -127,10 +127,10 @@ export default function UpdateProfile() {
                 </div>
                 <Button app>Update Profile!</Button>
               </>
-            );
+            )
           }}
         </Formik>
       </div>
     </Modal>
-  );
+  )
 }

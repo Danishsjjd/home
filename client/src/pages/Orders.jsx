@@ -1,36 +1,36 @@
-import { Image } from "cloudinary-react";
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import { toast } from "react-toastify";
+import { Image } from "cloudinary-react"
+import { useEffect, useState } from "react"
+import { useSelector } from "react-redux"
+import { Link } from "react-router-dom"
+import { toast } from "react-toastify"
 
-import { ReactComponent as CartImg } from "../assets/icons/cart_center.svg";
-import ordersBg from "../assets/images/orders-bg.jpg";
-import { Button } from "../components";
-import LoadingDialog from "../components/LoadingDialog";
-import { API } from "../libs/axios";
-import { getUser } from "../store/authSlice";
-import MetaData from "../utils/MetaData";
-import MountTransition from "../utils/MountTransition";
+import { ReactComponent as CartImg } from "../assets/icons/cart_center.svg"
+import ordersBg from "../assets/images/orders-bg.jpg"
+import { Button } from "../components"
+import LoadingDialog from "../components/LoadingDialog"
+import { API } from "../libs/axios"
+import { getUser } from "../store/authSlice"
+import MetaData from "../utils/MetaData"
+import MountTransition from "../utils/MountTransition"
 
 const Orders = () => {
-  const [loading, setLoading] = useState(true);
-  const [orders, setOrders] = useState(null);
-  const user = useSelector(getUser);
+  const [loading, setLoading] = useState(true)
+  const [orders, setOrders] = useState(null)
+  const user = useSelector(getUser)
 
   useEffect(() => {
     const getUserOrders = async () => {
       try {
-        const response = await API.getUserOrder({});
-        setOrders(response.data);
-        setLoading(false);
+        const response = await API.getUserOrder({})
+        setOrders(response.data)
+        setLoading(false)
       } catch (e) {
-        toast.error(e?.response?.data?.message || e.message);
-        setLoading(false);
+        toast.error(e?.response?.data?.message || e.message)
+        setLoading(false)
       }
-    };
-    getUserOrders();
-  }, [user._id]);
+    }
+    getUserOrders()
+  }, [user._id])
 
   return (
     <MountTransition>
@@ -83,7 +83,7 @@ const Orders = () => {
                                       <div className="mask mask-squircle w-20 h-20">
                                         <Image
                                           cloudName={
-                                            process.env.REACT_APP_CLOUD_NAME
+                                            import.meta.env.VITE_CLOUD_NAME
                                           }
                                           alt="item pic"
                                           className="w-full object-cover"
@@ -139,7 +139,7 @@ const Orders = () => {
                                 </span>
                               </td>
                             </tr>
-                          );
+                          )
                         })}
                       </tbody>
                     </table>
@@ -182,7 +182,7 @@ const Orders = () => {
                   </div>
                 </div>
               </div>
-            );
+            )
           })}
         </div>
       ) : loading ? (
@@ -199,7 +199,7 @@ const Orders = () => {
         </div>
       )}
     </MountTransition>
-  );
-};
+  )
+}
 
-export default Orders;
+export default Orders
