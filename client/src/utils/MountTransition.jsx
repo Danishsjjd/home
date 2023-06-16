@@ -25,7 +25,7 @@ const MountTransition = ({ children, className, dashboard }) => {
 						: variants
 					: variants
 			}
-			transition={{ duration: 0.4, type: "easeInOut" }}
+			transition={{ duration: 0.4 }}
 			className={className}
 		>
 			{children}

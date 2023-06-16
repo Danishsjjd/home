@@ -9,8 +9,8 @@
 /coverage
 
 # build
-**/build
-server/client/build
+**/dist
+server/client/dist
 
 # log files
 *.log
