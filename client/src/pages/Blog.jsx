@@ -1,11 +1,11 @@
-import React from "react";
-import MountTransition from "../utils/MountTransition";
+import React from "react"
 
-import ComingSoon from "../utils/ComingSoon";
-import MetaData from "../utils/MetaData";
+import ComingSoon from "../utils/ComingSoon"
+import MetaData from "../utils/MetaData"
+import MountTransition from "../utils/MountTransition"
 
 const Blog = () => {
-  const date = new Date().setHours(new Date().getHours() + 48);
+  const date = new Date().setHours(new Date().getHours() + 48)
 
   return (
     <MountTransition>
@@ -18,7 +18,7 @@ const Blog = () => {
         date={date}
       />
     </MountTransition>
-  );
-};
+  )
+}
 
-export default Blog;
+export default Blog

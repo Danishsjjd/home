@@ -1,27 +1,29 @@
-import React from "react";
-import * as Yup from "yup";
+import React from "react"
 
-import bg from "../assets/images/Blog_image.jpg";
-import { Form, Input } from "../components";
-import FormButton from "../components/form/Button";
-import CountDown from "./CountDown";
+import FormButton from "../components/form/Button"
+
+import bg from "../assets/images/Blog_image.jpg"
+import { Form, Input } from "../components"
+import CountDown from "./CountDown"
+
+import * as Yup from "yup"
 
 const ComingSoon = ({ title, desc, date }) => {
   const initialValues = {
     email: "",
-  };
+  }
   const validationSchema = Yup.object().shape({
     email: Yup.string().email().required(),
-  });
+  })
   return (
     <div
-      className="pt-20 h-screen w-screen bg-cover flex justify-center items-center text-white "
+      className="flex h-screen w-screen items-center justify-center bg-cover pt-20 text-white "
       style={{ background: `url(${bg}) center black no-repeat` }}
     >
-      <div className="max-w-2xl w-full mx-auto grid gap-8 px-4 justify-center items-center">
-        <div className="text-center space-y-3">
-          <h2 className="sm:text-4xl text-2xl font-bold">{title}</h2>
-          <p className="sm:text-base text-sm">{desc}</p>
+      <div className="mx-auto grid w-full max-w-2xl items-center justify-center gap-8 px-4">
+        <div className="space-y-3 text-center">
+          <h2 className="text-2xl font-bold sm:text-4xl">{title}</h2>
+          <p className="text-sm sm:text-base">{desc}</p>
         </div>
         <CountDown date={date} />
         <div>
@@ -29,7 +31,7 @@ const ComingSoon = ({ title, desc, date }) => {
             initialValues={initialValues}
             validationSchema={validationSchema}
             onSubmit={(values, { resetForm }) => {
-              resetForm();
+              resetForm()
             }}
           >
             <div className="flex gap-3">
@@ -37,7 +39,7 @@ const ComingSoon = ({ title, desc, date }) => {
                 <Input
                   name="email"
                   app
-                  className="!bg-transparent focus:text-secondary-darker focus:border-secondary-darker flex-1 flex-grow"
+                  className="flex-1 flex-grow !bg-transparent focus:border-secondary-darker focus:text-secondary-darker"
                   placeholder="Enter Your Email"
                 />
               </div>
@@ -49,7 +51,7 @@ const ComingSoon = ({ title, desc, date }) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ComingSoon;
+export default ComingSoon

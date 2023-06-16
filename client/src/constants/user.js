@@ -1,6 +1,6 @@
-import { logout, updatePassword, updateProfile } from "./functions";
-import offer1 from "../assets/images/header/offer 1.jpg";
-import offer2 from "../assets/images/header/offer 2.jpg";
+import offer1 from "../assets/images/header/offer 1.jpg"
+import offer2 from "../assets/images/header/offer 2.jpg"
+import { logout, updatePassword, updateProfile } from "./functions"
 
 //user - header - name is unique
 export const shope = {
@@ -132,7 +132,7 @@ export const shope = {
       className: "!text-accent-red",
     },
   ],
-};
+}
 // user - header dropdown - title
 export const userDropdown = [
   {
@@ -151,4 +151,4 @@ export const userDropdown = [
     className:
       "grid place-items-center text-lg font-medium bg-secondary-darker shadow-[0px_1px_6px_var(--secondary-darker)] w-[96%] text-white mx-auto mb-2",
   },
-];
+]

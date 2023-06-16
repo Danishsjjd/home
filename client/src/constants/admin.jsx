@@ -1,14 +1,9 @@
-import {
-  AiOutlineEye,
-  AiOutlineDollarCircle,
-  AiFillHome,
-  AiFillSetting,
-  AiOutlineAreaChart,
-} from "react-icons/ai";
-import { BsCart2 } from "react-icons/bs";
-import { FaRegComments, FaUsers } from "react-icons/fa";
-import { MdCreateNewFolder } from "react-icons/md";
-import { logout } from "./functions";
+import { AiFillHome, AiFillSetting, AiOutlineAreaChart, AiOutlineDollarCircle, AiOutlineEye } from "react-icons/ai"
+import { BsCart2 } from "react-icons/bs"
+import { FaRegComments, FaUsers } from "react-icons/fa"
+import { MdCreateNewFolder } from "react-icons/md"
+
+import { logout } from "./functions"
 
 // admin - sidebar - title
 export const NavLinks = [
@@ -38,39 +33,31 @@ export const NavLinks = [
     icon: <AiFillSetting />,
     to: "settings",
   },
-];
+]
 
 // admin - dashboard cards - title
 export const cardContent = [
   {
     title: "Daily sales",
     number: "80",
-    icon: (
-      <AiOutlineEye className="text-6xl text-lightBlack group-hover:text-white" />
-    ),
+    icon: <AiOutlineEye className="text-6xl text-lightBlack group-hover:text-white" />,
   },
   {
     title: "Sales",
     number: "1,504",
-    icon: (
-      <BsCart2 className="text-6xl text-lightBlack group-hover:text-white" />
-    ),
+    icon: <BsCart2 className="text-6xl text-lightBlack group-hover:text-white" />,
   },
   {
     title: "reviews",
     number: "284",
-    icon: (
-      <FaRegComments className="text-6xl text-lightBlack group-hover:text-white" />
-    ),
+    icon: <FaRegComments className="text-6xl text-lightBlack group-hover:text-white" />,
   },
   {
     title: "products",
     number: "59",
-    icon: (
-      <AiOutlineDollarCircle className="text-6xl text-lightBlack group-hover:text-white" />
-    ),
+    icon: <AiOutlineDollarCircle className="text-6xl text-lightBlack group-hover:text-white" />,
   },
-];
+]
 // admin - table
 export const tableContent = [
   {
@@ -79,7 +66,7 @@ export const tableContent = [
     payment: "paid",
     status: "delivered",
   },
-];
+]
 // admin - user profile dropdown - title
 export const DropDownData = [
   {
@@ -87,7 +74,7 @@ export const DropDownData = [
     Icon: AiFillHome,
     onClick: logout,
   },
-];
+]
 // admin - category picker dropdown - title
 export const productCategory = [
   {
@@ -110,4 +97,4 @@ export const productCategory = [
     title: "accessories",
     onClick: (setFieldValue, name) => setFieldValue(name, "accessories"),
   },
-];
+]

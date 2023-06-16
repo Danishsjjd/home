@@ -1,6 +1,6 @@
-import axios from "axios"
-
 import SERVICES from "./api"
+
+import axios from "axios"
 
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_SERVER_URL,
@@ -15,11 +15,7 @@ const axiosInstance = axios.create({
 const API = {}
 
 for (const [keys, values] of Object.entries(SERVICES)) {
-  API[keys] = (
-    { data, headers, query, params },
-    uploadProgress,
-    downloadProgress
-  ) => {
+  API[keys] = ({ data, headers, query, params }, uploadProgress, downloadProgress) => {
     return axiosInstance({
       ...(params ? { url: `${values.uri + params}` } : { url: values.uri }),
       method: values.method,
@@ -32,17 +28,13 @@ for (const [keys, values] of Object.entries(SERVICES)) {
       ...(data && { data: data }),
       onUploadProgress: (progressEvent) => {
         if (uploadProgress) {
-          const percentage = Math.round(
-            (progressEvent.loaded * 100) / progressEvent.total
-          )
+          const percentage = Math.round((progressEvent.loaded * 100) / progressEvent.total)
           uploadProgress(percentage)
         }
       },
       onDownloadProgress: (progressEvent) => {
         if (downloadProgress) {
-          const percentage = Math.round(
-            (progressEvent.loaded * 100) / progressEvent.total
-          )
+          const percentage = Math.round((progressEvent.loaded * 100) / progressEvent.total)
           downloadProgress(percentage)
         }
       },

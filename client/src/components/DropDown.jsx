@@ -1,16 +1,9 @@
-import { Menu, Transition } from "@headlessui/react";
-import { Fragment } from "react";
-import { useDispatch } from "react-redux";
+import { Menu, Transition } from "@headlessui/react"
+import { Fragment } from "react"
+import { useDispatch } from "react-redux"
 
-export default function DropDown({
-  list,
-  anchor,
-  side,
-  setFieldValue,
-  name,
-  dashboard,
-}) {
-  const dispatch = useDispatch();
+export default function DropDown({ list, anchor, side, setFieldValue, name, dashboard }) {
+  const dispatch = useDispatch()
   return (
     <Menu as="div" className="relative inline-block text-left">
       <Menu.Button>{anchor}</Menu.Button>
@@ -25,9 +18,7 @@ export default function DropDown({
       >
         <Menu.Items
           className={`absolute ${
-            side === "right"
-              ? "left-0 origin-top-left"
-              : "right-0 origin-top-right"
+            side === "right" ? "left-0 origin-top-left" : "right-0 origin-top-right"
           } mt-2 w-56 divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none ${
             dashboard && "dark:bg-black"
           }`}
@@ -38,20 +29,12 @@ export default function DropDown({
                 <button
                   className={` ${
                     active
-                      ? `text-white ${
-                          dashboard
-                            ? "dark:text-black bg-accent"
-                            : "bg-secondary-darker"
-                        }`
+                      ? `text-white ${dashboard ? "bg-accent dark:text-black" : "bg-secondary-darker"}`
                       : dashboard
                       ? "text-gray-900 dark:text-white"
                       : "text-gray-900"
                   } group flex w-full items-center rounded-md px-2 py-2 text-sm ${className}`}
-                  onClick={() =>
-                    setFieldValue
-                      ? onClick(setFieldValue, name)
-                      : onClick(dispatch)
-                  }
+                  onClick={() => (setFieldValue ? onClick(setFieldValue, name) : onClick(dispatch))}
                 >
                   {Icon && (
                     <Icon
@@ -75,5 +58,5 @@ export default function DropDown({
         </Menu.Items>
       </Transition>
     </Menu>
-  );
+  )
 }

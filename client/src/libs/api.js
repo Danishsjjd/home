@@ -43,6 +43,6 @@ const SERVICES = {
   deleteOrder: { uri: "orders/", method: "DELETE" }, // p:id
   updateOrderStatus: { uri: "orders/", method: "patch" }, // p:id
   getMonthlyIncome: { uri: "orders/income", method: "get" },
-};
+}
 
-export default SERVICES;
+export default SERVICES

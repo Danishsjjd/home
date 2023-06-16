@@ -1,20 +1,17 @@
 import { Image } from "cloudinary-react"
-import { Formik } from "formik"
 import { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { toast } from "react-toastify"
-import * as Yup from "yup"
 
 import { updateProfileApi } from "../../store/apiCall/authApi"
-import {
-  getUpdateProfile,
-  getUser,
-  setUpdateProfile,
-} from "../../store/authSlice"
+import { getUpdateProfile, getUser, setUpdateProfile } from "../../store/authSlice"
+import Modal from "../Modal"
 import Button from "../form/Button"
 import ErrorMessage from "../form/ErrorMessage"
 import Input from "../form/Input"
-import Modal from "../Modal"
+
+import { Formik } from "formik"
+import * as Yup from "yup"
 
 export default function UpdateProfile() {
   const dispatch = useDispatch()
@@ -47,11 +44,7 @@ export default function UpdateProfile() {
     reader.onload = () => {
       const extension = reader.result?.split(";")[0]?.split("/")[1]
       if (reader.readyState === 2) {
-        if (
-          extension === "jpeg" ||
-          extension === "png" ||
-          extension === "jpg"
-        ) {
+        if (extension === "jpeg" || extension === "png" || extension === "jpg") {
           setImage(reader.result)
           setFiledValue(e.target.name, reader.result)
         } else return toast.error("Only image is valid for profile")
@@ -62,21 +55,15 @@ export default function UpdateProfile() {
 
   return (
     <Modal closeModal={closeModal} isOpen={isOpen} maxWidth={"max-w-lg"}>
-      <div className="divide-y-2 space-y-5 divide-neutral-lighter">
-        <Formik
-          initialValues={initialValues}
-          onSubmit={onSubmit}
-          validationSchema={validationSchema}
-        >
+      <div className="space-y-5 divide-y-2 divide-neutral-lighter">
+        <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validationSchema}>
           {({ setFieldValue, errors, touched }) => {
             return (
               <>
                 <div>
-                  <label className="block text-lg font-medium text-gray-700 text-center">
-                    Photo
-                  </label>
-                  <div className="mt-1 flex items-center flex-col gap-3">
-                    <div className="w-40 h-40 rounded-full overflow-hidden">
+                  <label className="block text-center text-lg font-medium text-gray-700">Photo</label>
+                  <div className="mt-1 flex flex-col items-center gap-3">
+                    <div className="h-40 w-40 overflow-hidden rounded-full">
                       {user?.avatar?.public_id && image === null ? (
                         <Image
                           cloudName={import.meta.env.VITE_CLOUD_NAME}
@@ -84,17 +71,17 @@ export default function UpdateProfile() {
                           width="160"
                           height="160"
                           alt="user image"
-                          className="w-full h-full"
+                          className="h-full w-full"
                         />
                       ) : (
                         <img
                           src={image || user?.googleAvatar}
                           alt="user"
-                          className={`w-full h-full object-cover bg-[#999]`}
+                          className={`h-full w-full bg-[#999] object-cover`}
                         />
                       )}
                     </div>
-                    <button className="ml-5 bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:outline-secondary-darker">
+                    <button className="ml-5 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:outline-secondary-darker focus:ring-2 focus:ring-offset-2">
                       <label htmlFor="userAvatar">Upload</label>
                     </button>
                     <input
@@ -105,24 +92,15 @@ export default function UpdateProfile() {
                       onChange={(e) => onImageChange(e, setFieldValue)}
                       accept="image/png, image/jpeg"
                     />
-                    <ErrorMessage
-                      err={errors["avatar"]}
-                      visible={touched["avatar"]}
-                    />
+                    <ErrorMessage err={errors["avatar"]} visible={touched["avatar"]} />
                   </div>
                 </div>
                 <div>
-                  <h2 className="text-lg mb-1 mt-2">Email (immutable)</h2>
-                  <Input
-                    name="email"
-                    app
-                    type="email"
-                    value={user.email}
-                    disabled
-                  />
+                  <h2 className="mb-1 mt-2 text-lg">Email (immutable)</h2>
+                  <Input name="email" app type="email" value={user.email} disabled />
                 </div>
                 <div>
-                  <h2 className="text-lg mb-1 mt-2">username</h2>
+                  <h2 className="mb-1 mt-2 text-lg">username</h2>
                   <Input name="username" app type="text" />
                 </div>
                 <Button app>Update Profile!</Button>

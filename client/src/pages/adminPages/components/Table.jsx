@@ -1,28 +1,29 @@
-import React from "react";
-import { toast } from "react-toastify";
-import { Button } from "../../../components";
-import { API } from "../../../libs/axios";
+import React from "react"
+import { toast } from "react-toastify"
+
+import { Button } from "../../../components"
+import { API } from "../../../libs/axios"
 
 const Table = ({ content, setTableContent }) => {
   const nextOnClick = async (id, status) => {
-    let nextStatus;
-    if (status === "Pending") nextStatus = "Shipped";
-    else if (status === "Shipped") nextStatus = "Delivered";
+    let nextStatus
+    if (status === "Pending") nextStatus = "Shipped"
+    else if (status === "Shipped") nextStatus = "Delivered"
 
     try {
-      await API.updateOrderStatus({ params: id, data: { status: nextStatus } });
+      await API.updateOrderStatus({ params: id, data: { status: nextStatus } })
       setTableContent((pre) =>
         pre.map((order) => {
-          if (order._id === id) return { ...order, status: nextStatus };
-          return order;
+          if (order._id === id) return { ...order, status: nextStatus }
+          return order
         })
-      );
+      )
     } catch (e) {
-      toast.error(e?.response?.data?.message || e?.message);
+      toast.error(e?.response?.data?.message || e?.message)
     }
-  };
+  }
   return (
-    <table className="w-full border-collapse min-w-[500px] dark:text-white">
+    <table className="w-full min-w-[500px] border-collapse dark:text-white">
       <thead>
         <tr>
           <th className="p-3 px-4 text-left">Name</th>
@@ -33,8 +34,8 @@ const Table = ({ content, setTableContent }) => {
       </thead>
       <tbody>
         {content.map((items) => {
-          const { userId, amount, payment = "paid", status, _id } = items;
-          const { email } = userId;
+          const { userId, amount, payment = "paid", status, _id } = items
+          const { email } = userId
           let statusColor =
             status === "Delivered"
               ? "bg-green-500 text-white"
@@ -44,26 +45,22 @@ const Table = ({ content, setTableContent }) => {
               ? "bg-blue-700 text-white"
               : status === "Pending"
               ? "bg-red-700 text-white"
-              : "text-black";
+              : "text-black"
           return (
-            <tr className="border-lightBlack/20 border-b-1" key={_id}>
+            <tr className="border-b-1 border-lightBlack/20" key={_id}>
               <td className="p-3 px-4 text-left">{email}</td>
               <td className="p-3 px-4 text-right">{amount}</td>
               <td className="p-3 px-4 text-left">{payment}</td>
               <td className={`p-3 px-4 text-right`}>
-                <span className={`${statusColor} p-1 rounded-lg`}>
-                  {status}
-                </span>{" "}
-                {status !== "Delivered" && (
-                  <Button onClick={() => nextOnClick(_id, status)}>Next</Button>
-                )}
+                <span className={`${statusColor} rounded-lg p-1`}>{status}</span>{" "}
+                {status !== "Delivered" && <Button onClick={() => nextOnClick(_id, status)}>Next</Button>}
               </td>
             </tr>
-          );
+          )
         })}
       </tbody>
     </table>
-  );
-};
+  )
+}
 
-export default Table;
+export default Table

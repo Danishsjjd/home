@@ -1,16 +1,10 @@
-import { useEffect, useState } from "react";
-import {
-  Area,
-  AreaChart,
-  CartesianGrid,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
-import { toast } from "react-toastify";
+import { useEffect, useState } from "react"
+import { toast } from "react-toastify"
 
-import { API } from "../../../libs/axios";
+import { API } from "../../../libs/axios"
+
+import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
+
 var mL = [
   "January",
   "February",
@@ -24,33 +18,33 @@ var mL = [
   "October",
   "November",
   "December",
-];
+]
 
-const data = [{ name: "January", total: 999 }];
+const data = [{ name: "January", total: 999 }]
 
 const Chart = ({ title, aspect }) => {
-  const [chartData, setChartData] = useState([]);
+  const [chartData, setChartData] = useState([])
   useEffect(() => {
     const getChartData = async () => {
       try {
-        const response = await API.getMonthlyIncome({});
+        const response = await API.getMonthlyIncome({})
         setChartData(
           response.data.map((item) => ({
             name: mL[item._id - 1],
             total: item.total,
           }))
-        );
+        )
       } catch (e) {
-        toast.error(e.response.data.message || e.message);
+        toast.error(e.response.data.message || e.message)
       }
-    };
-    getChartData();
-    return () => {};
-  }, []);
+    }
+    getChartData()
+    return () => {}
+  }, [])
 
   return (
     <div className="w-full">
-      <div className="mb-5 heading">{title}</div>
+      <div className="heading mb-5">{title}</div>
       <ResponsiveContainer width="100%" aspect={aspect}>
         <AreaChart
           width={730}
@@ -66,22 +60,13 @@ const Chart = ({ title, aspect }) => {
           </defs>
           <XAxis dataKey="name" stroke="[stock:var(--accent)]" />
           <YAxis />
-          <CartesianGrid
-            strokeDasharray="3 3"
-            className="[stock:var(--accent)]"
-          />
+          <CartesianGrid strokeDasharray="3 3" className="[stock:var(--accent)]" />
           <Tooltip />
-          <Area
-            type="monotone"
-            dataKey="total"
-            stroke="#8884d8"
-            fillOpacity={1}
-            fill="url(#total)"
-          />
+          <Area type="monotone" dataKey="total" stroke="#8884d8" fillOpacity={1} fill="url(#total)" />
         </AreaChart>
       </ResponsiveContainer>
     </div>
-  );
-};
+  )
+}
 
-export default Chart;
+export default Chart

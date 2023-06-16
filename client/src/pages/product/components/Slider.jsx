@@ -1,16 +1,17 @@
+import { Image } from "cloudinary-react"
+import { useState } from "react"
 import { Swiper, SwiperSlide } from "swiper/react"
-import { Navigation, Thumbs, Mousewheel } from "swiper"
+
+import { Mousewheel, Navigation, Thumbs } from "swiper"
 import "swiper/css"
 import "swiper/css/navigation"
-import { useState } from "react"
-import { Image } from "cloudinary-react"
 
 export default function Slider({ slides }) {
   const [imagesNavSlider, setImagesNavSlider] = useState(null)
   return (
-    <section className="slider sticky top-0 left-0">
+    <section className="slider sticky left-0 top-0">
       <div className="slider__flex">
-        <div className="slider__col min-w-full sm:min-w-[80px] overflow-y-auto">
+        <div className="slider__col min-w-full overflow-y-auto sm:min-w-[80px]">
           <div className="slider__prev"></div>
 
           <div className="slider__thumbs">
@@ -57,10 +58,7 @@ export default function Slider({ slides }) {
           <Swiper
             // thumbs={{ swiper: imagesNavSlider }}
             thumbs={{
-              swiper:
-                imagesNavSlider && !imagesNavSlider.destroyed
-                  ? imagesNavSlider
-                  : null,
+              swiper: imagesNavSlider && !imagesNavSlider.destroyed ? imagesNavSlider : null,
             }}
             direction="horizontal"
             slidesPerView={1}

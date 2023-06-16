@@ -1,18 +1,14 @@
-import { Provider } from "react-redux";
-import { BrowserRouter } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import "swiper/css";
+import { Provider } from "react-redux"
+import { BrowserRouter } from "react-router-dom"
+import { ToastContainer } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
 
-import "./assets/styles/style.css";
-import {
-  SignUpLogin,
-  ForgetPassword,
-  UpdatePassword,
-  UpdateProfile,
-} from "./components";
-import store from "./store/configureStore";
-import Router from "./routes/Router";
+import "./assets/styles/style.css"
+import { ForgetPassword, SignUpLogin, UpdatePassword, UpdateProfile } from "./components"
+import Router from "./routes/Router"
+import store from "./store/configureStore"
+
+import "swiper/css"
 
 function App() {
   return (
@@ -26,7 +22,7 @@ function App() {
         <UpdateProfile />
       </BrowserRouter>
     </Provider>
-  );
+  )
 }
 
-export default App;
+export default App

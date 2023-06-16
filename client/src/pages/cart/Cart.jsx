@@ -1,10 +1,14 @@
 import { Image } from "cloudinary-react"
-import { Form, Formik } from "formik"
 import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 import StripeCheckout from "react-stripe-checkout"
 import { toast } from "react-toastify"
+
+import MetaData from "../../utils/MetaData"
+import MountTransition from "../../utils/MountTransition"
+
+import LoadingDialog from "../../components/LoadingDialog"
 
 import { ReactComponent as CartImg } from "../../assets/icons/cart_center.svg"
 import { ReactComponent as IcClose } from "../../assets/icons/ic-close.svg"
@@ -12,14 +16,10 @@ import MasterCard from "../../assets/icons/social/MasterCard.png"
 import Visa from "../../assets/icons/social/Visa.png"
 import HomeLogo from "../../assets/logo-black.svg"
 import { Button, Input } from "../../components"
-import LoadingDialog from "../../components/LoadingDialog"
-import {
-  createOrderFromCartApi,
-  removeProductCartApi,
-} from "../../store/apiCall/cartApi"
+import { createOrderFromCartApi, removeProductCartApi } from "../../store/apiCall/cartApi"
 import { getCart } from "../../store/cartSlice"
-import MetaData from "../../utils/MetaData"
-import MountTransition from "../../utils/MountTransition"
+
+import { Form, Formik } from "formik"
 
 const Cart = () => {
   const [loading, setLoading] = useState(false)
@@ -54,16 +54,16 @@ const Cart = () => {
     rows.push(
       <tr key={productId._id} className="border-1 border-neutral-lighter">
         <td colSpan={2}>
-          <div className="flex items-center space-x-3 text-left p-4">
+          <div className="flex items-center space-x-3 p-4 text-left">
             <span
-              className="p-2 text-gray-400 hover:text-gray-500 cursor-pointer"
+              className="cursor-pointer p-2 text-gray-400 hover:text-gray-500"
               onClick={() => removeProductCartApi(cart, productId._id)}
             >
               <IcClose className="text-neutral-darker" />
             </span>
             <div>
               <Link to={`/product/${productId._id}`} className="avatar block">
-                <div className="mask mask-squircle w-20 h-20">
+                <div className="mask mask-squircle h-20 w-20">
                   <Image
                     cloudName={import.meta.env.VITE_CLOUD_NAME}
                     alt="item pic"
@@ -76,25 +76,20 @@ const Cart = () => {
               </Link>
             </div>
             <div className={isDeleted ? "text-red-700" : ""}>
-              <Link
-                to={`/product/${productId._id}`}
-                className="block space-y-1"
-              >
+              <Link to={`/product/${productId._id}`} className="block space-y-1">
                 <div className="font-bold line-clamp-1">
                   {isDeleted && "(Deleted)"} {productId.title}
                 </div>
-                <div className="text-sm opacity-50 line-clamp-1">
-                  Category: {productId.category}
-                </div>
+                <div className="text-sm opacity-50 line-clamp-1">Category: {productId.category}</div>
               </Link>
             </div>
           </div>
         </td>
         <td className="">
-          <span className="max-w-[60px] lg:max-w-[150px] mx-auto rounded-full border-1 border-neutral-lighter py-2 px-3 flex text-neutral-darker font-bold">
+          <span className="mx-auto flex max-w-[60px] rounded-full border-1 border-neutral-lighter px-3 py-2 font-bold text-neutral-darker lg:max-w-[150px]">
             <input
               type="number"
-              className="max-w-[60px] lg:max-w-[150px] w-full text-center focus:outline-none outline-none border-none focus:border-none focus:ring-0"
+              className="w-full max-w-[60px] border-none text-center outline-none focus:border-none focus:outline-none focus:ring-0 lg:max-w-[150px]"
               placeholder="1"
               value={quantity}
               min={1}
@@ -103,14 +98,12 @@ const Cart = () => {
             />
           </span>
         </td>
-        <td className="text-lg font-medium space-y-2">
+        <td className="space-y-2 text-lg font-medium">
           <span>Price: ${productId.price}</span>
           <br />
           <span>
             Total: $
-            {productId?.offerPrice < 1
-              ? Number(productId.price) * quantity
-              : Number(productId.offerPrice) * quantity}
+            {productId?.offerPrice < 1 ? Number(productId.price) * quantity : Number(productId.offerPrice) * quantity}
           </span>
         </td>
       </tr>
@@ -120,8 +113,7 @@ const Cart = () => {
   useEffect(() => {
     setHaveDeletedProducts([])
     cart.forEach(({ productId }) => {
-      if (productId.isDeleted)
-        setHaveDeletedProducts((pre) => [...pre, productId._id])
+      if (productId.isDeleted) setHaveDeletedProducts((pre) => [...pre, productId._id])
     })
   }, [cart])
 
@@ -130,24 +122,21 @@ const Cart = () => {
       <MetaData title={"Cart"} />
       {loading ? <LoadingDialog loading={loading} /> : null}
       {cart.length > 0 ? (
-        <div className="max-w-7xl md:min-h-[calc(422px-100%)] min-h-[calc(924px-100%)] mx-auto mt-20 px-3">
-          <h1 className="text-4xl font-medium pt-4 pb-2">
-            Shopping Cart ({cart.length})
-          </h1>
+        <div className="mx-auto mt-20 min-h-[calc(924px-100%)] max-w-7xl px-3 md:min-h-[calc(422px-100%)]">
+          <h1 className="pb-2 pt-4 text-4xl font-medium">Shopping Cart ({cart.length})</h1>
           {haveDeletedProducts.length > 0 && (
             <div className="mt-2">
               <p className="text-lg">
                 <strong>Note:</strong> Product with red title is{" "}
-                <span className="text-red-700 font-medium">Deleted</span> you
-                can remove it from your cart
+                <span className="font-medium text-red-700">Deleted</span> you can remove it from your cart
               </p>
             </div>
           )}
-          <div className="flex flex-col-reverse lg:grid grid-cols-4 gap-6 mt-6">
+          <div className="mt-6 flex grid-cols-4 flex-col-reverse gap-6 lg:grid">
             <div className="col-span-3 w-full ">
-              <div className="overflow-x-auto w-full">
-                <table className="table-fixed w-full border-collapse rounded min-w-[440px]">
-                  <thead className="text-neutral-darker border-1 border-neutral-lighter !font-normal">
+              <div className="w-full overflow-x-auto">
+                <table className="w-full min-w-[440px] table-fixed border-collapse rounded">
+                  <thead className="border-1 border-neutral-lighter !font-normal text-neutral-darker">
                     <tr>
                       <th className="p-2">Product</th>
                       <th></th>
@@ -160,9 +149,9 @@ const Cart = () => {
               </div>
             </div>
             <div className="bg-white">
-              <div className="border-neutral-lighter border-1 divide-y-2 rounded divide-neutral-lighter p-2">
-                <div className="p-2 space-y-3">
-                  <h2 className="font-medium text-lg mb-2">Summery</h2>
+              <div className="divide-y-2 divide-neutral-lighter rounded border-1 border-neutral-lighter p-2">
+                <div className="space-y-3 p-2">
+                  <h2 className="mb-2 text-lg font-medium">Summery</h2>
                   <div className="flex justify-between">
                     <p className="text-neutral-darker">Subtotal</p>
                     <p className="font-medium">${subtotalPrice}</p>
@@ -172,8 +161,8 @@ const Cart = () => {
                     <p className="font-medium">Free</p>
                   </div>
                 </div>
-                <div className="p-2 space-y-1">
-                  <span className="font-medium text-lg">Discount Code</span>
+                <div className="space-y-1 p-2">
+                  <span className="text-lg font-medium">Discount Code</span>
                   <Formik initialValues={{ coupon: "" }}>
                     <Form className="flex gap-1">
                       <Input placeholder="Enter coupon" name="coupon" />
@@ -181,18 +170,15 @@ const Cart = () => {
                     </Form>
                   </Formik>
                 </div>
-                <div className="p-2 space-y-3">
+                <div className="space-y-3 p-2">
                   <div className="flex justify-between">
                     <span className="font-medium">Total</span>
-                    <h3 className="font-bold text-lg">${totalPrice}</h3>
+                    <h3 className="text-lg font-bold">${totalPrice}</h3>
                   </div>
                   <Button
-                    className="lg:w-full text-center bg-neutral-darkest hover:bg-neutral-darker text-white [&>*]:w-full [&>*]:block"
+                    className="bg-neutral-darkest text-center text-white hover:bg-neutral-darker lg:w-full [&>*]:block [&>*]:w-full"
                     onClick={() => {
-                      if (haveDeletedProducts.length > 0)
-                        return toast.error(
-                          "Please remove deleted Products first"
-                        )
+                      if (haveDeletedProducts.length > 0) return toast.error("Please remove deleted Products first")
                     }}
                   >
                     <StripeCheckout
@@ -209,16 +195,16 @@ const Cart = () => {
                       Proceed to Checkout
                     </StripeCheckout>
                   </Button>
-                  <div className="flex gap-1 sm:gap-5 justify-center">
+                  <div className="flex justify-center gap-1 sm:gap-5">
                     <img
                       src={Visa}
                       alt="visa"
-                      className="sm:w-10 object-contain grayscale hover:grayscale-0 transition-all duration-500"
+                      className="object-contain grayscale transition-all duration-500 hover:grayscale-0 sm:w-10"
                     />
                     <img
                       src={MasterCard}
                       alt="master card"
-                      className="sm:w-10 object-contain grayscale hover:grayscale-0 transition-all duration-500"
+                      className="object-contain grayscale transition-all duration-500 hover:grayscale-0 sm:w-10"
                     />
                   </div>
                 </div>
@@ -227,10 +213,10 @@ const Cart = () => {
           </div>
         </div>
       ) : (
-        <div className="w-screen h-screen flex justify-center items-center">
-          <div className="max-w-lg w-full space-y-4 mx-auto grid place-items-center">
+        <div className="flex h-screen w-screen items-center justify-center">
+          <div className="mx-auto grid w-full max-w-lg place-items-center space-y-4">
             <CartImg />
-            <p className="font-medium text-lg">Your shopping cart is empty</p>
+            <p className="text-lg font-medium">Your shopping cart is empty</p>
             <Link to="/shope" className="block">
               <Button app>Continue Shopping</Button>
             </Link>

@@ -1,10 +1,11 @@
 import { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { toast } from "react-toastify"
-import * as Yup from "yup"
 
 import { signInSignUpApi } from "../../store/apiCall/authApi"
 import { getDialog, setDialog, setForgetDialog } from "../../store/authSlice"
+
+import * as Yup from "yup"
 
 const useSignUpLogin = () => {
   const dispatch = useDispatch()
@@ -47,11 +48,7 @@ const useSignUpLogin = () => {
     reader.onload = () => {
       const extension = reader.result?.split(";")[0]?.split("/")[1]
       if (reader.readyState === 2) {
-        if (
-          extension === "jpeg" ||
-          extension === "png" ||
-          extension === "jpg"
-        ) {
+        if (extension === "jpeg" || extension === "png" || extension === "jpg") {
           setImage(reader.result)
           setFiledValue(e.target.name, reader.result)
         } else return toast.error("Only image is valid for profile pic")

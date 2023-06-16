@@ -1,22 +1,10 @@
-import { Dialog, Transition } from "@headlessui/react";
-import { Fragment } from "react";
+import { Dialog, Transition } from "@headlessui/react"
+import { Fragment } from "react"
 
-export default function Modal({
-  children,
-  isOpen,
-  closeModal,
-  zIndex,
-  maxWidth,
-  notCenter,
-  backDrop,
-}) {
+export default function Modal({ children, isOpen, closeModal, zIndex, maxWidth, notCenter, backDrop }) {
   return (
     <Transition appear show={isOpen} as={Fragment}>
-      <Dialog
-        as="div"
-        className={`relative ${zIndex ? zIndex : "z-30"}`}
-        onClose={closeModal}
-      >
+      <Dialog as="div" className={`relative ${zIndex ? zIndex : "z-30"}`} onClose={closeModal}>
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -26,16 +14,12 @@ export default function Modal({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div
-            className={`fixed inset-0 ${backDrop ? backDrop : "bg-black/25"}`}
-          />
+          <div className={`fixed inset-0 ${backDrop ? backDrop : "bg-black/25"}`} />
         </Transition.Child>
 
         <div className="fixed inset-0 overflow-y-auto">
           <div
-            className={`flex min-h-full justify-center p-4 text-center ${
-              notCenter ? "items-start" : "items-center"
-            }`}
+            className={`flex min-h-full justify-center p-4 text-center ${notCenter ? "items-start" : "items-center"}`}
           >
             <Transition.Child
               as={Fragment}
@@ -60,5 +44,5 @@ export default function Modal({
         </div>
       </Dialog>
     </Transition>
-  );
+  )
 }

@@ -1,6 +1,7 @@
-import { Transition } from "@headlessui/react";
-import { ColorRing } from "react-loader-spinner";
-import MetaData from "../utils/MetaData";
+import { Transition } from "@headlessui/react"
+import { ColorRing } from "react-loader-spinner"
+
+import MetaData from "../utils/MetaData"
 
 export default function LoadingDialog({ loading, className }) {
   return (
@@ -14,11 +15,7 @@ export default function LoadingDialog({ loading, className }) {
       leaveFrom="opacity-100"
       leaveTo="opacity-0"
     >
-      <div
-        className={`fixed inset-0 ${
-          className ? className : "bg-black bg-opacity-25"
-        } grid place-items-center z-50`}
-      >
+      <div className={`fixed inset-0 ${className ? className : "bg-black bg-opacity-25"} z-50 grid place-items-center`}>
         <MetaData title={"Loading"} />
         <ColorRing
           visible={true}
@@ -31,5 +28,5 @@ export default function LoadingDialog({ loading, className }) {
         />
       </div>
     </Transition>
-  );
+  )
 }

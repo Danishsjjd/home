@@ -1,19 +1,18 @@
-import { ReactComponent as Accessories } from "../assets/icons/category/Accessories.svg";
-import { ReactComponent as Bathroom } from "../assets/icons/category/Bathroom.svg";
-import { ReactComponent as Bedroom } from "../assets/icons/category/Bedroom.svg";
-import { ReactComponent as Kitchen } from "../assets/icons/category/Kitchen.svg";
-import { ReactComponent as LivingRoom } from "../assets/icons/category/Living room.svg";
-import { ReactComponent as Workspace } from "../assets/icons/category/Workspace.svg";
-import sofa from "../assets/images/home/sofa.png";
-import smallTree from "../assets/images/home/small-tree.png";
-import lamps from "../assets/images/home/lamps.png";
-
-import { ReactComponent as Dollar } from "../assets/icons/aboutUs/dollar.svg";
-import { ReactComponent as Gift } from "../assets/icons/aboutUs/gift.svg";
-import { ReactComponent as Plane } from "../assets/icons/aboutUs/ic-plane.svg";
-import { ReactComponent as Phone } from "../assets/icons/aboutUs/ic-phone.svg";
-import { ReactComponent as House } from "../assets/icons/contactUs/ic-house.svg";
-import { ReactComponent as Mail } from "../assets/icons/contactUs/ic-mail.svg";
+import { ReactComponent as Dollar } from "../assets/icons/aboutUs/dollar.svg"
+import { ReactComponent as Gift } from "../assets/icons/aboutUs/gift.svg"
+import { ReactComponent as Phone } from "../assets/icons/aboutUs/ic-phone.svg"
+import { ReactComponent as Plane } from "../assets/icons/aboutUs/ic-plane.svg"
+import { ReactComponent as Accessories } from "../assets/icons/category/Accessories.svg"
+import { ReactComponent as Bathroom } from "../assets/icons/category/Bathroom.svg"
+import { ReactComponent as Bedroom } from "../assets/icons/category/Bedroom.svg"
+import { ReactComponent as Kitchen } from "../assets/icons/category/Kitchen.svg"
+import { ReactComponent as LivingRoom } from "../assets/icons/category/Living room.svg"
+import { ReactComponent as Workspace } from "../assets/icons/category/Workspace.svg"
+import { ReactComponent as House } from "../assets/icons/contactUs/ic-house.svg"
+import { ReactComponent as Mail } from "../assets/icons/contactUs/ic-mail.svg"
+import lamps from "../assets/images/home/lamps.png"
+import smallTree from "../assets/images/home/small-tree.png"
+import sofa from "../assets/images/home/sofa.png"
 
 // home - category - title
 export const homeCategories = [
@@ -23,7 +22,7 @@ export const homeCategories = [
   { Icon: Bathroom, title: "Bathroom" },
   { Icon: Workspace, title: "Workspace" },
   { Icon: Accessories, title: "Accessories" },
-];
+]
 // home - cards - imgAlt
 export const homeCards = [
   {
@@ -47,7 +46,7 @@ export const homeCards = [
     position: "-top-8",
     desc: "Ceramic Japanese Lamp",
   },
-];
+]
 
 // about us - icon - title
 export const aboutCard = [
@@ -55,7 +54,7 @@ export const aboutCard = [
   { Icon: Dollar, title: "Money Back Guarantee", t2: "Within 30 days" },
   { Icon: Phone, title: "Online Support", t2: "Free support system 24/7" },
   { Icon: Gift, title: "Member Gift", t2: "Coupon at weekend" },
-];
+]
 
 // contact us faq - index (unique)
 export const faqData = [
@@ -99,7 +98,7 @@ export const faqData = [
     que: "Who Should I Contact If I Have Any Queries?",
     ans: "Sed quis nunc efficitur, gravida orci sed, gravida felis. Quisque non euismod felis. Suspendisse consectetur, tellus in condimentum fringilla, turpis massa facilisis augue",
   },
-];
+]
 
 // contact use & footer - title
 
@@ -119,4 +118,4 @@ export const contactInfo = [
     title: "danishsjjd@gmail.com",
     link: "mailto:danishsjjd@gmail.com",
   },
-];
+]

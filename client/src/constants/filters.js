@@ -2,7 +2,7 @@ export const sortOptions = [
   { name: "Best Rating", href: "#", current: false },
   { name: "Newest", href: "#", current: false },
   { name: "Reset", href: "#", current: false },
-];
+]
 export const subCategories = [
   // top
   { name: "Orders", href: "/orders" },
@@ -10,7 +10,7 @@ export const subCategories = [
   { name: "WishList", href: "/wishlist" },
   { name: "Home", href: "/" },
   { name: "About", href: "/about" },
-];
+]
 
 export const filters = [
   {
@@ -25,4 +25,4 @@ export const filters = [
       { value: "workspace", label: "Workspace" },
     ],
   },
-];
+]

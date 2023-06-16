@@ -1,13 +1,11 @@
-import Rating from "@mui/material/Rating"
+import { Image } from "cloudinary-react"
 import { FaRegTrashAlt } from "react-icons/fa"
 import { useSelector } from "react-redux"
 
-import { Image } from "cloudinary-react"
-import {
-  deleteReviewApi,
-  toggleReviewLikeApi,
-} from "../../../store/apiCall/productApi"
+import { deleteReviewApi, toggleReviewLikeApi } from "../../../store/apiCall/productApi"
 import { getUser } from "../../../store/authSlice"
+
+import Rating from "@mui/material/Rating"
 
 const Reviews = ({ reviews, productId, setProduct }) => {
   const user = useSelector(getUser)
@@ -20,14 +18,14 @@ const Reviews = ({ reviews, productId, setProduct }) => {
     toggleReviewLikeApi({ revId: id, setProduct, user, reviews })
   }
   return (
-    <div className="divide-y col-span-2 max-w-2xl">
+    <div className="col-span-2 max-w-2xl divide-y">
       {reviews.map((review) => {
         const liked = review.likes.find((email) => email === user.email)
         return (
-          <div className="p-4 space-y-2" key={review.user.email}>
+          <div className="space-y-2 p-4" key={review.user.email}>
             <div className="flex justify-between">
-              <div className="flex gap-2 items-center">
-                <div className="w-10 h-10 rounded-full overflow-hidden">
+              <div className="flex items-center gap-2">
+                <div className="h-10 w-10 overflow-hidden rounded-full">
                   {review?.user?.avatar?.public_id ? (
                     <Image
                       cloudName={import.meta.env.VITE_CLOUD_NAME}
@@ -35,7 +33,7 @@ const Reviews = ({ reviews, productId, setProduct }) => {
                       width="40"
                       height="40"
                       alt="user image"
-                      className="w-full h-full"
+                      className="h-full w-full"
                     />
                   ) : (
                     <img src={review?.user?.googleAvatar} alt="user" />
@@ -50,7 +48,7 @@ const Reviews = ({ reviews, productId, setProduct }) => {
                 <Rating readOnly name="size-medium" value={review.rating} />
                 {user?.role === "admin" ? (
                   <FaRegTrashAlt
-                    className="text-neutral-darker hover:text-neutral-darkest cursor-pointer text-xl"
+                    className="cursor-pointer text-xl text-neutral-darker hover:text-neutral-darkest"
                     onClick={() => deleteReview(review._id)}
                   />
                 ) : null}
@@ -59,8 +57,7 @@ const Reviews = ({ reviews, productId, setProduct }) => {
             <p className="text-neutral-darker">{review.review}</p>
             <button
               className={
-                "flex gap-1 hover:text-blue-600 cursor-pointer font-medium " +
-                `${liked ? "text-blue-600" : ""}`
+                "flex cursor-pointer gap-1 font-medium hover:text-blue-600 " + `${liked ? "text-blue-600" : ""}`
               }
               onClick={() => toggleLike(review._id)}
             >

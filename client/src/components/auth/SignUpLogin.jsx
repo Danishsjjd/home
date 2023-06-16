@@ -1,14 +1,14 @@
-import { Formik } from "formik";
+import default_img from "../../assets/default_img.jpg"
+import { ReactComponent as Google } from "../../assets/icons/social/ic-google.svg"
+import login_signUp from "../../assets/images/auth/login_SignUp.jpg"
+import { ReactComponent as Logo } from "../../assets/logo-black.svg"
+import Modal from "../Modal"
+import Button from "../form/Button"
+import ErrorMessage from "../form/ErrorMessage"
+import Input from "../form/Input"
+import useSignUpLogin from "./useSignUpLogin"
 
-import default_img from "../../assets/default_img.jpg";
-import { ReactComponent as Google } from "../../assets/icons/social/ic-google.svg";
-import login_signUp from "../../assets/images/auth/login_SignUp.jpg";
-import { ReactComponent as Logo } from "../../assets/logo-black.svg";
-import Button from "../form/Button";
-import ErrorMessage from "../form/ErrorMessage";
-import Input from "../form/Input";
-import Modal from "../Modal";
-import useSignUpLogin from "./useSignUpLogin";
+import { Formik } from "formik"
 
 export default function SignUpLogin() {
   const {
@@ -25,33 +25,27 @@ export default function SignUpLogin() {
     setAgreeTerms,
     googleLogin,
     forgetPassword,
-  } = useSignUpLogin();
+  } = useSignUpLogin()
 
   return (
     <Modal closeModal={closeModal} isOpen={isOpen}>
-      <div className="grid sm:grid-cols-2 gap-4">
+      <div className="grid gap-4 sm:grid-cols-2">
         <div className="hidden sm:block">
-          <img
-            src={login_signUp}
-            alt="login"
-            className="w-full h-full object-cover"
-          />
+          <img src={login_signUp} alt="login" className="h-full w-full object-cover" />
         </div>
         <div className="space-y-1">
           <Logo className="w-24" />
-          <h1 className="font-medium  text-lg">
-            {haveAccount ? "Welcome Back" : "Hello Friends!!!"}
-          </h1>
+          <h1 className="text-lg  font-medium">{haveAccount ? "Welcome Back" : "Hello Friends!!!"}</h1>
           <button
-            className="flex justify-center items-center gap-3 p-4 w-full min-w-210 bg-white rounded-full shadow-lg text-center"
+            className="min-w-210 flex w-full items-center justify-center gap-3 rounded-full bg-white p-4 text-center shadow-lg"
             onClick={googleLogin}
           >
             <Google /> Sign up with Google
           </button>
-          <div className="flex justify-center items-center gap-2 !my-3 px-3">
-            <div className="flex-1 h-1 rounded-full bg-neutral-lightest" />
+          <div className="!my-3 flex items-center justify-center gap-2 px-3">
+            <div className="h-1 flex-1 rounded-full bg-neutral-lightest" />
             <p className=" font-bold">or</p>
-            <div className="flex-1 h-1 rounded-full bg-neutral-lightest" />
+            <div className="h-1 flex-1 rounded-full bg-neutral-lightest" />
           </div>
           <Formik
             validationSchema={haveAccount ? loginValidation : signUpValidation}
@@ -62,20 +56,16 @@ export default function SignUpLogin() {
               <form onSubmit={handleSubmit}>
                 {!haveAccount && (
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 text-center">
-                      Photo
-                    </label>
-                    <div className="mt-1 flex items-center flex-col gap-3">
-                      <div className="max-w-[100px] grid place-items-center w-full max-h-[100px] h-full overflow-hidden rounded-full">
+                    <label className="block text-center text-sm font-medium text-gray-700">Photo</label>
+                    <div className="mt-1 flex flex-col items-center gap-3">
+                      <div className="grid h-full max-h-[100px] w-full max-w-[100px] place-items-center overflow-hidden rounded-full">
                         <img
                           src={image || default_img}
                           alt="default"
-                          className={`w-full ${
-                            image ? "object-cover" : "object-contain bg-[#999]"
-                          }`}
+                          className={`w-full ${image ? "object-cover" : "bg-[#999] object-contain"}`}
                         />
                       </div>
-                      <button className="ml-5 bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:outline-secondary-darker">
+                      <button className="ml-5 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:outline-secondary-darker focus:ring-2 focus:ring-offset-2">
                         <label htmlFor="userAvatar">Upload</label>
                       </button>
                       <input
@@ -86,10 +76,7 @@ export default function SignUpLogin() {
                         onChange={(e) => onImageChange(e, setFieldValue)}
                         accept="image/png, image/jpeg"
                       />
-                      <ErrorMessage
-                        err={errors["avatar"]}
-                        visible={touched["avatar"]}
-                      />
+                      <ErrorMessage err={errors["avatar"]} visible={touched["avatar"]} />
                     </div>
                   </div>
                 )}
@@ -109,43 +96,36 @@ export default function SignUpLogin() {
                   <Input name="password" app type="password" />
                 </div>
                 {haveAccount && (
-                  <span
-                    className="text-right block hover:text-blue-700 cursor-pointer"
-                    onClick={forgetPassword}
-                  >
+                  <span className="block cursor-pointer text-right hover:text-blue-700" onClick={forgetPassword}>
                     forget password?
                   </span>
                 )}
                 {!haveAccount && (
-                  <div className="flex justify-center !my-2">
-                    <div className="form-check flex gap-2 ml-2">
+                  <div className="!my-2 flex justify-center">
+                    <div className="form-check ml-2 flex gap-2">
                       <input
                         type="checkbox"
                         id="flexCheckIndeterminate"
-                        className="accent-secondary-darker focus:outline-1 focus:outline-secondary-darker focus:ring-0 checkbox checkbox-primary"
+                        className="checkbox-primary checkbox accent-secondary-darker focus:outline-1 focus:outline-secondary-darker focus:ring-0"
                         onChange={(e) => setAgreeTerms(e.target.checked)}
                       />
                       <label
-                        className="form-check-label inline-block text-gray-800 text-xs sm:text-base"
+                        className="form-check-label inline-block text-xs text-gray-800 sm:text-base"
                         htmlFor="flexCheckIndeterminate"
                       >
-                        By submitting this form you agree to our Terms and
-                        Conditions
+                        By submitting this form you agree to our Terms and Conditions
                       </label>
                     </div>
                   </div>
                 )}
-                <div className="text-center !my-2">
+                <div className="!my-2 text-center">
                   <Button app className={"text-center"}>
                     {haveAccount ? "Login" : "create Account"}
                   </Button>
                 </div>
                 <p className="!mt-2 text-center">
                   {haveAccount ? "Not a Member?" : "Already a member?"}{" "}
-                  <span
-                    className="text-[#2F80ED] cursor-pointer"
-                    onClick={() => setHaveAccount((pre) => !pre)}
-                  >
+                  <span className="cursor-pointer text-[#2F80ED]" onClick={() => setHaveAccount((pre) => !pre)}>
                     {haveAccount ? "Sign In" : "Login"}
                   </span>
                 </p>
@@ -155,5 +135,5 @@ export default function SignUpLogin() {
         </div>
       </div>
     </Modal>
-  );
+  )
 }

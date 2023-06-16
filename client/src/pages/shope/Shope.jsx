@@ -1,28 +1,25 @@
-import { Dialog, Disclosure, Menu, Transition } from "@headlessui/react";
-import { XIcon } from "@heroicons/react/outline";
-import {
-  ChevronDownIcon,
-  FilterIcon,
-  MinusSmIcon,
-  PlusSmIcon,
-  ViewGridIcon,
-} from "@heroicons/react/solid";
-import { Pagination, Slider, styled } from "@mui/material";
-import { Fragment, useEffect, useState } from "react";
-import { AiOutlineUnorderedList } from "react-icons/ai";
-import { useSelector } from "react-redux";
-import { Link, useSearchParams } from "react-router-dom";
+import { Dialog, Disclosure, Menu, Transition } from "@headlessui/react"
+import { XIcon } from "@heroicons/react/outline"
+import { ChevronDownIcon, FilterIcon, MinusSmIcon, PlusSmIcon, ViewGridIcon } from "@heroicons/react/solid"
+import { Fragment, useEffect, useState } from "react"
+import { AiOutlineUnorderedList } from "react-icons/ai"
+import { useSelector } from "react-redux"
+import { Link, useSearchParams } from "react-router-dom"
 
-import { Card } from "../../components";
-import LoadingDialog from "../../components/LoadingDialog";
-import { filters, sortOptions, subCategories } from "../../constants/filters";
-import { getProductsApi } from "../../store/apiCall/productApi";
-import { getProducts, getProductsCount } from "../../store/productSlice";
-import MetaData from "../../utils/MetaData";
-import MountTransition from "../../utils/MountTransition";
+import MetaData from "../../utils/MetaData"
+import MountTransition from "../../utils/MountTransition"
+
+import LoadingDialog from "../../components/LoadingDialog"
+
+import { Card } from "../../components"
+import { filters, sortOptions, subCategories } from "../../constants/filters"
+import { getProductsApi } from "../../store/apiCall/productApi"
+import { getProducts, getProductsCount } from "../../store/productSlice"
+
+import { Pagination, Slider, styled } from "@mui/material"
 
 function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
+  return classes.filter(Boolean).join(" ")
 }
 const CusSlider = styled(Slider)({
   color: "#e9672b",
@@ -62,52 +59,44 @@ const CusSlider = styled(Slider)({
       transform: "rotate(45deg)",
     },
   },
-});
+})
 
 export default function Shope() {
-  const [loading, setLoading] = useState(true);
-  const [sort, setSort] = useState("");
-  const [grid, setGrid] = useState(true);
-  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-  const [value, setValue] = useState([0, 2000]);
+  const [loading, setLoading] = useState(true)
+  const [sort, setSort] = useState("")
+  const [grid, setGrid] = useState(true)
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
+  const [value, setValue] = useState([0, 2000])
 
-  const products = useSelector(getProducts);
-  const productsCount = useSelector(getProductsCount);
-  const [searchParams, setSearchParams] = useSearchParams();
+  const products = useSelector(getProducts)
+  const productsCount = useSelector(getProductsCount)
+  const [searchParams, setSearchParams] = useSearchParams()
 
-  const category = searchParams.get("category") || "";
-  const pageN = Number(searchParams.get("page"));
-  const page = typeof pageN === "number" ? (pageN < 0 ? 1 : pageN) : 1;
+  const category = searchParams.get("category") || ""
+  const pageN = Number(searchParams.get("page"))
+  const page = typeof pageN === "number" ? (pageN < 0 ? 1 : pageN) : 1
 
-  let cards = [];
+  let cards = []
 
   const onCategoryChange = (e) => {
     if (e.target.checked) {
       if (category === null) {
-        setSearchParams({ page, category: e.target.name });
+        setSearchParams({ page, category: e.target.name })
       } else {
-        setSearchParams({ page, category: category + e.target.name });
+        setSearchParams({ page, category: category + e.target.name })
       }
     } else {
-      const updatedFilter = category.replace(
-        new RegExp(e.target.name, "i"),
-        ""
-      );
-      setSearchParams({ page, category: updatedFilter });
+      const updatedFilter = category.replace(new RegExp(e.target.name, "i"), "")
+      setSearchParams({ page, category: updatedFilter })
     }
-  };
+  }
 
   products?.forEach((product) => {
-    if (
-      category.length > 0 &&
-      !category.toLowerCase().includes(product.category.toLowerCase())
-    )
-      return;
+    if (category.length > 0 && !category.toLowerCase().includes(product.category.toLowerCase())) return
 
-    const productPrice =
-      product.offerPrice < 1 ? product.price : product.offerPrice;
+    const productPrice = product.offerPrice < 1 ? product.price : product.offerPrice
 
-    if (productPrice < value[0] || productPrice > value[1]) return;
+    if (productPrice < value[0] || productPrice > value[1]) return
 
     cards.push(
       <Card
@@ -124,27 +113,27 @@ export default function Shope() {
         grid={grid}
         createdAt={product?.createdAt}
       />
-    );
-  });
+    )
+  })
 
   if (sort === "Best Rating") {
     cards = cards.sort((a, b) => {
-      return b.props.rating - a.props.rating;
-    });
+      return b.props.rating - a.props.rating
+    })
   } else if (sort === "Newest") {
     cards = cards.sort((a, b) => {
-      return new Date(b.props.createdAt) - new Date(a.props.createdAt);
-    });
+      return new Date(b.props.createdAt) - new Date(a.props.createdAt)
+    })
   }
 
   useEffect(() => {
-    if (products.length > 0) setLoading(false);
-    else setLoading(true);
-  }, [products]);
+    if (products.length > 0) setLoading(false)
+    else setLoading(true)
+  }, [products])
 
   useEffect(() => {
-    getProductsApi(page);
-  }, [page]);
+    getProductsApi(page)
+  }, [page])
 
   return (
     <MountTransition>
@@ -153,11 +142,7 @@ export default function Shope() {
         <div>
           {/* Mobile filter dialog */}
           <Transition.Root show={mobileFiltersOpen} as={Fragment}>
-            <Dialog
-              as="div"
-              className="relative z-40 lg:hidden"
-              onClose={setMobileFiltersOpen}
-            >
+            <Dialog as="div" className="relative z-40 lg:hidden" onClose={setMobileFiltersOpen}>
               <Transition.Child
                 as={Fragment}
                 enter="transition-opacity ease-linear duration-300"
@@ -170,7 +155,7 @@ export default function Shope() {
                 <div className="fixed inset-0 bg-black bg-opacity-25" />
               </Transition.Child>
 
-              <div className="fixed inset-0 flex z-40">
+              <div className="fixed inset-0 z-40 flex">
                 <Transition.Child
                   as={Fragment}
                   enter="transition ease-in-out duration-300 transform"
@@ -180,14 +165,12 @@ export default function Shope() {
                   leaveFrom="translate-x-0"
                   leaveTo="translate-x-full"
                 >
-                  <Dialog.Panel className="ml-auto relative max-w-xs w-full h-full bg-white shadow-xl py-4 pb-12 flex flex-col overflow-y-auto">
-                    <div className="px-4 flex items-center justify-between">
-                      <h2 className="text-lg font-medium text-gray-900">
-                        Filters
-                      </h2>
+                  <Dialog.Panel className="relative ml-auto flex h-full w-full max-w-xs flex-col overflow-y-auto bg-white py-4 pb-12 shadow-xl">
+                    <div className="flex items-center justify-between px-4">
+                      <h2 className="text-lg font-medium text-gray-900">Filters</h2>
                       <button
                         type="button"
-                        className="-mr-2 w-10 h-10 bg-white p-2 rounded-md flex items-center justify-center text-gray-400"
+                        className="-mr-2 flex h-10 w-10 items-center justify-center rounded-md bg-white p-2 text-gray-400"
                         onClick={() => setMobileFiltersOpen(false)}
                       >
                         <span className="sr-only">Close menu</span>
@@ -198,42 +181,27 @@ export default function Shope() {
                     {/* Filters */}
                     <form className="mt-4 border-t border-gray-200">
                       <h3 className="sr-only">Categories</h3>
-                      <ul className="font-medium text-gray-900 px-2 py-3">
+                      <ul className="px-2 py-3 font-medium text-gray-900">
                         {subCategories.map((category) => (
                           <li key={category.name}>
-                            <Link
-                              to={category.href}
-                              className="block px-2 py-3"
-                            >
+                            <Link to={category.href} className="block px-2 py-3">
                               {category.name}
                             </Link>
                           </li>
                         ))}
                       </ul>
                       {filters.map((section) => (
-                        <Disclosure
-                          as="div"
-                          key={section.id}
-                          className="border-t border-gray-200 px-4 py-6"
-                        >
+                        <Disclosure as="div" key={section.id} className="border-t border-gray-200 px-4 py-6">
                           {({ open }) => (
                             <>
                               <h3 className="-mx-2 -my-3 flow-root">
-                                <Disclosure.Button className="px-2 py-3 bg-white w-full flex items-center justify-between text-gray-400 hover:text-gray-500">
-                                  <span className="font-medium text-gray-900">
-                                    {section.name}
-                                  </span>
+                                <Disclosure.Button className="flex w-full items-center justify-between bg-white px-2 py-3 text-gray-400 hover:text-gray-500">
+                                  <span className="font-medium text-gray-900">{section.name}</span>
                                   <span className="ml-6 flex items-center">
                                     {open ? (
-                                      <MinusSmIcon
-                                        className="h-5 w-5"
-                                        aria-hidden="true"
-                                      />
+                                      <MinusSmIcon className="h-5 w-5" aria-hidden="true" />
                                     ) : (
-                                      <PlusSmIcon
-                                        className="h-5 w-5"
-                                        aria-hidden="true"
-                                      />
+                                      <PlusSmIcon className="h-5 w-5" aria-hidden="true" />
                                     )}
                                   </span>
                                 </Disclosure.Button>
@@ -241,18 +209,13 @@ export default function Shope() {
                               <Disclosure.Panel className="pt-6">
                                 <div className="space-y-6">
                                   {section.options.map((option, optionIdx) => (
-                                    <div
-                                      key={option.value}
-                                      className="flex items-center"
-                                    >
+                                    <div key={option.value} className="flex items-center">
                                       <input
                                         id={`filter-mobile-${section.id}-${optionIdx}`}
                                         type="checkbox"
-                                        className="accent-secondary-darker h-4 w-4 focus:outline-1 focus:outline-secondary-darker focus:ring-0 checkbox checkbox-primary"
+                                        className="checkbox-primary checkbox h-4 w-4 accent-secondary-darker focus:outline-1 focus:outline-secondary-darker focus:ring-0"
                                         name={`${option.value}`}
-                                        checked={category
-                                          .toLowerCase()
-                                          .includes(option.value)}
+                                        checked={category.toLowerCase().includes(option.value)}
                                         onChange={onCategoryChange}
                                       />
                                       <label
@@ -269,39 +232,26 @@ export default function Shope() {
                           )}
                         </Disclosure>
                       ))}
-                      <Disclosure
-                        as="div"
-                        className="border-b border-gray-200 py-6 px-4"
-                      >
+                      <Disclosure as="div" className="border-b border-gray-200 px-4 py-6">
                         {({ open }) => (
                           <>
                             <h3 className="-my-3 flow-root">
                               <Disclosure.Button className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
-                                <span className="font-medium text-gray-900">
-                                  Price Range
-                                </span>
+                                <span className="font-medium text-gray-900">Price Range</span>
                                 <span className="ml-6 flex items-center">
                                   {open ? (
-                                    <MinusSmIcon
-                                      className="h-5 w-5"
-                                      aria-hidden="true"
-                                    />
+                                    <MinusSmIcon className="h-5 w-5" aria-hidden="true" />
                                   ) : (
-                                    <PlusSmIcon
-                                      className="h-5 w-5"
-                                      aria-hidden="true"
-                                    />
+                                    <PlusSmIcon className="h-5 w-5" aria-hidden="true" />
                                   )}
                                 </span>
                               </Disclosure.Button>
                             </h3>
-                            <Disclosure.Panel className="pt-6 px-4">
+                            <Disclosure.Panel className="px-4 pt-6">
                               <CusSlider
                                 getAriaLabel={() => "Price range"}
                                 value={value}
-                                onChange={(e, updatedValue) =>
-                                  setValue(updatedValue)
-                                }
+                                onChange={(e, updatedValue) => setValue(updatedValue)}
                                 valueLabelDisplay="on"
                                 getAriaValueText={(value) => `${value}$`}
                                 min={0}
@@ -318,11 +268,9 @@ export default function Shope() {
             </Dialog>
           </Transition.Root>
 
-          <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="relative z-10 flex items-baseline justify-between pt-24 pb-6 border-b border-gray-200">
-              <h1 className="text-4xl font-bold tracking-tight text-gray-900">
-                New Arrivals
-              </h1>
+          <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="relative z-10 flex items-baseline justify-between border-b border-gray-200 pb-6 pt-24">
+              <h1 className="text-4xl font-bold tracking-tight text-gray-900">New Arrivals</h1>
 
               <div className="flex items-center">
                 <Menu as="div" className="relative inline-block text-left">
@@ -330,7 +278,7 @@ export default function Shope() {
                     <Menu.Button className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
                       Sort
                       <ChevronDownIcon
-                        className="flex-shrink-0 -mr-1 ml-1 h-5 w-5 text-gray-400 group-hover:text-gray-500"
+                        className="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
                         aria-hidden="true"
                       />
                     </Menu.Button>
@@ -345,7 +293,7 @@ export default function Shope() {
                     leaveFrom="transform opacity-100 scale-100"
                     leaveTo="transform opacity-0 scale-95"
                   >
-                    <Menu.Items className="origin-top-right absolute right-0 mt-2 w-40 rounded-md shadow-2xl bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    <Menu.Items className="absolute right-0 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none">
                       <div className="py-1">
                         {sortOptions.map((option) => (
                           <Menu.Item key={option.name}>
@@ -353,9 +301,7 @@ export default function Shope() {
                               <span
                                 to={option.href}
                                 className={classNames(
-                                  option.current
-                                    ? "font-medium text-gray-900"
-                                    : "text-gray-500",
+                                  option.current ? "font-medium text-gray-900" : "text-gray-500",
                                   active ? "bg-gray-100" : "",
                                   "block px-4 py-2 text-sm"
                                 )}
@@ -373,39 +319,36 @@ export default function Shope() {
 
                 <button
                   type="button"
-                  className="p-2 -m-2 ml-5 sm:ml-7 text-gray-400 hover:text-gray-500 sm:block hidden"
+                  className="-m-2 ml-5 hidden p-2 text-gray-400 hover:text-gray-500 sm:ml-7 sm:block"
                   onClick={() => setGrid((pre) => !pre)}
                 >
                   {grid ? (
-                    <AiOutlineUnorderedList
-                      className="w-5 h-5"
-                      aria-hidden="true"
-                    />
+                    <AiOutlineUnorderedList className="h-5 w-5" aria-hidden="true" />
                   ) : (
-                    <ViewGridIcon className="w-5 h-5" aria-hidden="true" />
+                    <ViewGridIcon className="h-5 w-5" aria-hidden="true" />
                   )}
                 </button>
                 <button
                   type="button"
-                  className="p-2 -m-2 ml-4 sm:ml-6 text-gray-400 hover:text-gray-500 lg:hidden"
+                  className="-m-2 ml-4 p-2 text-gray-400 hover:text-gray-500 sm:ml-6 lg:hidden"
                   onClick={() => setMobileFiltersOpen(true)}
                 >
                   <span className="sr-only">Filters</span>
-                  <FilterIcon className="w-5 h-5" aria-hidden="true" />
+                  <FilterIcon className="h-5 w-5" aria-hidden="true" />
                 </button>
               </div>
             </div>
 
-            <section aria-labelledby="products-heading" className="pt-6 pb-24">
+            <section aria-labelledby="products-heading" className="pb-24 pt-6">
               <h2 id="products-heading" className="sr-only">
                 Products
               </h2>
 
-              <div className="grid grid-cols-1 lg:grid-cols-4 gap-x-8 gap-y-10">
+              <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
                 {/* Filters */}
-                <form className="hidden lg:block sticky top-16 self-start">
+                <form className="sticky top-16 hidden self-start lg:block">
                   <h3 className="sr-only">Categories</h3>
-                  <ul className="text-sm font-medium text-gray-900 space-y-4 pb-6 border-b border-gray-200">
+                  <ul className="space-y-4 border-b border-gray-200 pb-6 text-sm font-medium text-gray-900">
                     {subCategories.map((category) => (
                       <li key={category.name}>
                         <Link to={category.href}>{category.name}</Link>
@@ -414,30 +357,17 @@ export default function Shope() {
                   </ul>
 
                   {filters.map((section) => (
-                    <Disclosure
-                      as="div"
-                      key={section.id}
-                      className="border-b border-gray-200 py-6"
-                      defaultOpen
-                    >
+                    <Disclosure as="div" key={section.id} className="border-b border-gray-200 py-6" defaultOpen>
                       {({ open }) => (
                         <>
                           <h3 className="-my-3 flow-root">
-                            <Disclosure.Button className="py-3 bg-white w-full flex items-center justify-between text-sm text-gray-400 hover:text-gray-500">
-                              <span className="font-medium text-gray-900">
-                                {section.name}
-                              </span>
+                            <Disclosure.Button className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
+                              <span className="font-medium text-gray-900">{section.name}</span>
                               <span className="ml-6 flex items-center">
                                 {open ? (
-                                  <MinusSmIcon
-                                    className="h-5 w-5"
-                                    aria-hidden="true"
-                                  />
+                                  <MinusSmIcon className="h-5 w-5" aria-hidden="true" />
                                 ) : (
-                                  <PlusSmIcon
-                                    className="h-5 w-5"
-                                    aria-hidden="true"
-                                  />
+                                  <PlusSmIcon className="h-5 w-5" aria-hidden="true" />
                                 )}
                               </span>
                             </Disclosure.Button>
@@ -445,18 +375,13 @@ export default function Shope() {
                           <Disclosure.Panel className="pt-6">
                             <div className="space-y-4">
                               {section.options.map((option, optionIdx) => (
-                                <div
-                                  key={option.value}
-                                  className="flex items-center"
-                                >
+                                <div key={option.value} className="flex items-center">
                                   <input
                                     id={`filter-${section.id}-${optionIdx}`}
                                     type="checkbox"
-                                    className="accent-secondary-darker h-4 w-4 focus:outline-1 focus:outline-secondary-darker focus:ring-0 checkbox checkbox-primary"
+                                    className="checkbox-primary checkbox h-4 w-4 accent-secondary-darker focus:outline-1 focus:outline-secondary-darker focus:ring-0"
                                     name={`${option.value}`}
-                                    checked={category
-                                      .toLowerCase()
-                                      .includes(option.value)}
+                                    checked={category.toLowerCase().includes(option.value)}
                                     onChange={onCategoryChange}
                                   />
                                   <label
@@ -473,28 +398,17 @@ export default function Shope() {
                       )}
                     </Disclosure>
                   ))}
-                  <Disclosure
-                    as="div"
-                    className="border-b border-gray-200 py-6"
-                  >
+                  <Disclosure as="div" className="border-b border-gray-200 py-6">
                     {({ open }) => (
                       <>
                         <h3 className="-my-3 flow-root">
                           <Disclosure.Button className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
-                            <span className="font-medium text-gray-900">
-                              Price Range
-                            </span>
+                            <span className="font-medium text-gray-900">Price Range</span>
                             <span className="ml-6 flex items-center">
                               {open ? (
-                                <MinusSmIcon
-                                  className="h-5 w-5"
-                                  aria-hidden="true"
-                                />
+                                <MinusSmIcon className="h-5 w-5" aria-hidden="true" />
                               ) : (
-                                <PlusSmIcon
-                                  className="h-5 w-5"
-                                  aria-hidden="true"
-                                />
+                                <PlusSmIcon className="h-5 w-5" aria-hidden="true" />
                               )}
                             </span>
                           </Disclosure.Button>
@@ -503,9 +417,7 @@ export default function Shope() {
                           <CusSlider
                             getAriaLabel={() => "Price range"}
                             value={value}
-                            onChange={(e, updatedValue) =>
-                              setValue(updatedValue)
-                            }
+                            onChange={(e, updatedValue) => setValue(updatedValue)}
                             valueLabelDisplay="on"
                             getAriaValueText={(value) => `${value}$`}
                             min={0}
@@ -523,16 +435,14 @@ export default function Shope() {
 
                   {!loading ? (
                     <div
-                      className={`block grid-cols-2 md:grid-cols-3 gap-6 space-y-6  ${
+                      className={`block grid-cols-2 gap-6 space-y-6 md:grid-cols-3  ${
                         grid ? "sm:grid sm:!space-y-0" : "space-y-6"
                       }`}
                     >
                       {cards.length > 0 ? (
                         <>{cards}</>
                       ) : (
-                        <div className="text-lg font-medium">
-                          we don't currently have item in {category}
-                        </div>
+                        <div className="text-lg font-medium">we don't currently have item in {category}</div>
                       )}
                       <Pagination
                         count={Math.ceil(productsCount / 10)}
@@ -549,10 +459,7 @@ export default function Shope() {
                       />
                     </div>
                   ) : (
-                    <LoadingDialog
-                      loading={loading}
-                      className="!static w-full h-full grid place-items-center"
-                    />
+                    <LoadingDialog loading={loading} className="!static grid h-full w-full place-items-center" />
                   )}
                   {/* /End replace */}
                 </div>
@@ -562,5 +469,5 @@ export default function Shope() {
         </div>
       </div>
     </MountTransition>
-  );
+  )
 }
