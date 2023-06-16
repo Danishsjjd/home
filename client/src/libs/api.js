@@ -16,7 +16,7 @@ const SERVICES = {
   logout: { uri: "users/auth/logout", method: "get" },
   me: { uri: "users/me", method: "GET" },
   forgetPassword: { uri: "users/password/forget", method: "post" },
-  resetPassword: { uri: "users/password/reset", method: "post" }, // Q:token
+  resetPassword: { uri: "users/password/reset/", method: "post" }, // Q:token
   updatePassword: { uri: "users/password/update", method: "post" },
   UpdateProfile: { uri: "users/profile/update", method: "post" },
   // user - wishlist

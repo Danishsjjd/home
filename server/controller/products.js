@@ -23,7 +23,7 @@ exports.createProduct = async (req, res, next) => {
 
   for (let i = 0; i < req.body.images.length; i++) {
     const result = await cloudinary.uploader.upload(req.body.images[i], {
-      folder: "Home_assets/products",
+      folder: "Home/products",
     })
 
     imagesLinks.push({
@@ -113,7 +113,7 @@ exports.updateProduct = async (req, res, next) => {
   for (let i = 0; i < req.body.images.length; i++) {
     if (!req.body.images[i].public_id) {
       const result = await cloudinary.uploader.upload(req.body.images[i], {
-        folder: "Home_assets/products",
+        folder: "Home/products",
       })
       imagesLinks.push({
         public_id: result.public_id,

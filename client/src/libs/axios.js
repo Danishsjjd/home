@@ -9,6 +9,7 @@ const axiosInstance = axios.create({
     Accept: "application/json",
     "Content-Type": "application/json",
     "Access-Control-Allow-Credentials": true,
+    "x-auth-token": localStorage.getItem("x-auth-token") || "",
   },
 })
 

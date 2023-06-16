@@ -27,6 +27,7 @@ const {
   vGetSingleUser,
 } = require("../models/users")
 const validate = require("../middleware/validate")
+const ErrorHandler = require("../utils/ErrorHandler")
 
 const router = express.Router()
 
@@ -34,8 +35,10 @@ router.post("/wishlist", authentication, createAndUpdateWishList)
 router.post("/wishlist/remove", authentication, deleteItemFromWishList)
 router.post("/auth/register", validate(vUser), register)
 router.post("/auth/login", validate(vUserLogin), login)
-router.get("/auth/logout", (req, res) => {
-  req.logout()
+router.get("/auth/logout", (req, res, next) => {
+  req?.logout((e) => {
+    if (e) return next(new ErrorHandler(e, 500))
+  })
   res.status(200).json("success")
 })
 router.get("/me", authentication, refreshCheck)

@@ -39,10 +39,8 @@ module.exports = function (app) {
 
   app.use(error)
 
-  if (process.env.NODE_ENV == "production") {
-    app.use(express.static(root))
-    app.get("*", (req, res) => {
-      res.sendFile("index.html", { root })
-    })
-  }
+  app.use(express.static(root))
+  app.get("*", (req, res) => {
+    res.sendFile("index.html", { root })
+  })
 }

@@ -65,7 +65,10 @@ export default function SignUpLogin() {
                           className={`w-full ${image ? "object-cover" : "bg-[#999] object-contain"}`}
                         />
                       </div>
-                      <button className="ml-5 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:outline-secondary-darker focus:ring-2 focus:ring-offset-2">
+                      <button
+                        className="ml-5 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:outline-secondary-darker focus:ring-2 focus:ring-offset-2"
+                        type="button"
+                      >
                         <label htmlFor="userAvatar">Upload</label>
                       </button>
                       <input

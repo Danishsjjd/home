@@ -77,12 +77,11 @@ export const signInSignUpApi = async ({ values, haveAccount = false, agreeTerms 
 export const logoutApi = async () => {
   try {
     await API.logout({})
+  } finally {
     localStorage.clear()
     dispatch(setUser({}))
     dispatch(setLogin(false))
     dispatch(setCart([]))
-  } catch (err) {
-    toast.error(err.message)
   }
 }
 // profile update
