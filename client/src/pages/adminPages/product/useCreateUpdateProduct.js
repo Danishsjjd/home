@@ -75,7 +75,7 @@ const useCreateUpdateProduct = () => {
       }
     } else {
       try {
-        const response = await API.updateProduct({ data: values, params: id })
+        const response = await API.updateProduct({ data: values, params: `/${id}` })
         toast.success(response?.data)
         setImages([])
         navigate(`/product/${id}`, { replace: true })

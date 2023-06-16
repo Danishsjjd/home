@@ -21,7 +21,7 @@ exports.createOrder = async (req, res, next) => {
   if (!cart) return next(new ErrorHandler("cart is not found"))
 
   let amount = 0
-
+  // TODO: Create this function as a cloud function to run on Stripe webhook because currently it decreases the stock even if the order is not created.
   for (let i = 0; i < cart.products.length; i++) {
     try {
       const updatedProduct = await updateStock(cart.products[i].productId._id, cart.products[i].quantity, session)
@@ -55,6 +55,8 @@ exports.createOrder = async (req, res, next) => {
     products: cart.products,
     userId: req.user._id,
   }
+
+  console.log("token", token.id)
 
   await stripe.charges.create({
     source: token.id,

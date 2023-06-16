@@ -36,6 +36,9 @@ export default function SignUpLogin() {
         <div className="space-y-1">
           <Logo className="w-24" />
           <h1 className="text-lg  font-medium">{haveAccount ? "Welcome Back" : "Hello Friends!!!"}</h1>
+          <p className="text-xs text-red-600">
+            Google auth is not working, To make it work please use passport^0.5.3 😀
+          </p>
           <button
             className="min-w-210 flex w-full items-center justify-center gap-3 rounded-full bg-white p-4 text-center shadow-lg"
             onClick={googleLogin}
@@ -65,7 +68,10 @@ export default function SignUpLogin() {
                           className={`w-full ${image ? "object-cover" : "bg-[#999] object-contain"}`}
                         />
                       </div>
-                      <button className="ml-5 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:outline-secondary-darker focus:ring-2 focus:ring-offset-2">
+                      <button
+                        className="ml-5 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:outline-secondary-darker focus:ring-2 focus:ring-offset-2"
+                        type="button"
+                      >
                         <label htmlFor="userAvatar">Upload</label>
                       </button>
                       <input

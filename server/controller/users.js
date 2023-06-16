@@ -17,7 +17,7 @@ exports.register = async (req, res, next) => {
 
   if (req.body.avatar) {
     myCloud = await cloudinary.uploader.upload(req.body.avatar, {
-      folder: "Home_assets/avatars",
+      folder: "Home/avatars",
       width: 150,
       crop: "scale",
     })
@@ -142,7 +142,7 @@ exports.updateProfile = async (req, res, next) => {
     const imageId = user.avatar.public_id
 
     const myCloud = await cloudinary.uploader.upload(req.body.avatar, {
-      folder: "Home_assets/avatars",
+      folder: "Home/avatars",
       width: 150,
       crop: "scale",
     })
